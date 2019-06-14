@@ -1,4 +1,40 @@
-# Über mich
+---
+profileImage: https://avatars1.githubusercontent.com/u/1517125?s=460&v=4
+contact:
+  - label: Munich, Germany
+    icon: location
+    url:
+  - label: github.com/chunksnbits
+    icon: github
+    url: https://github.com/chunksnbits
+  - label: linkedin.com/in/daniel-eißing
+    icon: linkedin
+    url: https://linkedin.com/in/daniel-eißing-5a24805b
+skills:
+  - name: Typescript
+    level: 3
+    category: frontend
+  - name: Javascript
+    level: 3
+    category: frontend
+  - name: HTML | CSS
+    level: 3
+    category: frontend
+  - name: React
+    level: 2
+    category: frontend
+  - name: Git
+    level: 3
+    category: tools
+  - name: NodeJS
+    level: 3
+    category: backend
+  - name: Sketch
+    level: 2
+    category: ux
+---
+
+# Steckbrief
 Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und Node.js. 5+ Jahre Berufserfahrung, v.a. im Agenturumfeld.
 
 **Geburtsdatum:** 14.10.1983, Fulda, Deutschland<br />

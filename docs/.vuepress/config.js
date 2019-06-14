@@ -21,5 +21,13 @@ module.exports = {
       title: 'VuePress',
       description: 'Vue 驱动的静态网站生成器'
     }
-  }
+  },
+  // chainWebpack: config => {
+  //   config.module
+  //     .rule('svg')
+  //     .test(/\.svg$/)
+  //     .use('raw-loader')
+  //       .loader('raw-loader')
+  //       .end();
+  // },
 }

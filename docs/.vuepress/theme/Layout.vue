@@ -1,13 +1,30 @@
 <template>
-  <div>
-    <h1>{{ $page.frontmatter.title }}</h1>
-    <Content />
+  <div class="page">
+    <main class="page__main">
+      <Content />
+    </main>
+    <aside class="page__sidebar">
+      <outline :outline="$page.frontmatter"></outline>
+    </aside>
   </div>
 </template>
 
-<style>
+<script>
+export default {}
+</script>
+
+
+
+<style lang="scss">
   :root {
     --color-primary: #004B63;
+    --color-primary__border: #5A5A5A;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
   }
 
   html {
@@ -19,7 +36,33 @@
     color: inherit;
   }
 
-  .content__default a.header-anchor {
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 1rem;
+  }
+
+  h1 {
+    color: var(--color-primary);
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 10px;
+
+    &:after {
+      content: '';
+      display: block;
+      border: 1px solid black;
+      margin-top: 5px;
+    }
+  }
+
+  h2 {
+    font-weight: 200;
+  }
+
+  h3 {
+    font-weight: 500;
+  }
+
+  a.header-anchor {
     font-size: 0.85em;
     float: left;
     margin-left: -0.87em;
@@ -28,45 +71,52 @@
     opacity: 0;
   }
 
-  .content__default a.header-anchor:hover {
+  a.header-anchor:hover {
     text-decoration: none;
   }
 
-  .content__default ul, ul li {
-    margin: 0;
-    padding: 0;
+  .page {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 50px;
+    box-sizing: border-box;
+    max-width: 1024px;
   }
 
-  .content__default li {
-    display: inline;
+  .page__main {
+    display: flex;
+    flex-direction: columns;
+    flex: 1 1 100%;
+
+    padding: 76px 20px 100px;
+    max-width: 700px;
   }
 
-  .content__default li::before {
-    content: ' - ';
+  .page__sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 240px;
   }
 
-  .content__default li:first-child::before {
-    content: none;
-  }
+  .content_default {
 
-  .content__default h1, h2, h3, h4, h5, h6 {
-    font-size: 1rem;
-  }
+    ul, ul li {
+      margin: 0;
+      padding: 0;
+    }
 
-  .content__default h1 {
-    color: var(--color-primary);
-    text-transform: uppercase;
-  }
+    li {
+      display: inline;
+    }
 
-  .content__default h2 {
-    font-weight: 200;
-  }
+    li::before {
+      content: ' - ';
+    }
 
-  .content__default h3 {
-    font-weight: 500;
+    li:first-child::before {
+      content: none;
+    }
   }
 </style>
-
-<script>
-    export default {};
-</script>
