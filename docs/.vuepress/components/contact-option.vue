@@ -14,20 +14,22 @@ export default {
 </script>
 
 <style lang="scss">
+  @import '../styles/functions.scss';
+
   .contact-option {
     display: flex;
     flex-direction: row;
     list-style: none;
-    padding: 4px 0;
+    padding: rem-size(4px) 0;
     margin: 0;
   }
 
   .contact-option__icon {
     display: flex;
-    flex: 0 0 18px;
+    flex: 0 0 rem-size(18px);
     display: inline-block;
     vertical-align: middle;
-    margin-right: 10px;
+    margin-right: rem-size(10px);
   }
 
   .contact-option__link {

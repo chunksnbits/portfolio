@@ -1,12 +1,15 @@
 <template>
-  <div class="page">
+  <v-app none>
+    <div class="page">
     <main class="page__main">
       <Content />
+
     </main>
     <aside class="page__sidebar">
       <outline :outline="$page.frontmatter"></outline>
     </aside>
   </div>
+</v-app>
 </template>
 
 <script>
@@ -14,11 +17,15 @@ export default {}
 </script>
 
 
-
 <style lang="scss">
+  @import '../styles/variables.scss';
+  @import '../styles/functions.scss';
+
   :root {
-    --color-primary: #004B63;
-    --color-primary__border: #5A5A5A;
+    --root__color--text: rgba(0, 0, 0, 0.85);
+    --root__color--primary: #004B63;
+    --root__color--border: #5A5A5A;
+    --root__color--link: #00618E;
   }
 
   #app {
@@ -27,13 +34,15 @@ export default {}
     justify-content: center;
   }
 
-  html {
+  html,
+  .application.theme--light {
+    background: none;
+    color: var(--root__color--text);
     font-family: Roboto, sans-serif !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 15px;
+    font-size: $root__base-size;
     font-weight: 200;
-    color: inherit;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -41,7 +50,7 @@ export default {}
   }
 
   h1 {
-    color: var(--color-primary);
+    color: var(--root__color--primary);
     text-transform: uppercase;
     display: inline-block;
     margin-bottom: 10px;
@@ -56,10 +65,16 @@ export default {}
 
   h2 {
     font-weight: 200;
+    margin-bottom: rem-size(10px);
+
+    strong {
+      font-weight: 900;
+    }
   }
 
   h3 {
-    font-weight: 500;
+    font-weight: 400;
+    margin-bottom: rem-size(0);
   }
 
   a.header-anchor {
@@ -75,14 +90,18 @@ export default {}
     text-decoration: none;
   }
 
+  a.link {
+    color: var(--root__color--link);
+  }
+
   .page {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
-    padding: 50px;
+    padding: rem-size(50px);
     box-sizing: border-box;
-    max-width: 1024px;
+    max-width: $root__page-max-width;
   }
 
   .page__main {
@@ -90,14 +109,18 @@ export default {}
     flex-direction: columns;
     flex: 1 1 100%;
 
-    padding: 76px 20px 100px;
-    max-width: 700px;
+    padding: rem-size(76px) rem-size(20px) rem-size(100px);
+    max-width: $root__main-content-max-width;
   }
 
   .page__sidebar {
     display: flex;
     flex-direction: column;
-    flex: 0 0 240px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: $root__sidebar-width;
+    max-width: $root__sidebar-width;
+    overflow: hidden;
   }
 
   .content_default {
@@ -109,14 +132,15 @@ export default {}
 
     li {
       display: inline;
+  @media print {
+    html {
+      font-size: $root__base-size--print;
     }
 
-    li::before {
-      content: ' - ';
-    }
-
-    li:first-child::before {
-      content: none;
+    .page__sidebar {
+      flex-basis: $root__sidebar-width--print;
+      max-width: $root__sidebar-width--print;
     }
   }
 </style>
+

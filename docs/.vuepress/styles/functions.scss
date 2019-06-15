@@ -1,0 +1,9 @@
+@import './variables.scss';
+
+@function rem-size($px-size) {
+  @if $px-size == 0 or $px-size == 0px {
+    @return 0;
+  }
+
+  @return $px-size / $root__base-size * 1rem;
+}
