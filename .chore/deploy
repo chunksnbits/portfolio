@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+# abort on errors
+set -e
+
+yarn build
+
+cd docs/.vuepress/dist
+
+git init
+git add --all
+git commit -m 'chore: deploy'
+git push -f git@github.com:chunksnbits/portfolio.git master:gh-pages
+
+cd -

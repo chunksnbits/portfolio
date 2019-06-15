@@ -1,6 +1,6 @@
 module.exports = {
   title: "Daniel Eissing",
-  host: 'localhost',
+  base: '/portfolio/',
   head: [
     ['link', {
       rel: 'stylesheet',

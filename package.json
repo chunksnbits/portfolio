@@ -6,7 +6,8 @@
   "scripts": {
     "start": "vuepress dev docs",
     "build": "vuepress build docs",
-    "lint": "echo '/** noop */'"
+    "lint": "echo '/** noop */'",
+    "deploy": ".chore/deploy"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.0.0",
