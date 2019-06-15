@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
+
+# see: https://vuepress.vuejs.org/guide/deploy.html#github-pages
+
 # abort on errors
 set -e
 

@@ -45,7 +45,7 @@ module.exports = {
   markdown: {
     extendMarkdown: md => {
       md.use(require('markdown-it-link-attributes'), {
-        pattern: /^\/docs\/.*/,
+        pattern: /^\.\/docs\/.*/,
         attrs: {
           target: '_blank',
           rel: 'alternate',
