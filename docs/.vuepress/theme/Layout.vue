@@ -94,6 +94,20 @@ export default {}
     color: var(--root__color--link);
   }
 
+  a.link--document::after {
+    content: '';
+    display: inline-block;
+    position: relative;
+    font-size: 0.7rem;
+    width: rem-size(8px);
+    height: rem-size(8px);
+    vertical-align: baseline;
+    margin-left: rem-size(4px);
+    top: rem-size(-2px);
+    background-image: $root__icons--launch;
+    background-size: contain;
+  }
+
   .page {
     display: flex;
     flex-direction: row;
@@ -123,15 +137,6 @@ export default {}
     overflow: hidden;
   }
 
-  .content_default {
-
-    ul, ul li {
-      margin: 0;
-      padding: 0;
-    }
-
-    li {
-      display: inline;
   @media print {
     html {
       font-size: $root__base-size--print;

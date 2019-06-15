@@ -1,0 +1,90 @@
+<template>
+  <div class="period">
+    <slot name="timeframe"></slot>
+    <div class="period__content">
+      <slot></slot>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'period',
+};
+</script>
+
+<style lang="scss" scoped>
+  @import '../styles/functions.scss';
+
+  .period {
+    margin-bottom: rem-size(36px);
+    padding-left: 90px;
+    position: relative;
+
+    ul, ul li {
+      margin: 0;
+      padding: 0;
+    }
+
+    a, a:link {
+      text-decoration: none;
+    }
+
+    ul {
+      margin-bottom: rem-size(10px);
+    }
+
+    ul + p {
+      margin-bottom: 0.8rem;
+    }
+
+    li {
+      display: flex;
+      line-height: 1.667rem;
+      justify-content: left;
+    }
+
+    li p {
+      display: flex;
+      flex: 1 1 100%;
+      margin: 0;
+    }
+
+    li::before {
+      content: '-';
+
+      display: flex;
+      flex-basis: rem-size(3px);
+      flex-shrink: 0;
+      flex-grow: 0;
+      width: rem-size(3px);
+      height: rem-size(1px);
+      margin-right: 7px;
+      background: var(--color-primary);
+    }
+  }
+
+  @media print {
+    .period {
+      li {
+        display: inline;
+        line-height: rem-size(19px);
+      }
+
+      li p {
+        display: inline;
+      }
+
+      li::before {
+        content: ' - ';
+        display: inline;
+      }
+
+      li:first-child::before {
+        content: none;
+      }
+    }
+  }
+
+</style>
+
