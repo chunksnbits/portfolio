@@ -1,4 +1,5 @@
 ---
+title: Steckbrief
 profileImage: https://avatars1.githubusercontent.com/u/1517125?s=460&v=4
 contact:
   - label: Munich, Germany
@@ -20,18 +21,66 @@ skills:
   - name: HTML | CSS
     level: 3
     category: frontend
+  - name: Angular
+    level: 3
+    category: frontend
+  - name: ReactiveX | NgRx | Redux
+    level: 2
+    category: frontend
+  - name: Testing | Karma | Jest | Protractor
+    level: 2
+    category: frontend
   - name: React
     level: 2
+    category: frontend
+  - name: Progressive Web Apps
+    level: 2
+    category: frontend
+  - name: SCSS
+    level: 2
+    category: frontend
+  - name: d3.js
+    level: 1
     category: frontend
   - name: Git
     level: 3
     category: tools
-  - name: NodeJS
+  - name: Webpack | NPM Scripts
     level: 3
-    category: backend
-  - name: Sketch
+    category: tools
+  - name: CICD | Jenkins | Github | Gitlabs
     level: 2
-    category: ux
+    category: tools
+  - name: Living Styleguides | Patternplate | Storybook
+    level: 2
+    category: tools
+  - name: NodeJS
+    level: 2
+    category: backend
+  - name: Java | Spring | WebFlux
+    level: 2
+    category: backend
+  - name: Cloud Infrastruktur | CloudFoundry
+    level: 1
+    category: backend
+  - name: AWS Serverless
+    level: 1
+    category: backend
+  - name: Datenbanken | GraphQL | SQL | DynamoDB
+    level: 1
+    category: backend
+  - name: Scrum
+    level: 3
+    category: other
+  - name: UX+Design Tools | Sketch | Adobe Suite
+    level: 2
+    category: other
+  - name: Developer Communities | Support
+    level: 2
+    category: other
+  - name: Coaching | Junior Development
+    level: 2
+    category: other
 ---
 
 # Steckbrief

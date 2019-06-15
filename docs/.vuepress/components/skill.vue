@@ -1,14 +1,21 @@
 <template>
   <li class="skill" :class="[skillTypeClassname]">
-    <span v-for="index in 3"
-    class="skill__category"
-    :class="{
-      'skill__category--active': index <= level,
-      'skill__category--inactive': index > level,
-    }"></span>
-    <span class="skill__label">
-      <slot></slot>
-    </span>
+    <v-tooltip top open-delay="100" nudge-right="75%" nudge-top="-5px">
+      <template v-slot:activator="{ on }">
+        <div v-on="on" class="skill__contents">
+          <span v-for="index in 3"
+          class="skill__category"
+          :class="{
+            'skill__category--active': index <= level,
+            'skill__category--inactive': index > level,
+          }"></span>
+          <span class="skill__label">
+            <slot></slot>
+          </span>
+        </div>
+      </template>
+      <span>{{ title }} — Kategorie: <span class="skill__tooltip-category">{{ category }}</span></span>
+    </v-tooltip>
   </li>
 </template>
 
@@ -17,8 +24,11 @@ export default {
   name: 'skill',
   props: ['level', 'category'],
   computed: {
-    skillTypeClassname: function() { return `skill__category--${this.category}`; },
-  }
+    skillTypeClassname() { return `skill__category--${this.category}`; },
+    title() {
+      return this.$slots.default[0].text;
+    },
+  },
 };
 </script>
 
@@ -28,57 +38,62 @@ export default {
     --skill__category--color--frontend: #8BDAE0;
     --skill__category--color--tools: #5A5A5A;
     --skill__category--color--backend: #FFB96E;
-    --skill__category--color--ux: #FC6C73;
-    --skill__category--size: 11px;
+    --skill__category--color--other: #FC6C73;
+
+    --skill__category--size: 1rem;
   }
 </style>
 
 <style lang="scss" scoped>
+
+  @import '../styles/functions.scss';
+
+  $categories: frontend, tools, backend, other;
 
   .skill {
     list-style: none;
     padding: 0;
     margin: 0;
 
-    margin-top: 20px;
+    margin-top: rem-size(20px);
+    width: 100%;
+
+    cursor: default;
+  }
+
+  .skill__contents {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .skill__category {
     display: inline-block;
     width: var(--skill__category--size);
     height: var(--skill__category--size);
-    border: 2px solid var(--color-primary__border);
+    border: 2px solid var(--root__color--border);
     background: none;
 
     margin-right: 6px;
   }
 
-  .skill__category--frontend .skill__category--active {
-    background: var(--skill__category--color--frontend);
+  .skill__tooltip-category {
+    text-transform: capitalize;
   }
 
-  .skill__category--frontend + .skill__category--frontend,
-  .skill__category--tools + .skill__category--tools,
-  .skill__category--backend + .skill__category--backend,
-  .skill__category--ux + .skill__category--ux {
-    margin-top: 8px;
-  }
+  @each $category in $categories {
+    .skill__category--#{$category} + .skill__category--#{$category} {
+      margin-top: rem-size(8px);
+    }
 
-  .skill__category--tools .skill__category--active {
-    background: var(--skill__category--color--tools);
-  }
-
-  .skill__category--backend .skill__category--active {
-    background: var(--skill__category--color--backend);
-  }
-
-  .skill__category--ux .skill__category--active {
-    background: var(--skill__category--color--ux);
+    .skill__category--#{$category} .skill__category--active {
+      background: var(--skill__category--color--#{$category});
+    }
   }
 
   .skill__label {
     display: inline;
-    margin-left: 5px;
+    margin-left: rem-size(5px);
   }
 </style>
 
