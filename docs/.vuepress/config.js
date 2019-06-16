@@ -6,10 +6,6 @@ module.exports = {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap'
     }],
-    // ['script', {
-    //   src: 'https://cdn.jsdelivr.net/gh/chunksnbits/technology-radar@latest/dist/webcomponent.js',
-    //   async: true,
-    // }],
   ],
   locales: {
     // The key is the path for the locale to be nested under.
@@ -26,14 +22,24 @@ module.exports = {
   plugins: [
     ['container', {
       type: 'period',
-      before: (timeframe) => `<period>
-          <template v-slot:timeframe>
-            <period-timeframe>
-              ${timeframe}
-            </period-timeframe>
-          </template>
-        <div>
-      `,
+      before: (args) => {
+        args = args.split(':');
+
+        const timeframe = args[0].trim();
+        const type = args[1] ? args[1].trim() : null;
+
+        const className = type ? `period--${ type }` : '';
+
+        return `
+          <period class="${ className }">
+            <template v-slot:timeframe>
+              <period-timeframe>
+                ${ timeframe }
+              </period-timeframe>
+            </template>
+          <div>
+        `;
+      },
       after: '</div></period>',
     }],
     ['container', {
@@ -65,31 +71,4 @@ module.exports = {
     },
 
   },
-  //     md.use(require('markdown-it-container'), 'section', {
-  //       validate: function (params) {
-  //         return params.trim().match(/^ ?section\w*$/);
-  //       },
-
-  //       render: function (tokens, idx) {
-  //         var m = tokens[idx].info.trim().match(/^ ?section\w*$/);
-
-  //         if (tokens[idx].nesting === 0) {
-  //           return `<portfolio-section>
-  //             ${md.utils.escapeHtml(m[1])}
-  //           </portfolio-section>`;
-  //         } else {
-  //           return '</div>\n';
-  //         }
-  //       }
-  //     })
-  //   },
-  // },
-  // chainWebpack: config => {
-  //   config.module
-  //     .rule('svg')
-  //     .test(/\.svg$/)
-  //     .use('raw-loader')
-  //       .loader('raw-loader')
-  //       .end();
-  // },
 }

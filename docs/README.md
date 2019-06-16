@@ -103,7 +103,7 @@ Fokusbereiche:
 :::
 
 ## Referenzen
-::: period 2018 - 2019
+::: period 2018 - 2019 : jambit
 ### **jambit GmbH, München** · Senior Software Architect (extern)
 ##### Kunde: Süddeutscher Automobilhersteller · Projekt: AOD / AMD 2018-2019
 - Weiterentwicklung eines Angular Frameworks
@@ -132,7 +132,7 @@ Fokusbereiche:
 - Ansprechpartner für UX- und Designfragen
 :::
 
-::: period 2013 - 2018
+::: period 2013 - 2018 : sinnerschrader
 ### **SinnerSchrader, München** · (Senior) Product Engineer
 - Konzeption und Implementierung von Anwendungsarchitekturen für Webapplikationen
 - Implementierung von Produktfeatures mit Javascript, HTML und CSS
@@ -214,13 +214,13 @@ Fokusbereiche:
 - Projektstandorte: Düsseldorf und Hamburg
 :::
 
-::: period 2013
+::: period 2013 : tomtec
 ### **TomTec Imaging Systems GmbH, München**  -  Software Developer
 Umsetzung von Produktfeatures einer Reporting Anwendung mit Java (Wicket) und JavaScript - Redesign und Erweiterung eines E2E Test Frameworks auf Basis von Ruby und Selenium - Umsetzung von Produktfeatures, Unit und Integrationstests in C++
 :::
 
 ## Ausbildung
-::: period 2013
+::: period 2013 : education
 ### **Universiät Koblenz/Landau** Studiengang Computervisualistik
 Abschluss Diplom Informatik - Schwerpunkte: Computergrafik, Interface Design, Kunst - Hilfswissenschaftler am Institut für Web Science mit Schwerpunkt: Semantic Web
 

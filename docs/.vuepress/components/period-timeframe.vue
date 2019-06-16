@@ -1,6 +1,8 @@
 <template>
   <div class="period-timeframe">
-    <slot></slot>
+    <span class="period-timeframe__label">
+      <slot></slot>
+    </span>
   </div>
 </template>
 
@@ -15,9 +17,9 @@ export default {
 
   .period-timeframe {
     position: absolute;
-    width: 30px;
-    top: 5px;
-    bottom: 45px;
+    width: rem-size(30px);
+    top: rem-size(5px);
+    bottom: 0;
     left: 0;
     font-size: rem-size(12px);
     line-height: 1rem;
@@ -27,22 +29,28 @@ export default {
 
   .period-timeframe::after {
     content: '';
-    position: relative;
+    position: absolute;
+    top: rem-size(24px);
+    bottom: 0;
     left: calc(50% - 1px);
     display: block;
-    top: rem-size(10px);
     background: var(--root__color--border);
-    width: 1.5px;
-    height: 100%;
+    width: rem-size(1.5px);
   }
 
-  @include breakpoint-greater('sm') {
+  .period-timeframe__label {
+    display: inline-block;
+    background: white;
+    position: relative;
+    z-index: 100;
+    padding-bottom: 0.5rem;
+  }
 
+  @mixin period-timeframe__layout--desktop {
     .period-timeframe {
       position: absolute;
-      width: 70px;
+      width: rem-size(70px);
       top: 0;
-      bottom: 25px;
       left: 0;
       font-size: rem-size(12px);
       line-height: 1;
@@ -50,6 +58,18 @@ export default {
 
       text-align: center;
       white-space: nowrap;
+    }
+  }
+
+  @include breakpoint-greater('sm') {
+    @include period-timeframe__layout--desktop;
+  }
+
+  @media print {
+    @include period-timeframe__layout--desktop;
+
+    .period-timeframe {
+      width: rem-size(70px);
     }
   }
 </style>

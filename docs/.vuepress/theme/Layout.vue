@@ -243,6 +243,10 @@ export default {
     order: 1;
   }
 
+  .root__page-main h2:not(:first-child) {
+    margin-top: $root__section--margin-bottom;
+  }
+
   .root__page-sidebar {
     display: flex;
     flex-direction: column;
@@ -250,10 +254,10 @@ export default {
     overflow: hidden;
     order: 0;
     margin-bottom: rem-size(40px);
+    padding-top: rem-size(50px);
   }
 
-  .table-of-contents,
-  .section {
+  .table-of-contents {
     margin-bottom: $root__section--margin-bottom;
   }
 
@@ -261,8 +265,7 @@ export default {
     padding: rem-size(14px) rem-size(20px) !important;
   }
 
-  @include breakpoint-greater('sm') {
-
+  @mixin root-desktop-layout {
     .root__page {
       flex-direction: column;
     }
@@ -294,21 +297,60 @@ export default {
       flex-basis: $root__sidebar-width;
       max-width: $root__sidebar-width;
       margin-bottom: 0;
+      padding-top: rem-size(57px);
     }
   }
 
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  @include breakpoint-greater('sm') {
+    @include root-desktop-layout;
+  }
+
+  @page {
+    margin: 2cm 0.75cm;
+  }
+
+  @page:first {
+    margin-top: 1cm;
+  }
+
   @media print {
-    html {
+    @include root-desktop-layout;
+
+    body {
+      display: table;
+      table-layout: fixed;
+      padding-top: 2.5pt;
+      height: auto;
+    }
+
+    html,
+    .application.theme--light {
       font-size: $root__base-size--print;
     }
 
     .root__page-sidebar {
       flex-basis: $root__sidebar-width--print;
       max-width: $root__sidebar-width--print;
+      padding-top: rem-size(54px);
+    }
+
+    .root__page-main {
+      max-width: calc(100vw - #{$root__sidebar-width--print + 0.75 * $root__main-max-space});
+      padding-top: rem-size(54px);
+      padding-bottom: 0;
     }
 
     .root__page-toolbar {
       display: none !important;
+    }
+
+    a,
+    a.link {
+      color: var(--root__color--text) !important;
     }
   }
 </style>

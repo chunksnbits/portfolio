@@ -1,11 +1,6 @@
 <template>
   <div class="outline">
-    <div class="outline__profile-image">
-      <img :src="outline.profileImage">
-    </div>
-
     <div class="outline__section outline__section--contacts">
-
       <h2>Kontakt</h2>
       <contacts>
         <contact-option v-for="contact in outline.contact" :contact="contact"></contact-option>
@@ -20,6 +15,10 @@
           {{ skill.name }}
         </skill>
       </skills>
+    </div>
+
+    <div class="outline__profile-image">
+      <img :src="outline.profileImage">
     </div>
   </div>
 </template>
@@ -58,7 +57,11 @@ export default {
   }
 
   .outline__section {
-    padding-top: rem-size(40px);
+    padding-top: rem-size(52px);
+  }
+
+  .outline__section:first-child {
+    padding-top: 0;
   }
 
   .outline__section--name {
@@ -77,7 +80,6 @@ export default {
     font-size: rem-size(20px);
     margin-top: 7px;
     font-weight: 500;
-    // text-align: right;
   }
 
   .outline__profile-image {
@@ -96,15 +98,15 @@ export default {
     height: $outline__profile-image-size--mobile;
   }
 
-  @include breakpoint-greater('sm') {
+  @mixin outline__layout--desktop {
     .outline {
-      padding: rem-size(34px) rem-size(20px) rem-size(20px);
+      padding: 0 rem-size(20px) rem-size(20px);
     }
 
     .outline__profile-image {
       position: absolute;
       right: rem-size(0);
-      top: rem-size(0);
+      top: -1 * rem-size(57px);
       width: $outline__profile-image-size;
       height: $outline__profile-image-size;
       border-radius: $outline__profile-image-size;
@@ -114,6 +116,14 @@ export default {
       width: $outline__profile-image-size;
       height: $outline__profile-image-size;
     }
+  }
+
+  @include breakpoint-greater('sm') {
+    @include outline__layout--desktop;
+  }
+
+  @media print {
+    @include outline__layout--desktop;
   }
 </style>
 

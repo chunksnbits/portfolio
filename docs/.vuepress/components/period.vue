@@ -18,7 +18,7 @@ export default {
 
   .period {
     margin-bottom: $root__section--margin-bottom;
-    padding-left: 44px;
+    padding-left: rem-size(44px);
     position: relative;
 
     ul, ul li {
@@ -59,19 +59,29 @@ export default {
       flex-grow: 0;
       width: rem-size(3px);
       height: rem-size(1px);
-      margin-right: 7px;
+      margin-right: rem-size(7px);
       background: var(--color-primary);
     }
   }
 
-  @include breakpoint-greater('sm') {
+  @mixin period__layout--desktop {
     .period {
       margin-bottom: rem-size(36px);
-      padding-left: 90px;
+      padding-left: rem-size(90px);
     }
   }
 
+  @include breakpoint-greater('sm') {
+    @include period__layout--desktop;
+  }
+
   @media print {
+    @include period__layout--desktop;
+
+    .period {
+      margin-bottom: 0;
+    }
+
     .period {
       li {
         display: inline;
