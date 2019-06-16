@@ -207,7 +207,7 @@ Fokusbereiche:
 - Buildmigration von Grunt zu Webpack
 - Abstimmung mit fachl. und techn. Anwendern
 
-##### Kunde: eplus smartkauf · Projekt: Proof of Concept «tarifs»  - 2014
+##### Kunde: eplus smartkauf · Projekt: Proof of Concept «tarifs» · 2014
 - Implementierung eines Proof of Concepts für die Integrierung von Mobilfunk Tarifen in ein bestehendes Hybris Shop System
 - Entwicklung von Produktfeatures mit HTML, CSS und Javascript
 - Integration mit Hybris Backend
@@ -215,7 +215,7 @@ Fokusbereiche:
 :::
 
 ::: period 2013 : tomtec
-### **TomTec Imaging Systems GmbH, München**  -  Software Developer
+### **TomTec Imaging Systems GmbH, München** · Software Developer
 Umsetzung von Produktfeatures einer Reporting Anwendung mit Java (Wicket) und JavaScript - Redesign und Erweiterung eines E2E Test Frameworks auf Basis von Ruby und Selenium - Umsetzung von Produktfeatures, Unit und Integrationstests in C++
 :::
 
