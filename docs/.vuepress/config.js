@@ -1,5 +1,5 @@
 module.exports = {
-  title: "Daniel Eissing",
+  title: "Portfolio",
   base: '/portfolio/',
   head: [
     ['link', {
@@ -38,8 +38,15 @@ module.exports = {
     }],
     ['container', {
       type: 'spacer',
-      before: () => '<div class="spacer"></div>',
+      before: (height) => height ?
+        `<div class="spacer" style="height: ${height}"></div>` :
+        '<div class="spacer"></div>',
       after: '',
+    }],
+    ['container', {
+      type: 'section',
+      before: () => '<div class="section">',
+      after: '</div>',
     }],
   ],
   markdown: {
@@ -53,6 +60,10 @@ module.exports = {
         }
       });
     },
+    toc: {
+      includeLevel: [2, 3],
+    },
+
   },
   //     md.use(require('markdown-it-container'), 'section', {
   //       validate: function (params) {

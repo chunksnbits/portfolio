@@ -14,11 +14,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/functions.scss';
+  @import '../styles/styles.scss';
 
   .period {
-    margin-bottom: rem-size(36px);
-    padding-left: 90px;
+    margin-bottom: $root__section--margin-bottom;
+    padding-left: 44px;
     position: relative;
 
     ul, ul li {
@@ -61,6 +61,13 @@ export default {
       height: rem-size(1px);
       margin-right: 7px;
       background: var(--color-primary);
+    }
+  }
+
+  @include breakpoint-greater('sm') {
+    .period {
+      margin-bottom: rem-size(36px);
+      padding-left: 90px;
     }
   }
 

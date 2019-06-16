@@ -5,14 +5,15 @@
     </div>
 
     <div class="outline__section outline__section--contacts">
-      <h1>Kontakt</h1>
+
+      <h2>Kontakt</h2>
       <contacts>
         <contact-option v-for="contact in outline.contact" :contact="contact"></contact-option>
       </contacts>
     </div>
 
     <div class="outline__section outline__section--skills">
-      <h1>Technologien + Skills</h1>
+      <h2>Technologien + Skills</h2>
 
       <skills>
         <skill v-for="skill in skills" :level="skill.level" :category="skill.category">
@@ -47,33 +48,72 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/functions.scss';
+  @import '../styles/styles.scss';
 
   $outline__profile-image-size: rem-size(112px);
+  $outline__profile-image-size--mobile: rem-size(192px);
 
   .outline {
     position: relative;
-    padding: rem-size(34px) rem-size(20px) rem-size(20px);
   }
 
   .outline__section {
     padding-top: rem-size(40px);
   }
 
+  .outline__section--name {
+    font-weight: 700;
+    font-size: rem-size(30px);
+    color: var(--root__color--primary);
+    padding-top: 0;
+    line-height: 1;
+  }
+
+  .outline__name {
+    border-bottom: 1px solid black;
+  }
+
+  .outline__role {
+    font-size: rem-size(20px);
+    margin-top: 7px;
+    font-weight: 500;
+    // text-align: right;
+  }
+
   .outline__profile-image {
     position: absolute;
-    right: 0;
-    top: 0;
-    width: $outline__profile-image-size;
-    height: $outline__profile-image-size;
-    border-radius: $outline__profile-image-size;
+    right: rem-size(10px);
+    top: rem-size(100px);
+    width: $outline__profile-image-size--mobile;
+    height: $outline__profile-image-size--mobile;
+    border-radius: $outline__profile-image-size--mobile;
     overflow: hidden;
   }
 
   .outline__profile-image img {
     object-fit: cover;
-    width: $outline__profile-image-size;
-    height: $outline__profile-image-size;
+    width: $outline__profile-image-size--mobile;
+    height: $outline__profile-image-size--mobile;
+  }
+
+  @include breakpoint-greater('sm') {
+    .outline {
+      padding: rem-size(34px) rem-size(20px) rem-size(20px);
+    }
+
+    .outline__profile-image {
+      position: absolute;
+      right: rem-size(0);
+      top: rem-size(0);
+      width: $outline__profile-image-size;
+      height: $outline__profile-image-size;
+      border-radius: $outline__profile-image-size;
+    }
+
+    .outline__profile-image img {
+      width: $outline__profile-image-size;
+      height: $outline__profile-image-size;
+    }
   }
 </style>
 

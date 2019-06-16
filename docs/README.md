@@ -1,8 +1,9 @@
 ---
-title: Steckbrief
+title: Daniel Eissing
+subtitle: Portfolio
 profileImage: https://avatars1.githubusercontent.com/u/1517125?s=460&v=4
 contact:
-  - label: Munich, Germany
+  - label: München
     icon: location
     url:
   - label: github.com/chunksnbits
@@ -83,19 +84,28 @@ skills:
     category: other
 ---
 
-# Steckbrief
-Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und Node.js.
-5+ Jahre Berufserfahrung, v.a. im Agenturumfeld.
-
-**Geburtsdatum:** 14.10.1983, Fulda, Deutschland<br />
-**Sprachen:** Deutsch (Muttersprache), Englisch (verhandlungssicher)<br />
-
+::: slot table-of-contents
 [[toc]]
+:::
 
-# Referenzen
+::: section
+## Steckbrief
+Senior Frontend Architekt, mit 5+ Jahre Berufserfahrung in Festanstellung, v.a. im Agenturumfeld.
+Freiberufler seit 2018.
+
+Fokusbereiche:
+- Frontend-Architekturen und -Frameworks
+- User Centric Design
+- Getting Things Done
+
+**Geboren:** 14.10.1983, Fulda, Deutschland<br />
+**Sprachen:** Deutsch (Muttersprache), Englisch (verhandlungssicher)<br />
+:::
+
+## Referenzen
 ::: period 2018 - 2019
-## **jambit GmbH, München** · Senior Software Architect (extern)
-### Kunde: Süddeutscher Automobilhersteller · Projekt: AOD / AMD 2018-2019
+### **jambit GmbH, München** · Senior Software Architect (extern)
+##### Kunde: Süddeutscher Automobilhersteller · Projekt: AOD / AMD 2018-2019
 - Weiterentwicklung eines Angular Frameworks
 - Erweiterung und Neuentwicklung div. Libraries auf Angularbasis
 - Featureentwicklung und -erweiterungen für laufende Angular-Anwendung
@@ -123,7 +133,7 @@ Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und N
 :::
 
 ::: period 2013 - 2018
-## **SinnerSchrader, München** · (Senior) Product Engineer
+### **SinnerSchrader, München** · (Senior) Product Engineer
 - Konzeption und Implementierung von Anwendungsarchitekturen für Webapplikationen
 - Implementierung von Produktfeatures mit Javascript, HTML und CSS
 - produktiv eingesetzte Frameworks: Angular, AngularJS, React
@@ -142,8 +152,8 @@ Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und N
 - Task und Sprintplanung
 - Koordination mit fachlichen, technischen und kreativen Ansprechpartnern
 
-## **Projekte (Auszug)**
-### Kunde: Audi Business Innovation GmbH · Projekt: UI Components · 2018
+#### **Projekte (Auszug)**
+##### Kunde: Audi Business Innovation GmbH · Projekt: UI Components · 2018
 - Planung und Entwicklung eines Living Styleguides f. Angularkomponenten auf Basis eines bestehenden React-basiertern Styleguides
 - Erweiterung eines React-Styleguides um Angular Support
 - Architektur eines Frontendframeworks mit Theming + Whitelabel Support
@@ -151,7 +161,7 @@ Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und N
 - Task und Sprintplanung
 - Koordination mit fachlichen, technischen und kreativen Ansprechpartnern
 
-### Kunde: Allianz · Projekt: MyInvest · 2017 - 2018
+##### Kunde: Allianz · Projekt: MyInvest · 2017 - 2018
 - Frontend-Lead in der Entwicklung einer interaktiven und vollresponsiven Anwendung auf Basis Angular
 - Umsetzung von Produktfeatures
 - Konzeption und Implementierung eines Datenlayers mit NgRx
@@ -160,13 +170,13 @@ Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und N
 - Release and Deployments mit AWS + Jenkins
 - Testplanung, Konzeption und Implementierung von E2E Tests mit Jasmine und Protractor
 
-### Kunde: Allianz · Projekt: HVB Komponenten · 2017
+##### Kunde: Allianz · Projekt: HVB Komponenten · 2017
 - Implementierung von interaktiven und vollresponsiven Interface Komponenten mit Angular
 - Umsetzung von individuellen Chart Komponenten
 - Abstimmung und Konzeption von Build und Release Prozessen
 - Abstimmung mit fachl. und techn. Anwenden
 
-### Kunde: BMW · Projekt: eRetail · 2014 - 2017
+##### Kunde: BMW · Projekt: eRetail · 2014 - 2017
 - Frontend Lead in der Entwicklung bzw. Weiterentwicklung diverser vollresponsiver AngularJS Anwendung und   MVPs
 - Konzeption und Planung einer Anwendungsarchitektur
 - Feature und Modulentwicklung in AngularJS
@@ -186,18 +196,18 @@ Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und N
 - Koordination technischer Anforderungen mit Kunden
 - Übergabe und Architekturtransfer an Projektpartner
 
-### Kunde: BMW · Partner: QAWare · Projekt: Connected Drive · 2015 - 2016
+##### Kunde: BMW · Partner: QAWare · Projekt: Connected Drive · 2015 - 2016
 - Entwicklung von Produktfeatures für vollresponsive Webanwendung mit AngularJS (Typescript)
 - Beratung und Unterstützung im Aufbau der Anwendungsarchitektur
 - Quality Assurance der Designumsetzung
 
-### Kunde: Allianz · Project: Patttern library · 2014 - 2015
+##### Kunde: Allianz · Project: Patttern library · 2014 - 2015
 - Konzeption und Implementierung einer Komponentenlibrary mit Javascript, HTML und CSS
 - Komponenten und Featureimplementierung
 - Buildmigration von Grunt zu Webpack
 - Abstimmung mit fachl. und techn. Anwendern
 
-### Kunde: eplus smartkauf · Projekt: Proof of Concept «tarifs»  - 2014
+##### Kunde: eplus smartkauf · Projekt: Proof of Concept «tarifs»  - 2014
 - Implementierung eines Proof of Concepts für die Integrierung von Mobilfunk Tarifen in ein bestehendes Hybris Shop System
 - Entwicklung von Produktfeatures mit HTML, CSS und Javascript
 - Integration mit Hybris Backend
@@ -205,22 +215,22 @@ Senior Web Entwickler mit Freude an Frontend Architekturen, React, Angular und N
 :::
 
 ::: period 2013
-## **TomTec Imaging Systems GmbH, München**  -  Software Developer
+### **TomTec Imaging Systems GmbH, München**  -  Software Developer
 Umsetzung von Produktfeatures einer Reporting Anwendung mit Java (Wicket) und JavaScript - Redesign und Erweiterung eines E2E Test Frameworks auf Basis von Ruby und Selenium - Umsetzung von Produktfeatures, Unit und Integrationstests in C++
 :::
 
-# Ausbildung
+## Ausbildung
 ::: period 2013
-## **Universiät Koblenz/Landau** Studiengang Computervisualistik
+### **Universiät Koblenz/Landau** Studiengang Computervisualistik
 Abschluss Diplom Informatik - Schwerpunkte: Computergrafik, Interface Design, Kunst - Hilfswissenschaftler am Institut für Web Science mit Schwerpunkt: Semantic Web
 
-### Abschluss
+##### Abschluss
 Diplom Informatik
 
-### Auszeichnungen
+##### Auszeichnungen
 Young Talent Award 2011 der Knowledge Management Working Group Karlsruhe.
 
-### Publikationen / Aufsätze (Auszug)
+##### Publikationen / Aufsätze (Auszug)
 [Scherp, Eißing, Staab - Analysis and comparison of models for individual and organisational knowledge work - Aufsatz - Tagungsband der MKWI 2012](./docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf)
 
 [Scherp, Eißing, Saathoff - A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology - Aufsatz - Int. J. Semantic Computing 2012](./docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf)

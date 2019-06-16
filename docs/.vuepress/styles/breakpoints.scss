@@ -1,0 +1,46 @@
+
+@import './variables.scss';
+
+@function breakpoint-lower-bounds($breakpoint) {
+  @return map-get($root__breakpoints, $breakpoint);
+}
+
+@function breakpoint-upper-bounds($breakpoint) {
+  $index: index($root__breakpoint--keys, $breakpoint);
+  $next: nth($root__breakpoint--keys, $index + 1);
+
+  @return map-get($root__breakpoints, $next);
+}
+
+@mixin breakpoint($breakpoint) {
+  // If the key exists in the map
+  @media (min-width: breakpoint-lower-bounds($breakpoint)) and (max-width: breakpoint-upper-bounds($breakpoint)) {
+    @content;
+  }
+}
+
+@mixin breakpoint-greater($breakpoint) {
+  @media (min-width: breakpoint-upper-bounds($breakpoint)) {
+    @content;
+  }
+}
+
+@mixin breakpoint-greater-equals($breakpoint) {
+  @media (min-width: map-get($root__breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+
+@mixin breakpoint-smaller($breakpoint) {
+  @media (max-width: map-get($root__breakpoints, $breakpoint)) {
+    @content;
+  }
+}
+
+
+@mixin breakpoint-smaller-equals($breakpoint) {
+  @media (max-width: breakpoint-upper-bounds($breakpoint)) {
+    @content;
+  }
+}
