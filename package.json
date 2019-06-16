@@ -1,5 +1,5 @@
 {
-  "name": "portfolio",
+  "name": "@chunksnbits/portfolio",
   "version": "0.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -7,6 +7,7 @@
     "start": "vuepress dev docs",
     "build": "vuepress build docs",
     "lint": "echo '/** noop */'",
+    "release": "standard-version",
     "deploy": ".chore/deploy"
   },
   "devDependencies": {
