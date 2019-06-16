@@ -1,14 +1,14 @@
 <template>
   <div class="outline">
     <div class="outline__section outline__section--contacts">
-      <h2>Kontakt</h2>
+      <h2>Contact</h2>
       <contacts>
         <contact-option v-for="contact in outline.contact" :contact="contact"></contact-option>
       </contacts>
     </div>
 
     <div class="outline__section outline__section--skills">
-      <h2>Technologien + Skills</h2>
+      <h2>Technologies + Skills</h2>
 
       <skills>
         <skill v-for="skill in skills" :level="skill.level" :category="skill.category">
