@@ -1,5 +1,6 @@
 ---
 title: Daniel Eissing
+author: Daniel Eissing
 subtitle: Portfolio
 profileImage: https://avatars1.githubusercontent.com/u/1517125?s=460&v=4
 contact:

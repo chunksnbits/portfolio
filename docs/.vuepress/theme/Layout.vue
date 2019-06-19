@@ -23,7 +23,7 @@
       </table-of-contents>
     </v-navigation-drawer>
 
-    <v-toolbar app flat fixed dense
+    <v-toolbar flat fixed dense
       scroll-off-screen
       class="root__page-toolbar">
       <v-toolbar-title class="root__page-toolbar-title">
@@ -48,10 +48,25 @@
         </aside>
       </div>
     </div>
+    <v-footer app light absolute height="auto" class="root__footer">
+      <v-card class="root__footer-main" flat tile>
+        <v-card-title class="root__footer-title">
+          <span class="root__footer-copyright">
+            &copy;{{ copyright.year }}
+            — <strong>{{ copyright.author }}</strong>
+          </span>
+          <span class="root__footer-meta">
+            Version: {{ packageVersion }}
+          </span>
+        </v-card-title>
+      </v-card>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
+import { version as packageVersion } from '../../../package.json';
+
 export default {
   data() {
     return {
@@ -62,6 +77,17 @@ export default {
       // all layouts are handled the same.
       infinity: Number.MAX_SAFE_INTEGER,
     };
+  },
+  computed: {
+    copyright() {
+      return {
+        year: new Date().getFullYear(),
+        author: this.$page.frontmatter.author,
+      };
+    },
+    packageVersion() {
+      return packageVersion;
+    }
   },
   methods: {
     setTableOfContents(value) {
@@ -92,6 +118,31 @@ export default {
 
   .root .application--wrap {
     align-items: center;
+  }
+
+  .root__footer {
+    position: relative !important;
+    background: none !important;
+    justify-content: center;;
+  }
+
+  .root__footer-main {
+    display: flex;
+    width: 100%;
+    max-width: $root__page-max-width;
+  }
+
+  .root__footer-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: rem-size(14px);
+    width: 100%;
+  }
+
+  .root__footer-meta::before {
+    content: ' — ';
+    margin-left: 0.25rem;
   }
 
   html,
@@ -322,6 +373,10 @@ export default {
       table-layout: fixed;
       padding-top: 2.5pt;
       height: auto;
+    }
+
+    .root__footer {
+      display: none;
     }
 
     html,
