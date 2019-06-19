@@ -27,6 +27,14 @@
 
 const sortedCategories = ['frontend', 'tools', 'backend', 'other'];
 
+function getCategoryIndex(skill) {
+  return sortedCategories.indexOf(skill.catagory);
+}
+
+function equalsCategory(skill, other) {
+  return getCategoryIndex(skill) === getCategoryIndex(other);
+}
+
 export default {
   name: 'outline',
   props: ['outline'],
@@ -35,11 +43,12 @@ export default {
       if (!this.outline.skills) {
         return [];
       }
+
       return this.outline.skills.sort((skill, other) => {
-        if (sortedCategories.indexOf(skill.catagory) !== sortedCategories.indexOf(other.catagory)) {
-          return sortedCategories.indexOf(skill.catagory) - sortedCategories.indexOf(skill.catagory);
+        if (equalsCategory(skill, other)) {
+          return getCategoryIndex(other) - getCategoryIndex(skill);
         }
-        other.level - skill.level;
+        return other.level - skill.level;
       });
     }
   }

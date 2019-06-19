@@ -54,8 +54,6 @@
 <script>
 export default {
   data() {
-    console.log('+++ data', Number.POSITIVE_INFINITY);
-
     return {
       tableOfContents: false,
 
@@ -67,7 +65,6 @@ export default {
   },
   methods: {
     setTableOfContents(value) {
-      console.log('+++ value', value);
       this.tableOfContents = value;
     },
   },
@@ -301,7 +298,7 @@ export default {
     }
   }
 
-  p {
+  p, ul {
     margin-bottom: 0.5rem;
   }
 
