@@ -46,8 +46,7 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-
-  @import '../styles/functions.scss';
+  @import '../../../styles/styles.scss';
 
   $categories: frontend, tools, backend, other;
 

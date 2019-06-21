@@ -11,7 +11,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../styles/styles.scss';
+  @import '../../styles/styles.scss';
 
   .table-of-contents {
     display: block;

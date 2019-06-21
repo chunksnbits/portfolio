@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../styles/functions.scss';
+  @import '../../../styles/styles.scss';
 
   .contact-option {
     display: flex;

@@ -25,17 +25,6 @@
 </template>
 
 <script>
-
-const sortedCategories = ['frontend', 'tools', 'backend', 'other'];
-
-function getCategoryIndex(skill) {
-  return sortedCategories.indexOf(skill.catagory);
-}
-
-function equalsCategory(skill, other) {
-  return getCategoryIndex(skill) === getCategoryIndex(other);
-}
-
 export default {
   name: 'outline',
   props: ['outline'],
@@ -43,7 +32,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/styles.scss';
+  @import '../../styles/styles.scss';
 
   $outline__profile-image-size: rem-size(112px);
   $outline__profile-image-size--mobile: rem-size(192px);

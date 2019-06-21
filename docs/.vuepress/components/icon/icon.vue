@@ -16,9 +16,10 @@
 
 <script>
 
-import icons from '../public/assets/icons';
+import icons from '../../public/assets/icons';
 
 export default {
+  name: 'icon',
   data() {
     return {
       icons

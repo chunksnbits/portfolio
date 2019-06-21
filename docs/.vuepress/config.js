@@ -1,3 +1,18 @@
+const glob = require('glob');
+const path = require('path');
+
+function registerComponents(pattern) {
+
+  const filepaths = glob.sync(path.join(__dirname, 'components/**/*.vue'));
+
+  const components = filepaths.map(filepath => ({
+    name: filepath.split('/').pop().replace(/.vue$/, ''),
+    path: filepath,
+  }))
+
+  return components;
+}
+
 module.exports = {
   title: "Portfolio",
   base: '/portfolio/',
@@ -20,6 +35,9 @@ module.exports = {
     }
   },
   plugins: [
+    ['@vuepress/register-components' , {
+      components: registerComponents('components/**/*.vue'),
+    }],
     ['container', {
       type: 'period',
       before: (args) => {

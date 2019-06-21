@@ -13,7 +13,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/styles.scss';
+  @import '../../../styles/styles.scss';
 
   .period-timeframe {
     position: absolute;

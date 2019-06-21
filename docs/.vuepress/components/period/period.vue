@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '../styles/styles.scss';
+  @import '../../styles/styles.scss';
 
   .period {
     margin-bottom: $root__section--margin-bottom;
