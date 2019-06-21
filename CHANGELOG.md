@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/chunksnbits/portfolio/compare/v0.2.0...v0.3.0) (2019-06-21)
+
+
+### Features
+
+* adds i18n for static texts ([c9254bc](https://github.com/chunksnbits/portfolio/commit/c9254bc))
+* adds language select ([3e819cb](https://github.com/chunksnbits/portfolio/commit/3e819cb))
+
+
+
 ## [0.2.0](https://github.com/chunksnbits/portfolio/compare/v0.1.1...v0.2.0) (2019-06-21)
 
 
