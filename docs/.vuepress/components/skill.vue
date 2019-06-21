@@ -4,6 +4,7 @@
       <template v-slot:activator="{ on }">
         <div v-on="on" class="skill__contents">
           <span v-for="index in 3"
+          :key="index"
           class="skill__category"
           :class="{
             'skill__category--active': index <= level,

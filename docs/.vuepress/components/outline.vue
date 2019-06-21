@@ -3,7 +3,8 @@
     <div class="outline__section outline__section--contacts">
       <h2>Contact</h2>
       <contacts>
-        <contact-option v-for="contact in outline.contact" :contact="contact"></contact-option>
+        <contact-option v-for="contact in outline.contact" :key="contact.url" :contact="contact">
+        </contact-option>
       </contacts>
     </div>
 
@@ -11,7 +12,7 @@
       <h2>Technologies + Skills</h2>
 
       <skills>
-        <skill v-for="skill in skills" :level="skill.level" :category="skill.category">
+        <skill v-for="skill in outline.skills" :key="skill.name" :level="skill.level" :category="skill.category">
           {{ skill.name }}
         </skill>
       </skills>
@@ -38,20 +39,6 @@ function equalsCategory(skill, other) {
 export default {
   name: 'outline',
   props: ['outline'],
-  computed: {
-    skills() {
-      if (!this.outline.skills) {
-        return [];
-      }
-
-      return this.outline.skills.sort((skill, other) => {
-        if (equalsCategory(skill, other)) {
-          return getCategoryIndex(other) - getCategoryIndex(skill);
-        }
-        return other.level - skill.level;
-      });
-    }
-  }
 };
 </script>
 
