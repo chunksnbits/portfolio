@@ -5,6 +5,7 @@
     viewBox="0 0 18 18"
     :aria-labelledby="'icon--' + name"
     role="presentation"
+    class="icon"
   >
     <title
       :id="'icon--' + name"
@@ -46,7 +47,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+  .icon {
 
+  }
 </style>
 

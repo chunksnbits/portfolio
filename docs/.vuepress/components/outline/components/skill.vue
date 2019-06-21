@@ -15,7 +15,12 @@
           </span>
         </div>
       </template>
-      <span>{{ title }} — Kategorie: <span class="skill__tooltip-category">{{ category }}</span></span>
+      <span>
+        {{ title }} — {{ $localeConfig.i18n['SKILL__LABEL--CATEGORY'] }}
+        <span class="skill__tooltip-category">
+          {{ category }}
+        </span>
+      </span>
     </v-tooltip>
   </li>
 </template>

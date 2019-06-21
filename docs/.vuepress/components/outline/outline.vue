@@ -1,7 +1,7 @@
 <template>
   <div class="outline">
     <div class="outline__section outline__section--contacts">
-      <h2>Contact</h2>
+      <h2>{{ $localeConfig.i18n['OUTLINE__SECTION-TITLE--CONTACTS'] }}</h2>
       <contacts>
         <contact-option v-for="contact in outline.contact" :key="contact.url" :contact="contact">
         </contact-option>
@@ -9,7 +9,7 @@
     </div>
 
     <div class="outline__section outline__section--skills">
-      <h2>Technologies + Skills</h2>
+      <h2>{{ $localeConfig.i18n['OUTLINE__SECTION-TITLE--SKILLS'] }}</h2>
 
       <skills>
         <skill v-for="skill in outline.skills" :key="skill.name" :level="skill.level" :category="skill.category">

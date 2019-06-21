@@ -27,11 +27,13 @@ module.exports = {
     // As a special case, the default locale can use '/' as its path.
     '/': {
       lang: 'de-DE', // this will be set as the lang attribute on <html>
-      description: 'Vue-powered Static Site Generator'
+      description: 'Portfolio | Daniel Eissing',
+      i18n: require('./i18n/de-DE.json'),
     },
     '/en/': {
       lang: 'en-EN',
-      description: 'Vue 驱动的静态网站生成器'
+      description: 'Portfolio | Daniel Eissing',
+      i18n: require('./i18n/en-EN.json'),
     }
   },
   plugins: [

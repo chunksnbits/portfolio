@@ -6,7 +6,10 @@ profileImage: https://avatars1.githubusercontent.com/u/1517125?s=460&v=4
 contact:
   - label: München
     icon: location
-    url:
+    url: https://www.google.com/maps/place/Munich/@48.1550547,11.401752,11z
+  - label: Email schreiben
+    icon: email
+    url: mailto:github.daniel.eissing@gmail.com
   - label: github.com/chunksnbits
     icon: github
     url: https://github.com/chunksnbits
@@ -96,7 +99,7 @@ Freiberufler seit 2018.
 
 Fokusbereiche:
 - Frontend-Architekturen und -Frameworks
-- User Centric Design
+- User Centric Application Design
 - Getting Things Done
 
 **Geboren:** 14.10.1983, Fulda, Deutschland<br />

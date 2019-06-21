@@ -16,7 +16,7 @@
       </v-toolbar>
       <table-of-contents class="root__page-table-of-contents">
         <h2>
-          Table of Contents
+          {{ $localeConfig.i18n['ROOT__LABEL--TABLE_OF_CONTENTS'] }}
         </h2>
 
         <Content slot-key="table-of-contents" />
@@ -39,13 +39,13 @@
           <v-btn flat small to="/"
             class="root__application-bar-btn root__application-bar-btn--small root__language-select-action"
             active-class="root__language-select-action--active">
-            DE
+            {{ $localeConfig.i18n['ROOT__LABEL--LANGUAGE_SELECT_DE'] }}
           </v-btn>
           |
           <v-btn flat small to="/en"
             class="root__application-bar-btn root__application-bar-btn--small root__language-select-action"
             active-class="root__language-select-action--active">
-            EN
+            {{ $localeConfig.i18n['ROOT__LABEL--LANGUAGE_SELECT_EN'] }}
           </v-btn>
         </span>
 
@@ -68,11 +68,13 @@
       <v-card class="root__footer-main" flat tile>
         <v-card-title class="root__footer-title">
           <span class="root__footer-copyright">
-            &copy;{{ copyright.year }}
-            — <strong>{{ copyright.author }}</strong>
+            <span v-html="$localeConfig.i18n['ROOT_LABEL--FOOTER_COPYRIGHT']"></span>
+            {{ copyright.year }}
+            —
+            <strong>{{ copyright.author }}</strong>
           </span>
           <span class="root__footer-meta">
-            Version: {{ packageVersion }}
+            {{ $localeConfig.i18n['ROOT__LABEL--FOOTER_VERSION'] }}: {{ packageVersion }}
           </span>
         </v-card-title>
       </v-card>

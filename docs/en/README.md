@@ -6,7 +6,10 @@ profileImage: https://avatars1.githubusercontent.com/u/1517125?s=460&v=4
 contact:
   - label: Munich
     icon: location
-    url:
+    url: https://www.google.com/maps/place/Munich/@48.1550547,11.401752,11z
+  - label: Contact me
+    icon: email
+    url: mailto:github.daniel.eissing@gmail.com
   - label: github.com/chunksnbits
     icon: github
     url: https://github.com/chunksnbits
@@ -96,8 +99,8 @@ Freelances since 2018.
 
 Focus areas:
 - Frontend architectures and frameworks
-- User Centric Design
-- Getting Things Done
+- User centric application design
+- Getting things done
 
 **Birthdate:** 1983/10/14, Fulda, Germany<br />
 **Languages:** German (native), English (fluent)<br />
