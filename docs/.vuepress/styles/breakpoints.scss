@@ -1,6 +1,12 @@
 
 @import './variables.scss';
 
+@mixin breakpointCssVariables() {
+  @each $key, $value in $root__breakpoints {
+    --root__breakpoint--#{$key}: #{$value};
+  }
+}
+
 @function breakpoint-lower-bounds($breakpoint) {
   @return map-get($root__breakpoints, $breakpoint);
 }

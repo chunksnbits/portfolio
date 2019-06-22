@@ -36,6 +36,7 @@ export default {
 
   $outline__profile-image-size: rem-size(112px);
   $outline__profile-image-size--mobile: rem-size(192px);
+  $outline__profile-image-size--xs: 30vw;
 
   .outline {
     position: relative;
@@ -70,7 +71,7 @@ export default {
   .outline__profile-image {
     position: absolute;
     right: rem-size(10px);
-    top: rem-size(100px);
+    top: 0;
     width: $outline__profile-image-size--mobile;
     height: $outline__profile-image-size--mobile;
     border-radius: $outline__profile-image-size--mobile;
@@ -79,8 +80,8 @@ export default {
 
   .outline__profile-image img {
     object-fit: cover;
-    width: $outline__profile-image-size--mobile;
-    height: $outline__profile-image-size--mobile;
+    width: 100%;
+    height: 100%;
   }
 
   @mixin outline__layout--desktop {
@@ -105,6 +106,14 @@ export default {
 
   @include breakpoint-greater('sm') {
     @include outline__layout--desktop;
+  }
+
+  @include breakpoint-smaller-equals('xs') {
+
+    .outline__profile-image {
+      width: $outline__profile-image-size--xs;
+      height: $outline__profile-image-size--xs;
+    }
   }
 
   @media print {

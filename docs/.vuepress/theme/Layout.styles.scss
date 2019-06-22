@@ -2,6 +2,8 @@
   @import '../styles/styles.scss';
 
   :root {
+    @include breakpointCssVariables;
+
     --root__color--text: rgba(0, 0, 0, 0.85);
     --root__color--primary: #004B63;
     --root__color--border: #5A5A5A;
@@ -142,7 +144,7 @@
     z-index: $root__z-index__application-drawer-backdrop;
   }
 
-  .root__application-bar-drawer.root__application-bar-drawer {
+  .root__drawer-navigation-bar.root__drawer-navigation-bar {
     background: none;
   }
 
@@ -150,11 +152,15 @@
     background: white;
   }
 
-  .root__application-bar-drawer .v-toolbar__content,
+  .root__drawer-navigation-bar .v-toolbar__content,
   .root__application-bar .v-toolbar__content {
     justify-content: center;
     align-items: flex-end;
     padding: 0;
+  }
+
+  .root__drawer-content {
+    padding-top: rem-size(40px);
   }
 
   .root__application-bar {
@@ -222,13 +228,6 @@
     margin-bottom: rem-size(40px);
     padding-top: rem-size(50px);
   }
-
-  .root__language-select {
-    align-items: center;
-    height: 100%;
-    margin-right: rem-size(10px);
-  }
-
   .root__application-bar-btn {
     font-weight: 200;
     padding: rem-size(10px) rem-size(20px);
@@ -237,14 +236,6 @@
     min-width: 0;
     min-height: 0;
     line-height: 1;
-  }
-
-  .root__language-select-action--active {
-    font-weight: 900;
-  }
-
-  .root__language-select-action:not(:hover)::before {
-    background: none;
   }
 
   .table-of-contents {
@@ -293,6 +284,20 @@
 
   p, ul {
     margin-bottom: 0.5rem;
+  }
+
+  .root__language-select--navigation-drawer {
+    display: none;
+  }
+
+  @include breakpoint-smaller-equals('xs') {
+    .root__language-select--navigation-drawer {
+      display: block;
+    }
+
+    .root__language-select--application-bar {
+      display: none;
+    }
   }
 
   @include breakpoint-greater('sm') {
