@@ -1,8 +1,29 @@
 {
   "name": "@chunksnbits/portfolio",
   "version": "0.4.1",
-  "main": "index.js",
   "license": "MIT",
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "freelance portfolio",
+    "developer portfolio",
+    "portfolio",
+    "resume",
+    "javascript",
+    "vue",
+    "vuepress",
+    "Daniel Eissing",
+    "Munich",
+    "Hamburg",
+    "Berlin"
+  ],
+  "homepage": "https://chunksnbits.github.io/portfolio",
+  "author": {
+    "name": "Daniel Eissing",
+    "url": "https://github.com/chunksnbits",
+    "email": "github.daniel.eissing@gmail.com"
+  },
   "scripts": {
     "start": "vuepress dev docs",
     "build": "vuepress build docs",
