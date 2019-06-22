@@ -1,4 +1,3 @@
-
 function parseBreakpointsFromCssVariables() {
   const variables = getComputedStyle(document.documentElement);
 
@@ -23,32 +22,32 @@ function parseBreakpointsFromCssVariables() {
 const breakpoints = parseBreakpointsFromCssVariables();
 const breakpointKeys = Object.keys(breakpoints);
 
-function breakpointLowerBounds(breakpoint) {
+function getBreakpointLowerBounds(breakpoint) {
   return breakpoints[breakpoint];
 }
 
-function breakpointUpperBounds(breakpoint) {
+function getBreakpointUpperBounds(breakpoint) {
   const key = breakpointKeys[breakpointKeys.indexOf(breakpoint) + 1];
   return breakpoints[key];
 }
 
 export function isActiveBreakpoint(breakpoint) {
   const width = window.innerWidth;
-  return width >= breakpointLowerBounds(breakpoint) &&
-    width <= breakpointUpperBounds(breakpoint);
+  return width >= getBreakpointLowerBounds(breakpoint) &&
+    width <= getBreakpointUpperBounds(breakpoint);
 }
 
-export function breakpointGreater(breakpoint) {
-  return breakpointUpperBounds(breakpoint) < window.innerWidth;
+export function isBreakpointGreater(breakpoint) {
+  return getBreakpointUpperBounds(breakpoint) < window.innerWidth;
 }
-export function breakpointGreaterEquals(breakpoint) {
-  return breakpointUpperBounds(breakpoint) <= window.innerWidth;
-}
-
-export function breakpointSmaller(breakpoint) {
-  return breakpointLowerBounds(breakpoint) > window.innerWidth;
+export function isBreakpointGreaterEquals(breakpoint) {
+  return getBreakpointUpperBounds(breakpoint) <= window.innerWidth;
 }
 
-export function breakpointSmallerEquals(breakpoint) {
-  return breakpointLowerBounds(breakpoint) >= window.innerWidth;
+export function isBreakpointSmaller(breakpoint) {
+  return getBreakpointLowerBounds(breakpoint) > window.innerWidth;
+}
+
+export function isBreakpointSmallerEquals(breakpoint) {
+  return getBreakpointLowerBounds(breakpoint) >= window.innerWidth;
 }

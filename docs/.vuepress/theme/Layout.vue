@@ -87,9 +87,11 @@
 import { version as packageVersion } from '../../../package.json';
 import './Layout.styles.scss';
 
-import { breakpointGreaterEquals } from '../styles/brealkpoints';
-
 export default {
+  async mounted() {
+    this.$breakpoints = await import('../styles/breakpoints');
+    console.log('+++ this', this.$breakpoints);
+  },
   data() {
     return {
       tableOfContents: false,
@@ -125,7 +127,7 @@ export default {
       this.tableOfContents = value;
     },
     setActiveLanguageBreakpointAware(language) {
-      if (breakpointGreaterEquals('sm')) {
+      if (this.$breakpoints.isBreakpointGreaterEquals('sm')) {
         return this.setActiveLanguage(language);
       }
       this.tableOfContents = true;
