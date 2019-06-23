@@ -79,6 +79,12 @@ export default {
     background: none;
   }
 
-  @include breakpoint-greater('sm') {
+  @include breakpoint-greater-equals('md') {
+    .language-select--compact {
+      .language-select__separator,
+      .language-select__action {
+        display: block;
+      }
+    }
   }
 </style>

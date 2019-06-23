@@ -31,6 +31,13 @@ function getBreakpointUpperBounds(breakpoint) {
   return breakpoints[key];
 }
 
+export function getActiveBreakpoint() {
+  const width = window.innerWidth;
+  const [key] = Object.entries(breakpoints).find(([, value]) => width < value);
+
+  return key;
+}
+
 export function isActiveBreakpoint(breakpoint) {
   const width = window.innerWidth;
   return width >= getBreakpointLowerBounds(breakpoint) &&
@@ -38,16 +45,16 @@ export function isActiveBreakpoint(breakpoint) {
 }
 
 export function isBreakpointGreater(breakpoint) {
-  return getBreakpointUpperBounds(breakpoint) < window.innerWidth;
+  return window.innerWidth > getBreakpointLowerBounds(breakpoint);
 }
 export function isBreakpointGreaterEquals(breakpoint) {
-  return getBreakpointUpperBounds(breakpoint) <= window.innerWidth;
+  return window.innerWidth >= getBreakpointLowerBounds(breakpoint);
 }
 
 export function isBreakpointSmaller(breakpoint) {
-  return getBreakpointLowerBounds(breakpoint) > window.innerWidth;
+  return window.innerWidth < getBreakpointUpperBounds(breakpoint);
 }
 
 export function isBreakpointSmallerEquals(breakpoint) {
-  return getBreakpointLowerBounds(breakpoint) >= window.innerWidth;
+  return window.innerWidth <= getBreakpointUpperBounds(breakpoint);
 }

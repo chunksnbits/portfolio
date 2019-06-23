@@ -90,7 +90,6 @@ import './Layout.styles.scss';
 export default {
   async mounted() {
     this.$breakpoints = await import('../styles/breakpoints');
-    console.log('+++ this', this.$breakpoints);
   },
   data() {
     return {
@@ -127,7 +126,7 @@ export default {
       this.tableOfContents = value;
     },
     setActiveLanguageBreakpointAware(language) {
-      if (this.$breakpoints.isBreakpointGreaterEquals('sm')) {
+      if (this.$breakpoints.isBreakpointGreaterEquals('md')) {
         return this.setActiveLanguage(language);
       }
       this.tableOfContents = true;
