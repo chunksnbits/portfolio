@@ -36,14 +36,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import '../../styles/styles.scss';
 
   .language-select {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-right: rem-size(10px);
+    height: 100%;
   }
 
   .language-select--compact {
@@ -58,13 +58,7 @@ export default {
   }
 
   .language-select__action {
-    padding: rem-size(10px) rem-size(12px);
-    width: auto;
-    min-width: 0;
-    height: auto;
-    min-height: 0;
-    line-height: 1;
-    font-weight: 100;
+    @include root__navigation-bar--button;
   }
 
   .language-select__action--active {

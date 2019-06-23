@@ -1,0 +1,11 @@
+@mixin root__navigation-bar--button {
+  font-weight: 200;
+  margin: 0;
+  padding: rem-size(10px) rem-size(20px);
+  height: 100% !important;
+  width: auto;
+  min-width: rem-size(48px) !important;
+  min-width: 0;
+  min-height: 0;
+  line-height: 1;
+}

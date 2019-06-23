@@ -179,7 +179,8 @@
   }
 
   .root__application-bar-title {
-    padding: 0 rem-size(0px) rem-size(5px);
+    padding: 0 rem-size(0px) rem-size(8px);
+    margin-right: 20px;
   }
 
   .root__page-title {
@@ -223,13 +224,7 @@
     padding-top: rem-size(50px);
   }
   .root__application-bar-btn {
-    font-weight: 200;
-    padding: rem-size(10px) rem-size(20px);
-    height: auto;
-    width: auto;
-    min-width: 0;
-    min-height: 0;
-    line-height: 1;
+    @include root__navigation-bar--button;
   }
 
   .table-of-contents {

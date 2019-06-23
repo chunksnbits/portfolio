@@ -97,6 +97,20 @@ export default {
     }
 
     .period {
+      h5, h4, ul {
+        page-break-after: avoid;
+        page-break-before: avoid;
+        page-break-inside: avoid;
+      }
+
+      h4 {
+        page-break-before: auto;
+      }
+
+      ul {
+        page-break-after: auto;
+      }
+
       li {
         display: inline;
         line-height: rem-size(19px);
