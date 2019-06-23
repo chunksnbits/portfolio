@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/chunksnbits/portfolio/compare/v0.4.2...v0.4.3) (2019-06-23)
+
+
+### Bug Fixes
+
+* fixes issue with report container on path other than / ([3cce8f0](https://github.com/chunksnbits/portfolio/commit/3cce8f0))
+* fixes lyaout on small devices ([04673f7](https://github.com/chunksnbits/portfolio/commit/04673f7))
+
+
+
 ### [0.4.2](https://github.com/chunksnbits/portfolio/compare/v0.4.1...v0.4.2) (2019-06-22)
 
 
