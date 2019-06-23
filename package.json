@@ -29,8 +29,6 @@
     "build": "vuepress build docs",
     "lint": "echo '/** noop */'",
     "release": "standard-version",
-    "pdfs": "yarn export docs",
-    "predeploy": "yarn pdfs",
     "deploy": ".chore/deploy",
     "prepreview": "yarn build && mkdir -p .tmp && cp -rf docs/.vuepress/dist .tmp/portfolio && mv .tmp/portfolio docs/.vuepress/dist/portfolio",
     "preview": "yarn serve docs/.vuepress/dist"
