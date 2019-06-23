@@ -29,10 +29,13 @@
     "build": "vuepress build docs",
     "lint": "echo '/** noop */'",
     "release": "standard-version",
-    "deploy": ".chore/deploy"
+    "deploy": ".chore/deploy",
+    "prepreview": "yarn build && mkdir -p .tmp && cp -rf docs/.vuepress/dist .tmp/portfolio && mv .tmp/portfolio docs/.vuepress/dist/portfolio",
+    "preview": "yarn serve docs/.vuepress/dist"
   },
   "dependencies": {
     "markdown-it-link-attributes": "^2.1.0",
+    "serve": "^11.0.2",
     "vue-svg-inline-loader": "^1.2.15",
     "vue-svg-loader": "^0.12.0",
     "vuepress-plugin-container": "^2.0.1",
@@ -48,7 +51,7 @@
     "husky": "^2.4.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
-    "vuepress": "^1.0.1"
+    "vuepress": "^1.0.2"
   },
   "commitlint": {
     "extends": [

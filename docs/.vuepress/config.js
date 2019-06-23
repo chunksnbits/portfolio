@@ -50,15 +50,11 @@ module.exports = {
 
         const className = type ? `period--${ type }` : '';
 
-        return `
-          <period class="${ className }">
-            <template v-slot:timeframe>
-              <period-timeframe>
-                ${ timeframe }
-              </period-timeframe>
-            </template>
-          <div>
-        `;
+        return [
+          '<period><template v-slot:timeframe><period-timeframe>',
+          timeframe,
+          '</period-timeframe></template><div>'
+        ].join('\n');
       },
       after: '</div></period>',
     }],
