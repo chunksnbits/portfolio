@@ -1,5 +1,5 @@
 <template>
-  <div class="period">
+  <div class="period" v-if="initialized">
     <slot name="timeframe"></slot>
     <div class="period__content">
       <slot></slot>
@@ -10,6 +10,20 @@
 <script>
 export default {
   name: 'period',
+  // Fixes an issue for production build of unclear
+  // origin (@todo: recheck with upcoming vuepress updates).
+  //
+  // reference: https://github.com/nuxt/nuxt.js/issues/1552
+  mounted() {
+    setTimeout(() => {
+      this.initialized = true;
+    })
+  },
+  data() {
+    return {
+      initialized: false,
+    };
+  }
 };
 </script>
 

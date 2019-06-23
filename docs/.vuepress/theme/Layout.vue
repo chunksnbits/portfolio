@@ -69,7 +69,7 @@
       <v-card class="root__footer-main" flat tile>
         <v-card-title class="root__footer-title">
           <span class="root__footer-copyright">
-            <span v-html="$localeConfig.i18n['ROOT_LABEL--FOOTER_COPYRIGHT']"></span>
+            <span>&copy;</span>
             {{ copyright.year }}
             —
             <strong>{{ copyright.author }}</strong>

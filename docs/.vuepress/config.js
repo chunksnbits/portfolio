@@ -48,13 +48,11 @@ module.exports = {
         const timeframe = args[0].trim();
         const type = args[1] ? args[1].trim() : null;
 
-        const className = type ? `period--${ type }` : '';
-
         return [
           '<period><template v-slot:timeframe><period-timeframe>',
           timeframe,
           '</period-timeframe></template><div>'
-        ].join('\n');
+        ].join('');
       },
       after: '</div></period>',
     }],
