@@ -308,6 +308,10 @@
     margin-top: 1cm;
   }
 
+  html {
+    -webkit-print-color-adjust: exact;
+  }
+
   @media print {
     @include root-desktop-layout;
 

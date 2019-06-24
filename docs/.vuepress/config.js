@@ -40,6 +40,13 @@ module.exports = {
     ['@vuepress/register-components' , {
       components: registerComponents('components/**/*.vue'),
     }],
+    ['vuepress-plugin-export', [{
+      filter: (location) => !location.includes('/en/'),
+      dest: () => 'docs/public/docs/cv__daniel-eissing--de.pdf',
+    }, {
+      filter: (location) => location.includes('/en/'),
+      dest: (page) => 'docs/public/docs/cv__daniel-eissing--en.pdf',
+    }]],
     ['container', {
       type: 'period',
       before: (args) => {

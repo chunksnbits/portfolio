@@ -10,6 +10,7 @@ contact:
   - label: Email schreiben
     icon: email
     url: mailto:github.daniel.eissing@gmail.com
+    print: false
   - label: github.com/chunksnbits
     icon: github
     url: https://github.com/chunksnbits
@@ -53,7 +54,7 @@ skills:
   - name: Webpack | NPM Scripts
     level: 3
     category: tools
-  - name: CICD | Jenkins | Github | Gitlabs
+  - name: CICD | Jenkins | Github Hooks | Gitlabs
     level: 2
     category: tools
   - name: Living Styleguides | Patternplate | Storybook
@@ -71,7 +72,7 @@ skills:
   - name: AWS Serverless
     level: 1
     category: backend
-  - name: Datenbanken | GraphQL | SQL | DynamoDB
+  - name: Datenbanken | GraphQL | DynamoDB | SQL
     level: 1
     category: backend
   - name: Scrum

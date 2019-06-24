@@ -67,13 +67,13 @@ export default {
   }
 
   .skill__contents {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    display: flex;
+
   }
 
   .skill__category {
-    display: inline-block;
+    display: inline-flex;
+    flex: 0 0 auto;
     width: var(--skill__category--size);
     height: var(--skill__category--size);
     border: 2px solid var(--root__color--border);

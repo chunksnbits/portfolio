@@ -1,5 +1,5 @@
 <template>
-  <li class="contact-option">
+  <li class="contact-option" :class="{ 'contact-option--no-print': contact.print === false }">
     <icon class="contact-option__icon" color="rgba(0,0,0,1.0)" :name="contact.icon"></icon>
     <a :href="contact.url" target="_blank" class="contact-option__link">{{ contact.label }}</a>
   </li>
@@ -10,6 +10,9 @@
 export default {
   name: 'contact-option',
   props: ['contact'],
+  mounted() {
+    console.log('+++ contact', this.contact);
+  }
 };
 </script>
 
@@ -37,6 +40,12 @@ export default {
     flex: 1 1 100%;
     color: var(--color-primary);
     text-decoration: none;
+  }
+
+  @media print {
+    .contact-option--no-print {
+      display: none;
+    }
   }
 </style>
 
