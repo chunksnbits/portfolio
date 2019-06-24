@@ -45,7 +45,7 @@ module.exports = {
       dest: () => 'docs/public/docs/cv__daniel-eissing--de.pdf',
     }, {
       filter: (location) => location.includes('/en/'),
-      dest: (page) => 'docs/public/docs/cv__daniel-eissing--en.pdf',
+      dest: () => 'docs/public/docs/cv__daniel-eissing--en.pdf',
     }]],
     ['container', {
       type: 'period',
