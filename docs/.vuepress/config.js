@@ -42,10 +42,10 @@ module.exports = {
     }],
     ['vuepress-plugin-export', [{
       filter: (location) => !location.includes('/en/'),
-      dest: () => 'docs/public/docs/cv__daniel-eissing--de.pdf',
+      dest: () => 'docs/.vuepress/public/docs/cv__daniel-eissing--de.pdf',
     }, {
       filter: (location) => location.includes('/en/'),
-      dest: () => 'docs/public/docs/cv__daniel-eissing--en.pdf',
+      dest: () => 'docs/.vuepress/public/docs/cv__daniel-eissing--en.pdf',
     }]],
     ['container', {
       type: 'period',

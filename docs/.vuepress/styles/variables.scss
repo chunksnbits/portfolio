@@ -28,9 +28,10 @@ $root__breakpoints: (
 $root__breakpoint--keys: ('xs', 'sm', 'md', 'lg', 'xl');
 
 // ----------------------------------------------------------------------------- Z-Indices
-$root__z-index__application-bar: 1000;
-$root__z-index__application-drawer-backdrop: 1001;
-$root__z-index__application-drawer: 1002;
+$root__z-index__application-bar: 100;
+$root__z-index__application-drawer-backdrop: 101;
+$root__z-index__application-drawer: 102;
+$root__z-index__download-bar: 101;
 
 // ----------------------------------------------------------------------------- CSS only icons
 $root__icons--launch: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxOHB4IiBoZWlnaHQ9IjE4cHgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4gICAgICAgIDx0aXRsZT5TaGFwZTwvdGl0bGU+ICAgIDxkZXNjPkNyZWF0ZWQgd2l0aCBTa2V0Y2guPC9kZXNjPiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4gICAgICAgIDxnIGlkPSJBcnRib2FyZCIgZmlsbD0iIzAwNjE4RSIgZmlsbC1ydWxlPSJub256ZXJvIj4gICAgICAgICAgICA8cGF0aCBkPSJNMTYsMTYgTDIsMTYgTDIsMiBMOSwyIEw5LDAgTDIsMCBDMC44OSwwIDAsMC45IDAsMiBMMCwxNiBDMCwxNy4xIDAuODksMTggMiwxOCBMMTYsMTggQzE3LjEsMTggMTgsMTcuMSAxOCwxNiBMMTgsOSBMMTYsOSBMMTYsMTYgWiBNMTEsMCBMMTEsMiBMMTQuNTksMiBMNC43NiwxMS44MyBMNi4xNywxMy4yNCBMMTYsMy40MSBMMTYsNyBMMTgsNyBMMTgsMCBMMTEsMCBaIiBpZD0iU2hhcGUiPjwvcGF0aD4gICAgICAgIDwvZz4gICAgPC9nPjwvc3ZnPg==);

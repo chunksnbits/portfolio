@@ -17,6 +17,13 @@ contact:
   - label: linkedin.com/in/daniel-eißing
     icon: linkedin
     url: https://linkedin.com/in/daniel-eißing-5a24805b
+downloads:
+  - label: Download PDF (deutsch)
+    url: /docs/cv__daniel-eissing--de.pdf
+    icon: 'de'
+  - label: Download PDF (english)
+    url: /docs/cv__daniel-eissing--en.pdf
+    icon: 'en'
 skills:
   - name: Typescript
     level: 3
