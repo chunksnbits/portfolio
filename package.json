@@ -1,6 +1,6 @@
 {
   "name": "@chunksnbits/portfolio",
-  "version": "0.4.7",
+  "version": "0.5.0",
   "license": "MIT",
   "categories": [
     "Other"
@@ -28,9 +28,9 @@
     "start": "vuepress dev docs",
     "build": "vuepress build docs",
     "lint": "echo '/** noop */'",
-    "release": "standard-version",
+    "prerelease": "yarn export",
+    "release": "standard-version --commit-all",
     "export": "vuepress export docs",
-    "predeploy": "yarn export",
     "deploy": ".chore/deploy",
     "prepreview": "yarn build && mkdir -p .tmp && cp -rf docs/.vuepress/dist .tmp/portfolio && mv .tmp/portfolio docs/.vuepress/dist/portfolio",
     "preview": "yarn serve docs/.vuepress/dist"
