@@ -65,6 +65,17 @@
         </aside>
       </div>
     </div>
+    <actions class="root__actions">
+      <action @click="openDownloadBar()">
+        <icon name="download"></icon>
+      </action>
+    </actions>
+    <download-bar
+      :active="downloads"
+      :downloads="$page.frontmatter.downloads"
+      @close="downloads = false"
+      class="root__download-bar">
+    </download-bar>
     <v-footer app light absolute height="auto" class="root__footer">
       <v-card class="root__footer-main" flat tile>
         <v-card-title class="root__footer-title">
@@ -107,7 +118,8 @@ export default {
         label: 'DE',
         locale: 'de-DE',
         path: '/',
-      }]
+      }],
+      downloads: false,
     };
   },
   computed: {
@@ -122,6 +134,9 @@ export default {
     }
   },
   methods: {
+    openDownloadBar() {
+      this.downloads = true;
+    },
     setTableOfContents(value) {
       this.tableOfContents = value;
     },

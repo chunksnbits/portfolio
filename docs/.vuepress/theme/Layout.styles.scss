@@ -322,8 +322,11 @@
       height: auto;
     }
 
-    .root__footer {
-      display: none;
+    .root__footer,
+    .root__download-bar,
+    .root__actions,
+    .root__application-bar {
+      display: none !important;
     }
 
     html,
@@ -341,10 +344,6 @@
       max-width: calc(100vw - #{$root__sidebar-width--print + 0.75 * $root__main-max-space});
       padding-top: rem-size(54px);
       padding-bottom: 0;
-    }
-
-    .root__application-bar {
-      display: none !important;
     }
 
     a,
