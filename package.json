@@ -28,7 +28,7 @@
     "start": "vuepress dev docs",
     "build": "vuepress build docs",
     "lint": "echo '/** noop */'",
-    "prerelease": "yarn export",
+    "prerelease": "yarn export && git add .",
     "release": "standard-version --commit-all",
     "export": "vuepress export docs",
     "deploy": ".chore/deploy",
