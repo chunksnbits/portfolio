@@ -102,13 +102,9 @@ skills:
 
 ::: section
 ## Steckbrief
-Senior Frontend Architekt, mit 5+ Jahre Berufserfahrung in Festanstellung, v.a. im Agenturumfeld.
+Senior Web Application Developer, mit mehr als 5 Jahren Erfahrung in der Internetindustrie.
+Fokususiert auf die Entwicklung moderner, benutzerfreundlicher Web applikationen unter Verwendung aktuellster Technologien.
 Freiberufler seit 2018.
-
-Fokusbereiche:
-- Frontend-Architekturen und -Frameworks
-- User Centric Application Design
-- Getting Things Done
 
 **Geboren:** 14.10.1983, Fulda, Deutschland<br />
 **Sprachen:** Deutsch (Muttersprache), Englisch (verhandlungssicher)<br />

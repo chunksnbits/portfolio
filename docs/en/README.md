@@ -102,13 +102,10 @@ skills:
 
 ::: section
 ## Brief
-Senior frontend architect with 5+ years of experience in working frontend projects, most of that in an agency setting.
-Freelances since 2018.
-
-Focus areas:
-- Frontend architectures and frameworks
-- User centric application design
-- Getting things done
+Senior Web Application Developer, with a demonstrated history of working in the internet industry.
+Skilled in developing modern, user friendly web applications.
+5+ year of experience.
+Freelancer since 2018.
 
 **Birthdate:** 1983/10/14, Fulda, Germany<br />
 **Languages:** German (native), English (fluent)<br />
