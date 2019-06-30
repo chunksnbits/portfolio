@@ -1,7 +1,7 @@
 const glob = require('glob');
 const path = require('path');
 
-function registerComponents(pattern) {
+function registerComponents() {
 
   const filepaths = glob.sync(path.join(__dirname, 'components/**/*.vue'));
 
@@ -20,6 +20,11 @@ module.exports = {
     ['link', {
       rel: 'stylesheet',
       href: 'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap'
+    }],
+    ['link', {
+      rel: 'shortcut icon',
+      href: 'favicon.ico',
+      type: 'image/x-icon'
     }],
   ],
   locales: {
