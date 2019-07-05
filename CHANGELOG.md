@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.2](https://github.com/chunksnbits/portfolio/compare/v0.6.1...v0.6.2) (2019-06-30)
+
+
+### Bug Fixes
+
+* fixes path for favicon ([62b3107](https://github.com/chunksnbits/portfolio/commit/62b3107))
+
+
+
 ### [0.6.1](https://github.com/chunksnbits/portfolio/compare/v0.6.0...v0.6.1) (2019-06-30)
 
 
