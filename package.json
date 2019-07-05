@@ -31,6 +31,7 @@
     "prerelease": "yarn export && git add .",
     "release": "standard-version --commit-all",
     "export": "vuepress export docs",
+    "docx": "vuepress docx docs",
     "deploy": ".chore/deploy",
     "prepreview": "yarn build && mkdir -p .tmp && cp -rf docs/.vuepress/dist .tmp/portfolio && mv .tmp/portfolio docs/.vuepress/dist/portfolio",
     "preview": "yarn serve docs/.vuepress/dist"
@@ -41,6 +42,7 @@
     "vue-svg-inline-loader": "^1.2.15",
     "vue-svg-loader": "^0.12.0",
     "vuepress-plugin-container": "^2.0.1",
+    "vuepress-plugin-docx": "../vuepress-plugin-docx/",
     "vuetify": "^1.5.14"
   },
   "devDependencies": {
