@@ -19,10 +19,16 @@ contact:
     url: https://linkedin.com/in/daniel-eißing-5a24805b
 downloads:
   - label: Download PDF (english)
-    url: /docs/cv__daniel-eissing--en.pdf
+    url: /portfolio/docs/cv__daniel-eissing--en.pdf
     avatar: 'en'
   - label: Download PDF (german)
-    url: /docs/cv__daniel-eissing--de.pdf
+    url: /portfolio/docs/cv__daniel-eissing--de.pdf
+    avatar: 'de'
+  - label: Download docx (english)
+    url: /portfolio/docs/cv__daniel-eissing--en.docx
+    avatar: 'de'
+  - label: Download docx (german)
+    url: /portfolio/docs/cv__daniel-eissing--de.docx
     avatar: 'de'
 skills:
   - name: Typescript
@@ -135,7 +141,7 @@ Freelancer since 2018.
 
 ::: spacer
 
-- task + sprint planing
+- task + sprint planning
 - coordination with business and technical stakeholders
 - coordination of architectural decision with architecture board
 - consultant for UX + design topics
@@ -256,4 +262,23 @@ Young Talent Award 2011 Knowledge Management Working Group Karlsruhe.
 [Scherp, Eißing, Saathoff - A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology - Aufsatz - Int. J. Semantic Computing 2012](./docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf)
 
 [Scherp, Eißing, Staab - strukt - A Pattern System for Integrating Individual and Organizational Knowledge Work. - Konferenzbeitrag - The Semantic Web - ISWC 2011](./docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf)
+:::
+
+## Personal projects (excerpt)
+::: period 2019 : timer
+### -tim-er-
+MVP with goal of evaluating current technical topics, e.g.: React hooks, Redux Saga, CICD Integration in github - focused on early runnable version - status: alpha
+
+[Demo](https://chunksnbits.github.io/timer/)
+
+[Repository](https://github.com/chunksnbits/timer)
+:::
+
+::: period 2018 : technology_radar
+### Technologie Radar
+Proof of Concept with goal of evaluating technical topics, e.g.: d3js integration in React, React Contexts, Rendering Web Components with React - status: proof of concept (no further development planned)
+
+[Demo](https://chunksnbits.github.io/technology-radar/)
+
+[Repository](https://github.com/chunksnbits/technology-radar)
 :::
