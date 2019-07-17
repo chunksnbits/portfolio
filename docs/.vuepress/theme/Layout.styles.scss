@@ -334,6 +334,18 @@
       font-size: $root__base-size--print;
     }
 
+    .page-break {
+      page-break-after: $root__base-page-break--default;
+    }
+
+    .page-break--auto {
+      page-break-after: auto;
+    }
+
+    .page-break--always {
+      page-break-after: always;
+    }
+
     .root__page-sidebar {
       flex-basis: $root__sidebar-width--print;
       max-width: $root__sidebar-width--print;

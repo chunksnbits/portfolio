@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/chunksnbits/portfolio/compare/v0.6.2...v0.7.0) (2019-07-17)
+
+
+### Features
+
+* extends exported docs ([6711af0](https://github.com/chunksnbits/portfolio/commit/6711af0))
+
+
+
 ### [0.6.2](https://github.com/chunksnbits/portfolio/compare/v0.6.1...v0.6.2) (2019-06-30)
 
 

@@ -233,6 +233,7 @@ Freiberufler seit 2018.
 Umsetzung von Produktfeatures einer Reporting Anwendung mit Java (Wicket) und JavaScript - Redesign und Erweiterung eines E2E Test Frameworks auf Basis von Ruby und Selenium - Umsetzung von Produktfeatures, Unit und Integrationstests in C++
 :::
 
+::: pagebreak : auto
 ## Ausbildung
 ::: period 2013 : education
 ### **Universiät Koblenz/Landau** Studiengang Computervisualistik
@@ -252,6 +253,7 @@ Young Talent Award 2011 der Knowledge Management Working Group Karlsruhe.
 [Scherp, Eißing, Staab - strukt - A Pattern System for Integrating Individual and Organizational Knowledge Work. - Konferenzbeitrag - The Semantic Web - ISWC 2011](./docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf)
 :::
 
+::: pagebreak : auto
 ## Persöhnliche Projekte (Auszug)
 ::: period 2019 : timer
 ### -tim-er-

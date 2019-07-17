@@ -53,6 +53,17 @@ module.exports = {
       dest: () => 'docs/.vuepress/public/docs/cv__daniel-eissing--en.pdf',
     }]],
     ['container', {
+      type: 'pagebreak',
+      before: (args) => {
+        const [modifier] = args && args.split(':');
+
+        return modifier ?
+          `<div class="page-break page-break--${value}"></div>` :
+          `<div class="page-break"></div>`;
+      },
+      after: '',
+    }],
+    ['container', {
       type: 'period',
       before: (args) => {
         args = args.split(':');

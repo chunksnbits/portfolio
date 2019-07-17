@@ -10,9 +10,6 @@
 export default {
   name: 'contact-option',
   props: ['contact'],
-  mounted() {
-    console.log('+++ contact', this.contact);
-  }
 };
 </script>
 

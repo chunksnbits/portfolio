@@ -245,6 +245,7 @@ Freelancer since 2018.
 - unit and integration testing in C++
 :::
 
+::: pagebreak : auto
 ## Education
 ::: period 2013 : education
 ### **University of Koblenz/Landau** Studies of Computervisualistik
@@ -257,13 +258,14 @@ Diplom Informatik
 Young Talent Award 2011 Knowledge Management Working Group Karlsruhe.
 
 ##### Publications (excerpt)
-[Scherp, Eißing, Staab - Analysis and comparison of models for individual and organisational knowledge work - Aufsatz - Tagungsband der MKWI 2012](./docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf)
+[Scherp, Eißing, Staab - Analysis and comparison of modelbreas for individual and organisational knowledge work - Aufsatz - Tagungsband der MKWI 2012](./docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf)
 
 [Scherp, Eißing, Saathoff - A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology - Aufsatz - Int. J. Semantic Computing 2012](./docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf)
 
 [Scherp, Eißing, Staab - strukt - A Pattern System for Integrating Individual and Organizational Knowledge Work. - Konferenzbeitrag - The Semantic Web - ISWC 2011](./docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf)
 :::
 
+::: pagebreak
 ## Personal projects (excerpt)
 ::: period 2019 : timer
 ### -tim-er-

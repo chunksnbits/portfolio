@@ -14,7 +14,7 @@ $root__page-max-width:
   $root__main-max-space;
 
 $root__section--margin-bottom: 36px / $root__base-size * 1rem;
-
+$root__base-page-break--default: always;
 // ----------------------------------------------------------------------------- Breakpoints
 $root__breakpoints: (
   xs: 0px,
