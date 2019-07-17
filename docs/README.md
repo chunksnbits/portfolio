@@ -18,12 +18,18 @@ contact:
     icon: linkedin
     url: https://linkedin.com/in/daniel-eißing-5a24805b
 downloads:
-  - label: Download PDF (deutsch)
-    url: /docs/cv__daniel-eissing--de.pdf
-    icon: 'de'
   - label: Download PDF (english)
-    url: /docs/cv__daniel-eissing--en.pdf
-    icon: 'en'
+    url: /portfolio/docs/cv__daniel-eissing--en.pdf
+    avatar: 'en'
+  - label: Download PDF (german)
+    url: /portfolio/docs/cv__daniel-eissing--de.pdf
+    avatar: 'de'
+  - label: Download docx (english)
+    url: /portfolio/docs/cv__daniel-eissing--en.docx
+    avatar: 'de'
+  - label: Download docx (german)
+    url: /portfolio/docs/cv__daniel-eissing--de.docx
+    avatar: 'de'
 skills:
   - name: Typescript
     level: 3
@@ -244,4 +250,23 @@ Young Talent Award 2011 der Knowledge Management Working Group Karlsruhe.
 [Scherp, Eißing, Saathoff - A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology - Aufsatz - Int. J. Semantic Computing 2012](./docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf)
 
 [Scherp, Eißing, Staab - strukt - A Pattern System for Integrating Individual and Organizational Knowledge Work. - Konferenzbeitrag - The Semantic Web - ISWC 2011](./docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf)
+:::
+
+## Persöhnliche Projekte (Auszug)
+::: period 2019 : timer
+### -tim-er-
+MVP zur Evaluierung technischer Themen:: im Speziellen React hooks, Redux Saga, CICD Integration in github - Fokus auf früher lauffähiger Version - Status: alpha
+
+[Demo](https://chunksnbits.github.io/timer/)
+
+[Repository](https://github.com/chunksnbits/timer)
+:::
+
+::: period 2018 : technology_radar
+### Technologie Radar
+Proof of Concept zur Evaluierung technischer Themen: im Speziellen d3js Integration in React, React Contexts, Web Components als React Renderer - Status: Proof of Concept (abgeschlossen, bis auf weiteres)
+
+[Demo](https://chunksnbits.github.io/technology-radar/)
+
+[Repository](https://github.com/chunksnbits/technology-radar)
 :::
