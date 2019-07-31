@@ -28,13 +28,13 @@
     "start": "vuepress dev docs",
     "build": "vuepress build docs",
     "lint": "echo '/** noop */'",
-    "prerelease": "yarn export && git add .",
+    "prerelease": "npm run export && git add .",
     "release": "standard-version --commit-all",
     "export": "vuepress export docs",
     "docx": "vuepress docx docs",
     "deploy": ".chore/deploy",
-    "prepreview": "yarn build && mkdir -p .tmp && cp -rf docs/.vuepress/dist .tmp/portfolio && mv .tmp/portfolio docs/.vuepress/dist/portfolio",
-    "preview": "yarn serve docs/.vuepress/dist"
+    "prepreview": "npm run build && mkdir -p .tmp && cp -rf docs/.vuepress/dist .tmp/portfolio && mv .tmp/portfolio docs/.vuepress/dist/portfolio",
+    "preview": "serve docs/.vuepress/dist"
   },
   "dependencies": {
     "markdown-it-link-attributes": "^2.1.0",
@@ -81,8 +81,8 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "yarn commitlint -e $GIT_PARAMS",
-      "pre-push": "yarn lint"
+      "commit-msg": "commitlint -e $GIT_PARAMS",
+      "pre-push": "echo '/** noop */'"
     }
   }
 }
