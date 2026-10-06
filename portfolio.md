@@ -42,6 +42,8 @@ I started in interface design and computer graphics. Today I also build the APIs
 ### AURA Smart Analyzer {#aura}
 2025 – today · ZEISS Spectroscopy · Lead developer
 
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
+
 1. **AURA handheld NIR**: measures the sample
 2. **Expo app**: Bluetooth link, predictions on the phone, fully offline
 3. **Cloud platform**: calibrations, sign-in and over-the-air updates
@@ -52,6 +54,8 @@ Companion app for ZEISS's handheld near-infrared spectrometer, written almost en
 
 ### MyZEISS {#myzeiss}
 2023 – 2025 · ZEISS Vision Care · ZEISS Meditec · Lead developer
+
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
 
 ![MyZEISS Vision dashboard on a desktop](site/assets/img/myzeiss-vision-desktop.webp)
 ![MyZEISS Vision on an iPhone](site/assets/img/myzeiss-vision-phone.webp "phone")
@@ -66,6 +70,8 @@ For ZEISS Meditec I moved the Device Training API from Brandmaker to Veeva Vault
 ### ADAC Motorsport {#adac}
 2021 – 2025 · adac-motorsport.de · Lead developer
 
+![](site/assets/img/adac-keyvisual.webp "keyvisual")
+
 ![Pages of the German Rally Championship on adac-motorsport.de](site/assets/img/adac-drm.webp)
 
 The home of ADAC's racing series, from the DTM to the German Rally Championship: Gatsby and React on Contentful, with serverless tools on AWS for content migrations. When Gatsby Cloud shut down and Netlify quoted $2,700–5,700 a month, I moved the builds to GitHub Actions with build servers on DigitalOcean that a workflow sets up: $140 a month, 10% faster and 40% cheaper than before, without downtime.
@@ -75,6 +81,8 @@ The home of ADAC's racing series, from the DTM to the German Rally Championship:
 ### FC Bayern München {#fcbayern}
 2019 – 2022 · fcbayern.com · Lead developer
 
+![](site/assets/img/fcbayern-keyvisual.webp "keyvisual")
+
 ![Match centre, statistics and news of fcbayern.com on phones](site/assets/img/fcbayern-mobile.webp "plain")
 
 Relaunch of fcbayern.com on a headless CMS with a Satellytes team of six. I set up the first prototype of the frontend monorepo in July 2019 and built on it for almost three years. The site has about 100,000 statically generated pages with incremental updates, live tickers and real-time results, light and dark themes, WCAG 2.0 and more than 2,000 unit tests. In August 2021 I built most of the online condolence book for Gerd Müller in three days.
@@ -83,6 +91,8 @@ Relaunch of fcbayern.com on a headless CMS with a Satellytes team of six. I set 
 
 ### MediaMarktSaturn {#mediamarktsaturn}
 2022 – 2023 · webmobile team · Developer
+
+![](site/assets/img/mms-keyvisual.webp "keyvisual")
 
 ![A MediaMarkt campaign page](site/assets/img/mms-campaign.webp "Campaign pages on the webmobile platform")
 

@@ -23,6 +23,12 @@ const IMAGES = [
   // The FC Bayern and MediaMarkt originals are small thumbnails, so they keep their size.
   { source: 'image 7.png', name: 'fcbayern-mobile', density: 1 },
   { source: 'image 14.png', name: 'mms-campaign', density: 1 },
+  // Keyvisuals cover the whole window behind a project, so they show larger than their size.
+  // Bigger originals would look sharper.
+  { source: 'zeiss_keyvisual.png', name: 'zeiss-keyvisual', density: 1 },
+  { source: 'adac_keyvisual.webp', name: 'adac-keyvisual', density: 1 },
+  { source: 'fcb_keyvisual.png', name: 'fcbayern-keyvisual', density: 1 },
+  { source: 'mms_keyvisual.jpg', name: 'mms-keyvisual', density: 1 },
 ];
 
 const WEBP_QUALITY = '82';

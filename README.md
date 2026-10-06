@@ -81,6 +81,7 @@ The files use plain Markdown with a few position rules. Anything outside them fa
   - none: browser frame
   - `"phone"`: phone frame, overlapping a browser frame before it
   - `"plain"`: no frame
+  - `"keyvisual"`: no frame. In a project, the image fills the window behind its screen, see [Keyvisuals](#how-it-works). Projects of one customer can share it.
   - any other text: browser frame with that caption
 - A numbered list in a project becomes a flow diagram. `1. **Device**: measures the sample` gives each step a title.
 - `<!-- comments -->` never reach the page.
@@ -101,13 +102,14 @@ scripts/
     render.mjs                  ← HTML, plus the interface words in both languages
 site/                           ← copied into dist/ as is
   assets/styles.css             ← screen, both themes and the printed CV
-  assets/main.js                ← theme switch, spotlight, nav, slide-in
+  assets/main.js                ← theme switch, spotlight, nav, slide-in, keyvisuals
   docs/                         ← papers, at the paths the 2019 site used
 test/                           ← node --test
 ```
 
 - **Screens.** Every section is at least one window tall. Content must fit 1440×760: a 13" MacBook Air at its default resolution, minus the menu bar, Chrome's toolbars and the Dock.
 - **Slide-in.** Project panels slide in from the right edge as you scroll, tied to the scroll position. Once a panel has arrived, it stays in place when you scroll back up. Browsers with CSS scroll-driven animations run it in CSS, others in `main.js`. With "reduce motion" the panels stay in place.
+- **Keyvisuals.** When a project screen reaches the middle of the window, its customer's photo fades in behind the page, from blurred to sharp. It spans the full width but stays within the projects, so it never sits behind other sections. Behind the rail it is dimmed until the rail's text and buttons keep their contrast over any photo. With "reduce motion" it fades without blur or zoom.
 - **Hover.** Tiles rise one step under the mouse: a lighter surface and edge in the dark theme, a soft shadow in the light theme. They don't move, since they aren't links.
 - **Spotlight.** A soft glow follows the mouse, modeled on [brittanychiang.com](https://brittanychiang.com/). Touch screens don't show it.
 - **Themes.** The page follows the system theme until the visitor picks one with the switch. Text reaches 4.5:1 against its background, large text and the outlines of buttons 3:1.

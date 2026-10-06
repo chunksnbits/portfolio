@@ -28,5 +28,29 @@
     "height": 999,
     "density": 1,
     "avif": "assets/img/mms-campaign.avif"
+  },
+  "assets/img/zeiss-keyvisual.webp": {
+    "width": 720,
+    "height": 405,
+    "density": 1,
+    "avif": "assets/img/zeiss-keyvisual.avif"
+  },
+  "assets/img/adac-keyvisual.webp": {
+    "width": 1500,
+    "height": 750,
+    "density": 1,
+    "avif": "assets/img/adac-keyvisual.avif"
+  },
+  "assets/img/fcbayern-keyvisual.webp": {
+    "width": 720,
+    "height": 405,
+    "density": 1,
+    "avif": "assets/img/fcbayern-keyvisual.avif"
+  },
+  "assets/img/mms-keyvisual.webp": {
+    "width": 1024,
+    "height": 768,
+    "density": 1,
+    "avif": "assets/img/mms-keyvisual.avif"
   }
 }

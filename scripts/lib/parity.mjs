@@ -2,7 +2,8 @@ import { inlineLinks } from './markdown.mjs';
 
 // Contact details that must read the same in every language.
 const SHARED_KEYS = ['email', 'github', 'linkedin'];
-const FRAMES = ['phone', 'plain'];
+// Image titles that change how an image is shown. Any other title is a caption.
+const IMAGE_KINDS = ['phone', 'plain', 'keyvisual'];
 
 /**
  * Lists the structural differences between two language versions of the portfolio.
@@ -71,7 +72,7 @@ function compareBlocks(left, right, report) {
 
 function kind(block) {
   if (block.type === 'image') {
-    return `image (${FRAMES.includes(block.title) ? block.title : block.title ? 'browser, captioned' : 'browser'})`;
+    return `image (${IMAGE_KINDS.includes(block.title) ? block.title : block.title ? 'browser, captioned' : 'browser'})`;
   }
   if (block.type === 'list') {
     return block.ordered ? 'numbered list' : 'list';

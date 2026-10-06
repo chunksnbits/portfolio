@@ -15,6 +15,15 @@ test('accepts a translation that keeps the structure', () => {
   assert.deepEqual(compareStructure(load(), load({ lang: 'de', body: german })), []);
 });
 
+test('names a keyvisual when the block kinds differ', () => {
+  const english = DEFAULT_BODY.replace('2023 – 2025 · ZEISS\n', '2023 – 2025 · ZEISS\n\n![](site/assets/img/lens.webp "keyvisual")\n');
+  const german = english.replace('"keyvisual"', '"phone"');
+
+  const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
+
+  assert.match(differences.join('\n'), /image \(keyvisual\).*image \(phone\)/);
+});
+
 test('reports every structural difference with both line numbers', () => {
   const german = DEFAULT_BODY.replace('desktop.webp', 'other.webp')
     .replace('site/docs/paper.pdf', 'site/docs/other.pdf')

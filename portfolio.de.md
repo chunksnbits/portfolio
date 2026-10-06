@@ -42,6 +42,8 @@ Angefangen habe ich mit Interface-Design und Computergrafik. Heute baue ich auch
 ### AURA Smart Analyzer {#aura}
 2025 – heute · ZEISS Spectroscopy · Lead Developer
 
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
+
 1. **AURA Handheld-NIR**: misst die Probe
 2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Smartphone, komplett offline
 3. **Cloud-Plattform**: Kalibrierungen, Anmeldung und Over-the-Air-Updates
@@ -52,6 +54,8 @@ Begleit-App für das tragbare Nahinfrarot-Spektrometer von ZEISS, fast vollstän
 
 ### MyZEISS {#myzeiss}
 2023 – 2025 · ZEISS Vision Care · ZEISS Meditec · Lead Developer
+
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
 
 ![MyZEISS Vision Dashboard am Desktop](site/assets/img/myzeiss-vision-desktop.webp)
 ![MyZEISS Vision auf dem iPhone](site/assets/img/myzeiss-vision-phone.webp "phone")
@@ -66,6 +70,8 @@ Für ZEISS Meditec habe ich die Device Training API von Brandmaker auf Veeva Vau
 ### ADAC Motorsport {#adac}
 2021 – 2025 · adac-motorsport.de · Lead Developer
 
+![](site/assets/img/adac-keyvisual.webp "keyvisual")
+
 ![Seiten der Deutschen Rallye-Meisterschaft auf adac-motorsport.de](site/assets/img/adac-drm.webp)
 
 Das Zuhause der ADAC-Rennserien, von der DTM bis zur Deutschen Rallye-Meisterschaft: Gatsby und React auf Contentful, mit Serverless-Tools auf AWS für Content-Migrationen. Als Gatsby Cloud eingestellt wurde und Netlify 2.700–5.700 $ im Monat anbot, habe ich die Builds auf GitHub Actions umgezogen, mit Build-Servern auf DigitalOcean, die ein Workflow selbst aufsetzt: 140 $ im Monat, 10 % schneller und 40 % günstiger als zuvor, ohne Ausfall.
@@ -75,6 +81,8 @@ Das Zuhause der ADAC-Rennserien, von der DTM bis zur Deutschen Rallye-Meistersch
 ### FC Bayern München {#fcbayern}
 2019 – 2022 · fcbayern.com · Lead Developer
 
+![](site/assets/img/fcbayern-keyvisual.webp "keyvisual")
+
 ![Matchcenter, Statistiken und News von fcbayern.com auf Smartphones](site/assets/img/fcbayern-mobile.webp "plain")
 
 Relaunch von fcbayern.com auf einem Headless CMS mit einem Satellytes-Team von sechs Leuten. Ich habe im Juli 2019 den ersten Prototyp des Frontend-Monorepos aufgesetzt und fast drei Jahre darauf aufgebaut. Die Website umfasst rund 100.000 statisch generierte Seiten mit inkrementellen Updates, Liveticker und Echtzeit-Ergebnisse, helles und dunkles Theme, WCAG 2.0 und über 2.000 Unit-Tests. Im August 2021 habe ich in drei Tagen den Großteil des Online-Kondolenzbuchs für Gerd Müller gebaut.
@@ -83,6 +91,8 @@ Relaunch von fcbayern.com auf einem Headless CMS mit einem Satellytes-Team von s
 
 ### MediaMarktSaturn {#mediamarktsaturn}
 2022 – 2023 · webmobile-Team · Developer
+
+![](site/assets/img/mms-keyvisual.webp "keyvisual")
 
 ![Eine MediaMarkt-Kampagnenseite](site/assets/img/mms-campaign.webp "Kampagnenseiten auf der webmobile-Plattform")
 

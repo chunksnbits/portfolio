@@ -63,6 +63,9 @@
   /* A hovered tile rises one step: a shadow in the light theme, a lighter surface and edge in the dark theme. */
   --surface-raised: var(--surface);
   --shadow-raised: 0 16px 32px -20px rgba(15, 23, 42, 0.3);
+  --keyvisual-opacity: 0.35;
+  /* The photo's opacity behind the rail. Higher values let a black or white spot in it push the rail's button outlines below 3:1. */
+  --keyvisual-rail-opacity: 0.17;
   --frame: #e2e8f0;
   --sun: none;
   --moon: block;
@@ -93,6 +96,8 @@
     --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
     --surface-raised: var(--surface-hover);
     --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
+    --keyvisual-opacity: 0.5;
+    --keyvisual-rail-opacity: 0.075;
     --frame: #1e293b;
     --sun: block;
     --moon: none;
@@ -124,6 +129,8 @@
     --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
     --surface-raised: var(--surface-hover);
     --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
+    --keyvisual-opacity: 0.5;
+    --keyvisual-rail-opacity: 0.075;
     --frame: #1e293b;
     --sun: block;
     --moon: none;
@@ -798,6 +805,81 @@ code {
   justify-items: start;
 }
 
+/* Keyvisuals: the customer's photo behind the project being read, coming into focus as main.js shows it.
+ * The photo spans the window, but only within the height of the projects, so it never sits behind other sections. */
+
+@media screen {
+  .projects {
+    clip-path: inset(0 -100vw);
+  }
+}
+
+.keyvisuals {
+  position: fixed;
+  inset: 0;
+  /* Keeps the size of the largest window, so a phone's collapsing toolbar doesn't resize the photo. */
+  height: 100lvh;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .keyvisuals {
+    mask-image: linear-gradient(
+      to right,
+      rgb(0 0 0 / calc(var(--keyvisual-rail-opacity) / var(--keyvisual-opacity))) 40%,
+      #000 75%
+    );
+  }
+
+  /* The projects paint after the pinned rail, so it needs lifting above their keyvisuals. */
+  .rail {
+    z-index: 1;
+  }
+}
+
+.keyvisual {
+  --blur: 24px;
+  position: absolute;
+  /* Reaches past the window, so the blurred edges don't show. */
+  inset: calc(-2 * var(--blur));
+  visibility: hidden;
+  opacity: 0;
+  filter: blur(var(--blur));
+  transform: scale(1.06);
+  transition:
+    opacity 0.6s,
+    filter 0.6s,
+    transform 0.6s,
+    visibility 0s 0.6s;
+}
+
+.keyvisual.is-shown {
+  visibility: visible;
+  opacity: var(--keyvisual-opacity);
+  filter: none;
+  transform: none;
+  transition:
+    opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.keyvisual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .keyvisual {
+    filter: none;
+    transform: none;
+  }
+}
+
 /* Frames around screenshots. A capture taller than its frame scrolls through on hover. */
 
 .frame {
@@ -1152,6 +1234,7 @@ code {
   }
 
   .spotlight,
+  .keyvisuals,
   .skip-link,
   .nav,
   .switches,

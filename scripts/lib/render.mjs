@@ -7,6 +7,9 @@ const CONTACT = 'contact';
 // Image titles that pick a frame. Any other title is a caption under a browser frame.
 const FRAMES = ['phone', 'plain'];
 
+// Image title that turns a project's image into the backdrop of its screen.
+const KEYVISUAL = 'keyvisual';
+
 // Tallest frame, as height over width. A taller capture scrolls inside the frame on hover.
 const MAX_FRAME_RATIO = { browser: 1.15, phone: 1.78 };
 
@@ -198,10 +201,12 @@ function renderProjects(section, index, context) {
   const total = section.entries.length;
   const projects = section.entries.map((entry, position) => {
     const visuals = entry.blocks.filter(isVisual);
-    const text = entry.blocks.filter((block) => !isVisual(block));
+    const text = entry.blocks.filter((block) => !isVisual(block) && !isKeyvisual(block));
+    const keyvisual = keyvisualOf(entry);
+    const keyvisualAttribute = keyvisual ? ` data-keyvisual="${publishedPath(keyvisual.src, keyvisual.line)}"` : '';
     const projectTitleId = `${entry.id}-title`;
 
-    return `<section class="screen screen--project" id="${entry.id}" aria-labelledby="${projectTitleId}">
+    return `<section class="screen screen--project" id="${entry.id}" aria-labelledby="${projectTitleId}"${keyvisualAttribute}>
 <div class="screen__inner">
 <article class="panel${visuals.length > 0 ? '' : ' panel--text'}">
 <p class="eyebrow panel__eyebrow" aria-hidden="true"><span>${eyebrow(index, section.title, context)}</span><span class="panel__counter">${position + 1} / ${total}</span></p>
@@ -222,6 +227,7 @@ ${renderBlocks(text, context)}
 
   return `<section class="projects" id="${section.id}" aria-labelledby="${titleId}" data-nav>
 <h2 class="visually-hidden" id="${titleId}">${inline(section.title, context)}</h2>
+${renderKeyvisuals(section.entries, context)}
 ${projects.join('\n')}
 </section>`;
 }
@@ -270,7 +276,37 @@ function renderBlocks(blocks, context, { lead = false } = {}) {
 
 // Images and numbered lists form the visual column of a project panel.
 function isVisual(block) {
-  return block.type === 'image' || (block.type === 'list' && block.ordered);
+  return (block.type === 'image' && !isKeyvisual(block)) || (block.type === 'list' && block.ordered);
+}
+
+function isKeyvisual(block) {
+  return block.type === 'image' && block.title === KEYVISUAL;
+}
+
+function keyvisualOf(entry) {
+  const [keyvisual = null, second] = entry.blocks.filter(isKeyvisual);
+  if (second) {
+    throw lineError(second.line, `"${entry.title}" already has a keyvisual on line ${keyvisual.line}`);
+  }
+  return keyvisual;
+}
+
+// One layer per distinct keyvisual, which styles.css spreads across the window behind the projects.
+// Projects of the same customer share an image, and main.js shows the layer of the screen being read.
+function renderKeyvisuals(entries, context) {
+  const files = new Map();
+  for (const entry of entries) {
+    const keyvisual = keyvisualOf(entry);
+    if (keyvisual) files.set(publishedPath(keyvisual.src, keyvisual.line), keyvisual);
+  }
+  if (files.size === 0) return '';
+
+  const layers = [...files.values()].map((keyvisual) => {
+    const { file, image } = processedImage(keyvisual, context);
+    const avif = image.avif ? `<source type="image/avif" srcset="${context.base}${image.avif}">` : '';
+    return `<picture class="keyvisual" data-keyvisual="${file}">${avif}<img src="${context.base}${file}" alt="" loading="lazy" decoding="async" fetchpriority="low"></picture>`;
+  });
+  return `<div class="keyvisuals" aria-hidden="true">\n${layers.join('\n')}\n</div>`;
 }
 
 function renderVisual(block, context) {
@@ -289,11 +325,10 @@ function renderVisual(block, context) {
 }
 
 function renderFigure(block, context) {
-  const file = publishedPath(block.src, block.line);
-  const image = context.images[file];
-  if (!image) {
-    throw lineError(block.line, `${block.src} has no processed copy, run "npm run images"`);
+  if (isKeyvisual(block)) {
+    throw lineError(block.line, 'a keyvisual belongs under a ### project in the projects section');
   }
+  const { file, image } = processedImage(block, context);
 
   const frame = FRAMES.includes(block.title) ? block.title : 'browser';
   const caption = frame === 'browser' ? block.title : null;
@@ -341,6 +376,15 @@ function eyebrow(index, title, context) {
 
 function inline(text, { base }) {
   return renderInline(text, { href: (url) => (url.startsWith('site/') ? base + url.slice('site/'.length) : url) });
+}
+
+function processedImage(block, context) {
+  const file = publishedPath(block.src, block.line);
+  const image = context.images[file];
+  if (!image) {
+    throw lineError(block.line, `${block.src} has no processed copy, run "npm run images"`);
+  }
+  return { file, image };
 }
 
 function publishedPath(src, line) {

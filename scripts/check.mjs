@@ -26,6 +26,8 @@ const PHONE = { width: 390, height: 844 };
 // Size LinkedIn and other link previews show.
 const PREVIEW = { width: 1200, height: 630 };
 const MAX_CV_PAGES = 2;
+// The 150 ms main.js waits before showing a keyvisual, plus its longest transition in styles.css.
+const KEYVISUAL_FOCUS_MS = 2000;
 
 const CHROME_PATHS = [
   process.env.CHROME_PATH,
@@ -46,6 +48,7 @@ const MEASURE = `(() => {
       height: Math.ceil(screen.getBoundingClientRect().height),
       content: Math.ceil(screen.querySelector('.screen__inner').getBoundingClientRect().height),
       padding: parseFloat(getComputedStyle(screen).paddingTop) + parseFloat(getComputedStyle(screen).paddingBottom),
+      keyvisual: 'keyvisual' in screen.dataset,
     })),
     rail: { needed: rail.scrollHeight, available: rail.clientHeight },
     sideways: layoutOverflow(),
@@ -258,6 +261,7 @@ async function saveShots(tab, folder, lang, screens, pdf = null) {
   await screenshot(tab, join(folder, `${lang}-${options.theme}-sliding.png`));
   for (const [index, screen] of screens.entries()) {
     await scrollTo(tab, `document.getElementById('${screen.id}').offsetTop`);
+    if (screen.keyvisual) await new Promise((done) => setTimeout(done, KEYVISUAL_FOCUS_MS));
     await screenshot(tab, join(folder, `${lang}-${options.theme}-${String(index + 1).padStart(2, '0')}-${screen.id}.png`));
   }
 }

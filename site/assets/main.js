@@ -9,6 +9,7 @@ setUpPrintButtons();
 setUpSpotlight();
 setUpNavHighlight();
 setUpPanelSlideIn();
+setUpKeyvisuals();
 setUpLanguageSwitch();
 
 // The page follows the system theme until the visitor picks one, which is then remembered.
@@ -112,6 +113,43 @@ function setUpPanelSlideIn() {
   addEventListener('scroll', schedule, { passive: true });
   addEventListener('resize', schedule);
   update();
+}
+
+// Shows the keyvisual of the project screen that crosses the middle of the window and hides the others.
+// Projects of the same customer share a keyvisual, which then stays shown between their screens.
+function setUpKeyvisuals() {
+  const layers = new Map([...document.querySelectorAll('.keyvisual')].map((layer) => [layer.dataset.keyvisual, layer]));
+  if (layers.size === 0) return;
+
+  let current = null;
+  let timer = 0;
+  const show = (key) => {
+    current = key;
+    for (const [name, layer] of layers) {
+      if (name !== key) layer.classList.remove('is-shown');
+    }
+    const layer = layers.get(key);
+    // Waits for the image, so it doesn't pop in after its fade.
+    layer
+      ?.querySelector('img')
+      .decode()
+      .catch(() => {})
+      .then(() => {
+        if (current === key) layer.classList.add('is-shown');
+      });
+  };
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries.findLast((candidate) => candidate.isIntersecting);
+      if (!entry) return;
+      // Waits for the page to settle, so screens it only passes, like after a nav click, don't flash their keyvisual.
+      clearTimeout(timer);
+      timer = setTimeout(() => show(entry.target.dataset.keyvisual ?? null), 150);
+    },
+    { rootMargin: '-50% 0px -50% 0px' },
+  );
+  for (const screen of document.querySelectorAll('.screen')) observer.observe(screen);
 }
 
 // Opens the other language at the screen the visitor is reading. Both pages share the same ids.
