@@ -1,0 +1,32 @@
+{
+  "assets/img/adac-drm.webp": {
+    "width": 800,
+    "height": 1724,
+    "density": 2,
+    "avif": "assets/img/adac-drm.avif"
+  },
+  "assets/img/myzeiss-vision-desktop.webp": {
+    "width": 800,
+    "height": 456,
+    "density": 2,
+    "avif": "assets/img/myzeiss-vision-desktop.avif"
+  },
+  "assets/img/myzeiss-vision-phone.webp": {
+    "width": 320,
+    "height": 569,
+    "density": 2,
+    "avif": "assets/img/myzeiss-vision-phone.avif"
+  },
+  "assets/img/fcbayern-mobile.webp": {
+    "width": 654,
+    "height": 405,
+    "density": 1,
+    "avif": "assets/img/fcbayern-mobile.avif"
+  },
+  "assets/img/mms-campaign.webp": {
+    "width": 261,
+    "height": 999,
+    "density": 1,
+    "avif": "assets/img/mms-campaign.avif"
+  }
+}
