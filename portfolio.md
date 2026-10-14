@@ -1,15 +1,15 @@
 ---
 lang: en
 name: Daniel Eissing
-title: Senior Software Engineer
+title: Lead Software Engineer
 subtitle: Web and mobile apps, from interface to cloud
 status: Open to senior roles
-intro: 13 years of large React and Angular apps for ZEISS, FC Bayern, BMW and Allianz, and lately the Expo apps and .NET services behind them.
-location: Fulda, Germany · remote
+intro: 15 years of experience in building large scale React and Angular full-stack applications and integrations for customers like ZEISS, FC Bayern, BMW and Allianz
+location: Fulda, Germany
 email: github.daniel.eissing@gmail.com
 github: https://github.com/chunksnbits
 linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
-description: Senior Software Engineer in Fulda, Germany. Lead engineer of web and mobile apps with React, TypeScript, Expo and .NET for ZEISS, ADAC Motorsport and FC Bayern München.
+description: Lead Software Engineer. 15 years of experience in building large scale React and Angular full-stack applications and integrations for customers like ZEISS, ADAC Motorsport, FC Bayern München, BMW and Allianz.
 ---
 
 <!--
@@ -61,7 +61,7 @@ My professional career was largely spent working for some of the largest enterpr
 ### ZEISS AURA® Smart Analyzer {#aura}
 2025 – today · ZEISS Spectroscopy · Lead engineer
 
-![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
 1. **AURA NIR**: measures the sample
 2. **Expo app**: Bluetooth link, predictions on device, UI. Works on- and offline
@@ -71,82 +71,92 @@ ZEISS Aura® is the companion app for a new ZEISS near-infrared spectrometer tha
 
 The app connects to the hardware via Bluetooth LE, runs native calibration models on device and works with- or without a network connection.
 
-2nd mode, utilizes the camera module, on-device sensors and image recognition to guide the user through a new kind of sample measurement process.
+A 2nd mode, utilizes the camera module, on-device sensors and image recognition to guide the user through a new kind of sample measurement process.
 
 This project allowed me to shape all aspects of the product. Taking over responsibility and product ownership, developing and advancing the UX and UI direction, managing requirements and tasks.
-On the technical front, the task required besides the implementation of bussiness requirements: integrating the app into an existing cloud infrastructure,  contributing to the .NET platform that supports the app and setting up the app store submission and release processes.s and image recognition to guide the user through the sample measurement process.
+On the technical front, the project required the implementation of business requirements, the integration of the app into an existing cloud infrastructure and contributions to the .NET platform that supports the app.
+
+Managing the app store submissions and release processes delivered the app on time.
 
 `Expo` `React Native` `TypeScript` `XState` `Skia` `ONNX` `.NET` `GraphQL` `Azure`
 
 ### MyZEISS {#myzeiss}
 2023 – 2025 · ZEISS Vision Care · ZEISS Meditec · Lead engineer
 
-![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
 ![MyZEISS Vision dashboard on a desktop](site/assets/img/myzeiss-vision-desktop.webp)
 ![MyZEISS Vision on an iPhone](site/assets/img/myzeiss-vision-phone.webp "phone")
 
 <!-- Daniel: rewrite the next two paragraphs in your own words. They only claim what the commits show. -->
-In MyZEISS Vision, people who wear ZEISS lenses register their products, take an online vision screening and read their visual reports. I owned the web app end to end: 16 of its 17 production releases from November 2024, the redesigned product, prescription and warranty pages, and the app shell of the redesign that is live today.
+Embedded into the large infrastructure of the MyZEISS Digital Platform (ZDP), I've contributed to projects for MyZEISS Vision and Meditec.
 
-For ZEISS Meditec I moved the Device Training API from Brandmaker to Veeva Vault and built the service that notifies customers about their devices.
+With MyZEISS vision users were able to service their lens inserts for new Apple Vision Pro glasses. Driving the first realization of a right to left (RTL) UI within MyZEISS, I made the experience feel native for Arabic users, contributing new components and development tools to the Beyond Online design system. With implementation of the new major mobile first re-design, I was able to handover the project with a stable running app, clean codebase to the hands of the in-house team supporting the product going forward.
 
-`React` `TypeScript` `Vite` `Azure Functions` `TanStack Query` `Turborepo` `GraphQL`
+For ZEISS Meditec I worked on various projects, including the migration of Media Asset Management (MAM) systems, an automated notification and email system for device events and updates, as well as multiple contributions to a living universe of new and existing micro-frontend applications.
+
+`React` `TypeScript` `Azure Functions`  `Turborepo` `GraphQL` `Node Microservices` `Microfrontends` `Azure DevOps`
 
 ### ADAC Motorsport {#adac}
 2021 – 2025 · adac-motorsport.de · Lead engineer
 
-![](site/assets/img/adac-keyvisual.webp "keyvisual")
+![](site/assets/img/adac-keyvisual.webp "keyvisual ascii")
 
 ![Pages of the German Rally Championship on adac-motorsport.de](site/assets/img/adac-drm.webp)
 
-The home of ADAC's racing series, from the DTM to the German Rally Championship: Gatsby and React on Contentful, with serverless tools on AWS for content migrations. When Gatsby Cloud shut down and Netlify quoted $2,700–5,700 a month, I moved the builds to GitHub Actions with build servers on DigitalOcean that a workflow sets up: $140 a month, 10% faster and 40% cheaper than before, without downtime.
+The home of ADAC's racing series, from the ADAC GT Masters to the local Klassik Cups.
+
+On top of feature development and maintenance,
+I've steered the migration from  Gatsby Cloud / Netlify to a custom built engine that lives inside Github Actions. That move saved the customer 1000s of Euros in monthly hosting costs.
+
+Automated provisioning of build agents, the integration of a Contentful based publish pipeline and automated monitoring were all part of the migration project. The end result was a solution with about 20% faster builds and zero downtime since the move.
 
 `Gatsby` `React` `TypeScript` `Contentful` `GraphQL` `GitHub Actions` `AWS Lambda`
 
 ### FC Bayern München {#fcbayern}
 2019 – 2022 · fcbayern.com · Lead engineer
 
-![](site/assets/img/fcbayern-keyvisual.webp "keyvisual")
+![](site/assets/img/fcbayern-keyvisual.webp "keyvisual ascii")
 
 ![Match centre, statistics and news of fcbayern.com on phones](site/assets/img/fcbayern-mobile.webp "plain")
 
-Relaunch of fcbayern.com on a headless CMS with a Satellytes team of six. I set up the first prototype of the frontend monorepo in July 2019 and built on it for almost three years. The site has about 100,000 statically generated pages with incremental updates, live tickers and real-time results, light and dark themes, WCAG 2.0 and more than 2,000 unit tests. In August 2021 I built most of the online condolence book for Gerd Müller in three days.
+As Satellytes we were responsible for the relaunch of fcbayern.com, integrating a legacy CMS with an inhouse developed headless engine. The site had to migrate about 100,000 statically generated pages with incremental updates, live tickers and a custom built audio-player, real-time results, light and dark themes, WCAG 2.0 and more than 2,000 unit tests.
 
+Special projects like the widely popular online condolence book for Gerd Müller where created with no notice in less than 2 days.
 `Gatsby` `React` `TypeScript` `GraphQL` `Apollo` `Lerna` `Storybook` `Jest`
 
 ### MediaMarktSaturn {#mediamarktsaturn}
 2022 – 2023 · webmobile team · Developer
 
-![](site/assets/img/mms-keyvisual.webp "keyvisual")
+![](site/assets/img/mms-keyvisual.webp "keyvisual ascii")
 
 ![A MediaMarkt campaign page](site/assets/img/mms-campaign.webp "Campaign pages on the webmobile platform")
 
-The webmobile team builds the services and apps around MediaMarkt's online shop. I connected Jotform forms to campaign and editorial pages, built the forms and submissions service for the "Testpiloten" product-tester programme as a Contentful app and NestJS API, and added a tracking library to the campaign platform.
+At MediaMarktSaturn I was part of a team building new exploratory projects, like a new digital flyer or a new submission service for the "Testpiloten" product-tester programme. Integration into a complex infrastructure required to find creative solutions to deliver the functionality the customer wanted.
 
 `Next.js` `React` `NestJS` `Contentful` `Nx` `GraphQL`
 
 ## Experience {#experience}
 
 ### Senior Software Engineer · Satellytes
-2021 – today · Munich, remote from Fulda
+2021 – today · Munich, Fulda
 
-Lead engineer for ZEISS, ADAC Motorsport and FC Bayern München, developer for MediaMarktSaturn.
+Lead engineer and core contributor for ZEISS, ADAC Motorsport, FC Bayern München and MediaMarktSaturn.
 
 ### Freelance Senior Web Developer
 2018 – 2021 · Munich
 
-For Satellytes from 2019, and for jambit as external Senior Software Architect at a southern German car maker: Angular framework and libraries, Spring WebFlux backends, CI/CD with Jenkins and Cloud Foundry.
+Working with Satellytes and for jambit as external Senior Software Architect, I developed full stack web applications and core frameworks, to support the development of new applications for customers like Audi. The toolchain included Angular, Spring WebFlux, CI/CD with Jenkins and Cloud Foundry.
 
-### (Senior) Product Engineer · SinnerSchrader
-2013 – 2018 · Munich, now Accenture Song
+### (Senior) Product Engineer · SinnerSchrader, now Accenture Song
+2013 – 2018 · Munich
 
-Frontend lead for BMW eRetail and Allianz MyInvest, a living styleguide for Audi and a pattern library for Allianz. Senior from 2016.
+Frontend engineer and lead for BMW Group eRetail and Allianz MyInvest, a living styleguide for Audi and a pattern library for Allianz. Senior from 2016.
 
 ### Software Engineer · TomTec Imaging Systems
 2013 · Unterschleißheim
 
-Reporting features in Java and JavaScript, a Selenium test framework in Ruby, tests for a C++ conversion tool.
+Development of reporting features in Java and JavaScript, a Selenium test framework in Ruby, development of a conversion tool for DICOM image data, based on C++.
 
 ### Diplom-Informatiker · University of Koblenz-Landau
 2005 – 2013 · Computervisualistik
@@ -176,12 +186,12 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 
 ## Contact {#contact}
 
-Looking for a senior engineer who leads and still builds? ==Let's talk.==
+Looking for a lead engineer who drives your product vision forward? ==Let's talk.==
 
 I'm open to senior and lead roles in web, mobile and full-stack development.
 
 ### Privacy
-This page sets no cookies and tracks no one. Its fonts are served from this site. GitHub Pages hosts it and may log IP addresses, see [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+This page sets no cookies and tracks no one. Its fonts are served from this site. The site is hosted using GitHub Pages hosts and may log your IP address, see [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement) for details.
 
 ### Logos
 The logos are trademarks of their owners. They name companies I worked for, directly or through an agency, and imply no endorsement.

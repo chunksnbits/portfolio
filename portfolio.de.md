@@ -58,7 +58,7 @@ Daran habe ich in Teams von SinnerSchrader, heute Accenture Song, und Satellytes
 ### AURA Smart Analyzer {#aura}
 2025 – heute · ZEISS Spectroscopy · Lead Developer
 
-![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
 1. **AURA NIR**: misst die Probe
 2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Smartphone, komplett offline
@@ -71,7 +71,7 @@ Begleit-App für das tragbare Nahinfrarot-Spektrometer von ZEISS, fast vollstän
 ### MyZEISS {#myzeiss}
 2023 – 2025 · ZEISS Vision Care · ZEISS Meditec · Lead Developer
 
-![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
+![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
 ![MyZEISS Vision Dashboard am Desktop](site/assets/img/myzeiss-vision-desktop.webp)
 ![MyZEISS Vision auf dem iPhone](site/assets/img/myzeiss-vision-phone.webp "phone")
@@ -86,7 +86,7 @@ Für ZEISS Meditec habe ich die Device Training API von Brandmaker auf Veeva Vau
 ### ADAC Motorsport {#adac}
 2021 – 2025 · adac-motorsport.de · Lead Developer
 
-![](site/assets/img/adac-keyvisual.webp "keyvisual")
+![](site/assets/img/adac-keyvisual.webp "keyvisual ascii")
 
 ![Seiten der Deutschen Rallye-Meisterschaft auf adac-motorsport.de](site/assets/img/adac-drm.webp)
 
@@ -97,7 +97,7 @@ Das Zuhause der ADAC-Rennserien, von der DTM bis zur Deutschen Rallye-Meistersch
 ### FC Bayern München {#fcbayern}
 2019 – 2022 · fcbayern.com · Lead Developer
 
-![](site/assets/img/fcbayern-keyvisual.webp "keyvisual")
+![](site/assets/img/fcbayern-keyvisual.webp "keyvisual ascii")
 
 ![Matchcenter, Statistiken und News von fcbayern.com auf Smartphones](site/assets/img/fcbayern-mobile.webp "plain")
 
@@ -108,7 +108,7 @@ Relaunch von fcbayern.com auf einem Headless CMS mit einem Satellytes-Team von s
 ### MediaMarktSaturn {#mediamarktsaturn}
 2022 – 2023 · webmobile-Team · Developer
 
-![](site/assets/img/mms-keyvisual.webp "keyvisual")
+![](site/assets/img/mms-keyvisual.webp "keyvisual ascii")
 
 ![Eine MediaMarkt-Kampagnenseite](site/assets/img/mms-campaign.webp "Kampagnenseiten auf der webmobile-Plattform")
 

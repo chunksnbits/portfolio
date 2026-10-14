@@ -27,7 +27,8 @@ A single page per language, built from two plain Markdown files.
 2. Add it to `IMAGES` in `scripts/images.mjs`, with the width and pixel density to publish.
 3. Run `npm run images`. It writes WebP and AVIF copies plus `site/assets/img/manifest.json`.
 4. Reference the WebP copy in both Markdown files, e.g. `![MyZEISS dashboard](site/assets/img/myzeiss-vision-desktop.webp)`.
-5. If the top of the page changed, run `node scripts/check.mjs --og` to redraw the link preview images.
+5. For a new `"keyvisual ascii"`, add the area its flashes go off in to `FLASH_AREAS` in `site/assets/main.js`. Without an entry it gets no flashes.
+6. If the top of the page changed, run `node scripts/check.mjs --og` to redraw the link preview images.
 
 ## Adding a client logo
 
@@ -91,6 +92,7 @@ The files use plain Markdown with a few position rules. Anything outside them fa
   - `"phone"`: phone frame, overlapping a browser frame before it
   - `"plain"`: no frame
   - `"keyvisual"`: no frame. In a project, the image fills the window behind its screen, see [Keyvisuals](#how-it-works). Projects of one customer can share it.
+  - `"keyvisual ascii"`: a keyvisual drawn as colored ASCII art, see [ASCII keyvisuals](#how-it-works). Projects that share the image must all use this title.
   - `"logo"`: a one-color SVG from `site/assets/logos/`, drawn in the logo grey of the theme. Consecutive logos form a grid, see [Logos](#how-it-works).
   - any other text: browser frame with that caption
 - A numbered list in a project becomes a flow diagram. `1. **Device**: measures the sample` gives each step a title.
@@ -122,6 +124,7 @@ test/                           ← node --test
 - **Screens.** Every section is at least one window tall. Content must fit 1440×760: a 13" MacBook Air at its default resolution, minus the menu bar, Chrome's toolbars and the Dock.
 - **Slide-in.** Project panels slide in from the right edge as you scroll, tied to the scroll position. Once a panel has arrived, it stays in place when you scroll back up. Browsers with CSS scroll-driven animations run it in CSS, others in `main.js`. With "reduce motion" the panels stay in place.
 - **Keyvisuals.** When a project screen reaches the middle of the window, its customer's photo fades in behind the page, from blurred to sharp. It spans the full width but stays within the projects, so it never sits behind other sections. Behind the rail it is dimmed until the rail's text and buttons keep their contrast over any photo. With "reduce motion" it fades without blur or zoom.
+- **ASCII keyvisuals.** A `"keyvisual ascii"` draws its photo on a canvas as colored dots, after [Storm Plains on ascii.rest](https://ascii.rest/storm-plains/). Bright parts of the photo get large dots. In the light theme the dots are ink, so dark parts get them. Flashes go off as the page scrolls, and stop when the page stops: cameras in the stands of the FC Bayern and ADAC photos, glints on the store lamps of MediaMarkt and on the ZEISS microscope. Each burst also brightens the whole picture, so it shows while a panel covers the flashes. `FLASH_AREAS` in `site/assets/main.js` sets where each photo's flashes go off. With "reduce motion" the dots stay still. A hidden keyvisual frees its canvas, so only the one on screen holds a full-window bitmap.
 - **Logos.** Client logos are inlined, so they take the logo grey of the theme, and their holes show the page behind them. The build scales every logo to fit the same box, as in a logo wall: a round crest fills its height, a wide wordmark its width.
 - **Hover.** Tiles rise one step under the mouse: a lighter surface and edge in the dark theme, a soft shadow in the light theme. They don't move, since they aren't links.
 - **Spotlight.** A soft glow follows the mouse, modeled on [brittanychiang.com](https://brittanychiang.com/). Touch screens don't show it.
@@ -133,4 +136,5 @@ test/                           ← node --test
 - The design follows the "Kinetic Slate" design system from a [Google Stitch](https://stitch.withgoogle.com/) export: dark from its first variant, light from its second.
 - Fonts are self-hosted, so the page makes no requests to Google: [Inter](https://rsms.me/inter/), [Plus Jakarta Sans](https://github.com/tokotype/PlusJakartaSans) and [JetBrains Mono](https://www.jetbrains.com/lp/mono/), all under the SIL Open Font License, files from [Fontsource](https://fontsource.org/). The licenses sit next to the fonts in `site/assets/fonts/`.
 - Icons are from [Lucide](https://lucide.dev/) (ISC license), inlined by `scripts/lib/render.mjs`.
+- The ASCII keyvisual takes its dot ramp, dither and color curve from [Storm Plains](https://ascii.rest/storm-plains/) on [ascii.rest](https://ascii.rest/) by [bas3line](https://github.com/bas3line) (MIT license).
 - The 2019 version of this site, built with VuePress, lives in the git history up to tag `v0.8.0`.

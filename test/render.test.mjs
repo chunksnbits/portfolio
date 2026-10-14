@@ -87,6 +87,31 @@ test('loads a keyvisual in every layout, as AVIF with a WebP fallback', () => {
   );
 });
 
+const ASCII_KEYVISUAL = '![](site/assets/img/lens.webp "keyvisual ascii")';
+
+test('draws an ascii keyvisual on a canvas over its image', () => {
+  const html = renderBody(DEFAULT_BODY.replace('Lead developer\n', `Lead developer\n\n${ASCII_KEYVISUAL}\n`));
+
+  assert.match(
+    html,
+    /<div class="keyvisual keyvisual--ascii" data-keyvisual="assets\/img\/lens\.webp"><picture><source type="image\/avif" srcset="\.\.\/assets\/img\/lens\.avif"><img src="\.\.\/assets\/img\/lens\.webp" alt=""[^>]*><\/picture><canvas><\/canvas><\/div>/,
+  );
+  assert.match(html, /<section[^>]+id="aura"[^>]+data-keyvisual="assets\/img\/lens\.webp"/);
+});
+
+test('rejects one keyvisual shown both as a photo and as ascii', () => {
+  assert.throws(
+    () =>
+      renderBody(
+        DEFAULT_BODY.replace('Lead developer\n', `Lead developer\n\n${KEYVISUAL}\n`).replace(
+          '2023 – 2025 · ZEISS\n',
+          `2023 – 2025 · ZEISS\n\n${ASCII_KEYVISUAL}\n`,
+        ),
+      ),
+    /line \d+: .*lens\.webp/,
+  );
+});
+
 test('rejects a keyvisual outside a project', () => {
   assert.throws(() => renderBody(DEFAULT_BODY.replace("Let's talk.", `Let's talk.\n\n${KEYVISUAL}`)), /line \d+.*keyvisual/);
 });

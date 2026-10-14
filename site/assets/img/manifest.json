@@ -30,14 +30,14 @@
     "avif": "assets/img/mms-campaign.avif"
   },
   "assets/img/zeiss-keyvisual.webp": {
-    "width": 720,
-    "height": 405,
+    "width": 2000,
+    "height": 1125,
     "density": 1,
     "avif": "assets/img/zeiss-keyvisual.avif"
   },
   "assets/img/adac-keyvisual.webp": {
-    "width": 1500,
-    "height": 750,
+    "width": 2400,
+    "height": 1600,
     "density": 1,
     "avif": "assets/img/adac-keyvisual.avif"
   },

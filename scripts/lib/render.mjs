@@ -10,6 +10,9 @@ const FRAMES = ['phone', 'plain'];
 // Image title that turns a project's image into the backdrop of its screen.
 const KEYVISUAL = 'keyvisual';
 
+// Keyvisual that main.js draws onto a canvas as colored ASCII art, instead of showing the photo.
+const ASCII_KEYVISUAL = 'keyvisual ascii';
+
 // Image title that inlines a one-color SVG from site/assets/logos/, drawn in the logo grey of the theme.
 const LOGO = 'logo';
 
@@ -290,7 +293,7 @@ function isVisual(block) {
 }
 
 function isKeyvisual(block) {
-  return block.type === 'image' && block.title === KEYVISUAL;
+  return block.type === 'image' && (block.title === KEYVISUAL || block.title === ASCII_KEYVISUAL);
 }
 
 function isLogo(block) {
@@ -323,14 +326,24 @@ function renderKeyvisuals(entries, context) {
   const files = new Map();
   for (const entry of entries) {
     const keyvisual = keyvisualOf(entry);
-    if (keyvisual) files.set(publishedPath(keyvisual.src, keyvisual.line), keyvisual);
+    if (!keyvisual) continue;
+    const file = publishedPath(keyvisual.src, keyvisual.line);
+    const first = files.get(file);
+    if (first && first.title !== keyvisual.title) {
+      throw lineError(keyvisual.line, `${keyvisual.src} is a "${first.title}" on line ${first.line}, give both the same title`);
+    }
+    files.set(file, first ?? keyvisual);
   }
   if (files.size === 0) return '';
 
   const layers = [...files.values()].map((keyvisual) => {
     const { file, image } = processedImage(keyvisual, context);
     const avif = image.avif ? `<source type="image/avif" srcset="${context.base}${image.avif}">` : '';
-    return `<picture class="keyvisual" data-keyvisual="${file}">${avif}<img src="${context.base}${file}" alt="" loading="lazy" decoding="async" fetchpriority="low"></picture>`;
+    const img = `<img src="${context.base}${file}" alt="" loading="lazy" decoding="async" fetchpriority="low">`;
+    // The image stays in the page as the canvas's source, so it loads as lazily as a photo would.
+    return keyvisual.title === ASCII_KEYVISUAL
+      ? `<div class="keyvisual keyvisual--ascii" data-keyvisual="${file}"><picture>${avif}${img}</picture><canvas></canvas></div>`
+      : `<picture class="keyvisual" data-keyvisual="${file}">${avif}${img}</picture>`;
   });
   return `<div class="keyvisuals" aria-hidden="true">\n${layers.join('\n')}\n</div>`;
 }

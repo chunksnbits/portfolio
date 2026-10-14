@@ -24,6 +24,15 @@ test('names a keyvisual when the block kinds differ', () => {
   assert.match(differences.join('\n'), /image \(keyvisual\).*image \(phone\)/);
 });
 
+test('names an ascii keyvisual when the block kinds differ', () => {
+  const english = DEFAULT_BODY.replace('2023 – 2025 · ZEISS\n', '2023 – 2025 · ZEISS\n\n![](site/assets/img/lens.webp "keyvisual ascii")\n');
+  const german = english.replace('"keyvisual ascii"', '"keyvisual"');
+
+  const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
+
+  assert.match(differences.join('\n'), /image \(keyvisual ascii\).*image \(keyvisual\)/);
+});
+
 test('reports every structural difference with both line numbers', () => {
   const german = DEFAULT_BODY.replace('desktop.webp', 'other.webp')
     .replace('site/docs/paper.pdf', 'site/docs/other.pdf')
