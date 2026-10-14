@@ -37,6 +37,22 @@ Lead Developer, der weiter viel Code selbst schreibt, mit Releases, Reviews, Onb
 ### Vom Interface bis in die Cloud
 Angefangen habe ich mit Interface-Design und Computergrafik. Heute baue ich auch die APIs, Pipelines und Cloud-Infrastruktur hinter dem Interface.
 
+## Marken {#brands}
+
+Produkte für Marken, ==die Sie kennen==.
+
+Daran habe ich in Teams von SinnerSchrader, heute Accenture Song, und Satellytes gearbeitet, an den meisten mehrere Jahre lang. Ich weiß also, wie große Unternehmen Software bauen: mit Designsystemen, Barrierefreiheit, Release-Prozessen und vielen Beteiligten rund um ein Produkt.
+
+![Allianz](site/assets/logos/allianz.svg "logo")
+![BMW](site/assets/logos/bmw.svg "logo")
+![Audi](site/assets/logos/audi.svg "logo")
+![ZEISS](site/assets/logos/zeiss.svg "logo")
+![MediaMarktSaturn](site/assets/logos/mediamarktsaturn.svg "logo")
+![E-Plus, heute Teil von Telefónica](site/assets/logos/telefonica.svg "logo")
+![FC Bayern München](site/assets/logos/fcbayern.svg "logo")
+![ADAC Motorsport](site/assets/logos/adac.svg "logo")
+![SinnerSchrader, Teil von Accenture Interactive](site/assets/logos/sinnerschrader.svg "logo")
+
 ## Projekte {#projects}
 
 ### AURA Smart Analyzer {#aura}
@@ -44,7 +60,7 @@ Angefangen habe ich mit Interface-Design und Computergrafik. Heute baue ich auch
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
 
-1. **AURA Handheld-NIR**: misst die Probe
+1. **AURA NIR**: misst die Probe
 2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Smartphone, komplett offline
 3. **Cloud-Plattform**: Kalibrierungen, Anmeldung und Over-the-Air-Updates
 
@@ -156,3 +172,6 @@ Ich bin offen für Senior- und Lead-Rollen in der Web-, Mobile- und Full-Stack-E
 
 ### Datenschutz
 Diese Seite setzt keine Cookies und verfolgt niemanden. Die Schriften liegen auf dieser Website. GitHub Pages hostet sie und kann IP-Adressen protokollieren, siehe [Datenschutzerklärung von GitHub](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+
+### Logos
+Die Logos sind Marken ihrer Inhaber. Sie nennen Unternehmen, für die ich gearbeitet habe, direkt oder über eine Agentur, und bedeuten keine Empfehlung.

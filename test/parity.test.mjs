@@ -39,3 +39,12 @@ test('reports every structural difference with both line numbers', () => {
   assert.match(differences.join('\n'), /tags/);
   assert.match(differences.join('\n'), /contact.*kontakt/);
 });
+
+test('names a logo when the block kinds differ', () => {
+  const english = DEFAULT_BODY.replace("Let's talk.", 'Let\'s talk.\n\n![ZEISS](site/assets/logos/zeiss.svg "logo")');
+  const german = english.replace('"logo"', '"plain"');
+
+  const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
+
+  assert.match(differences.join('\n'), /image \(logo\).*image \(plain\)/);
+});

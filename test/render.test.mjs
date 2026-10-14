@@ -97,3 +97,48 @@ test('rejects a second keyvisual in one project', () => {
     /line \d+.*keyvisual/,
   );
 });
+
+const logo = (viewBox, shape = '<path d="M0 0h10v10H0z"/>') =>
+  `<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}">\n<!-- Source: example.com -->\n${shape}\n</svg>\n`;
+const LOGOS = {
+  'assets/logos/crest.svg': logo('0 0 100 100'),
+  'assets/logos/badge.svg': logo('0 0 150 100'),
+  'assets/logos/wordmark.svg': logo('0 0 400 100'),
+  'assets/logos/banner.svg': logo('0 0 800 100'),
+};
+const renderLogos = ({ names = ['crest', 'wordmark'], logos = LOGOS } = {}) => {
+  const lines = names.map((name) => `![${name[0].toUpperCase()}${name.slice(1)}](site/assets/logos/${name}.svg "logo")`);
+  const body = DEFAULT_BODY.replace('- **13 years** experience\n', `- **13 years** experience\n\n${lines.join('\n')}\n`);
+  return renderPage(toPortfolio(parseMarkdown(portfolioSource({ body }))), { ...OPTIONS, logos });
+};
+
+test('inlines consecutive logos as one list, named for screen readers', () => {
+  const html = renderLogos();
+
+  assert.equal(html.match(/<ul class="logos"/g).length, 1);
+  assert.match(
+    html,
+    /<ul class="logos" role="list">\s*<li><svg class="logo" viewBox="0 0 100 100" width="\d+" height="\d+" role="img" aria-label="Crest">\s*<path d="M0 0h10v10H0z"\/>\s*<\/svg><\/li>\s*<li><svg class="logo" viewBox="0 0 400 100"[^>]* aria-label="Wordmark">/,
+  );
+  assert.doesNotMatch(html, /Source: example\.com|<\?xml/);
+});
+
+test('fits every logo into one box: compact ones fill its height, wide ones its width', () => {
+  const [crest, badge, wordmark, banner] = [
+    ...renderLogos({ names: ['crest', 'badge', 'wordmark', 'banner'] }).matchAll(/<svg class="logo"[^>]* width="(\d+)" height="(\d+)"/g),
+  ].map(([, width, height]) => ({ width: Number(width), height: Number(height) }));
+
+  assert.equal(crest.height, badge.height);
+  assert.equal(wordmark.width, banner.width);
+  assert.ok(crest.width < badge.width && banner.height < wordmark.height);
+});
+
+test('rejects a logo with colors of its own', () => {
+  const colored = { ...LOGOS, 'assets/logos/crest.svg': logo('0 0 100 100', '<path fill="#dc052d" d="M0 0h10v10H0z"/>') };
+
+  assert.throws(() => renderLogos({ logos: colored }), /line \d+: .*crest\.svg.*fill/);
+});
+
+test('rejects a logo that has no file', () => {
+  assert.throws(() => renderLogos({ logos: {} }), /line \d+: site\/assets\/logos\/crest\.svg does not exist/);
+});

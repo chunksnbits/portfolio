@@ -19,6 +19,7 @@
     "start": "node scripts/serve.mjs",
     "test": "node --test test/*.test.mjs",
     "check": "node scripts/check.mjs",
-    "images": "node scripts/images.mjs"
+    "images": "node scripts/images.mjs",
+    "logos": "python3 scripts/logos.py"
   }
 }

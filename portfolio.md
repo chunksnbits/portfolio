@@ -9,7 +9,7 @@ location: Fulda, Germany · remote
 email: github.daniel.eissing@gmail.com
 github: https://github.com/chunksnbits
 linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
-description: Senior Software Engineer in Fulda, Germany. Lead developer of web and mobile apps with React, TypeScript, Expo and .NET for ZEISS, ADAC Motorsport and FC Bayern München.
+description: Senior Software Engineer in Fulda, Germany. Lead engineer of web and mobile apps with React, TypeScript, Expo and .NET for ZEISS, ADAC Motorsport and FC Bayern München.
 ---
 
 <!--
@@ -17,43 +17,69 @@ The English page, published at /portfolio/en/. Its German twin is portfolio.de.m
 How to write this file: README.md, "Writing portfolio.md".
 -->
 
+<!-- 10x Engineer -->
+
 ## About {#about}
 
-I build large web and mobile apps that ==stay live for years==.
+I engineer web and mobile systems that ==are built to last==.
 
-Thirteen years of frontend architecture, design systems and monorepos, first at SinnerSchrader, then as a freelancer and at Satellytes. Since 2023 more and more full-stack: GraphQL and Node.js services, Azure, and since 2025 a React Native app with the .NET platform behind it. I have led frontend teams since 2014 and enjoy mentoring as much as shipping.
+Fifteen years of experience developing and maintaining enterprise grade applications have me ideally prepared for the next phase of AI driven development.
+When agents write the code other skills come into focus. Obsession for detail, demonstrated experience in shaping, judging and steering architectural decisions the ability to look beyond the tellerrand enable me to find creative solutions to complicated problems that will drive your business forward.
 
-- **13 years** in software development
-- **4 lead roles** since 2019
-- **Web + mobile** React · Expo · .NET
-- **Fulda** remote since 2021
+- **15 years** in software development
+- **Leading teams** since 2019
+- **Web + mobile** React · Expo · Angular
+- **E2E** Frontend · Backend · CI/CD · Cloud
 
 ### Architecture that lasts
 Monorepos, micro-frontends and design systems for products that run for years, from FC Bayern to ZEISS.
 
 ### Leading by building
-Lead developer who still writes much of the code, with releases, reviews, onboarding and mentoring included.
+Lead engineer who still writes much of the code, with releases, reviews, onboarding and mentoring included.
 
 ### Interface to cloud
 I started in interface design and computer graphics. Today I also build the APIs, pipelines and cloud setup behind the interface.
 
+## Brands {#brands}
+
+Products for brands ==you know==.
+
+My professional career was largely spent working for some of the largest enterprises and brands in Germany. Working for large agencies I worked at and integrated into large corporate structure. This prepared me well to work in and set up processes at enterprise level. Driving architectures that bring design systems to live. Running release processes in full alignment with many stakeholders around the product.
+
+![Allianz](site/assets/logos/allianz.svg "logo")
+![BMW](site/assets/logos/bmw.svg "logo")
+![Audi](site/assets/logos/audi.svg "logo")
+![ZEISS](site/assets/logos/zeiss.svg "logo")
+![MediaMarktSaturn](site/assets/logos/mediamarktsaturn.svg "logo")
+![E-Plus, now part of Telefónica](site/assets/logos/telefonica.svg "logo")
+![FC Bayern München](site/assets/logos/fcbayern.svg "logo")
+![ADAC Motorsport](site/assets/logos/adac.svg "logo")
+![SinnerSchrader, part of Accenture Interactive](site/assets/logos/sinnerschrader.svg "logo")
+
 ## Projects {#projects}
 
-### AURA Smart Analyzer {#aura}
-2025 – today · ZEISS Spectroscopy · Lead developer
+### ZEISS AURA® Smart Analyzer {#aura}
+2025 – today · ZEISS Spectroscopy · Lead engineer
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
 
-1. **AURA handheld NIR**: measures the sample
-2. **Expo app**: Bluetooth link, predictions on the phone, fully offline
-3. **Cloud platform**: calibrations, sign-in and over-the-air updates
+1. **AURA NIR**: measures the sample
+2. **Expo app**: Bluetooth link, predictions on device, UI. Works on- and offline
+3. **Cloud platform**: calibrations, authentication, firmware and app over-the-air updates
 
-Companion app for ZEISS's handheld near-infrared spectrometer, written almost entirely by me. It connects over Bluetooth LE, runs ONNX calibration models on the phone without a network, and updates the device firmware over the air. Around it I built the update service on Azure Functions, a hardware-in-the-loop test bench and a TypeScript SDK with Protocol Buffers, and contributed to the .NET platform. 70 releases since January 2026.
+ZEISS Aura® is the companion app for a new ZEISS near-infrared spectrometer that gives customers insights into their crops and feeds.
+
+The app connects to the hardware via Bluetooth LE, runs native calibration models on device and works with- or without a network connection.
+
+2nd mode, utilizes the camera module, on-device sensors and image recognition to guide the user through a new kind of sample measurement process.
+
+This project allowed me to shape all aspects of the product. Taking over responsibility and product ownership, developing and advancing the UX and UI direction, managing requirements and tasks.
+On the technical front, the task required besides the implementation of bussiness requirements: integrating the app into an existing cloud infrastructure,  contributing to the .NET platform that supports the app and setting up the app store submission and release processes.s and image recognition to guide the user through the sample measurement process.
 
 `Expo` `React Native` `TypeScript` `XState` `Skia` `ONNX` `.NET` `GraphQL` `Azure`
 
 ### MyZEISS {#myzeiss}
-2023 – 2025 · ZEISS Vision Care · ZEISS Meditec · Lead developer
+2023 – 2025 · ZEISS Vision Care · ZEISS Meditec · Lead engineer
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual")
 
@@ -68,7 +94,7 @@ For ZEISS Meditec I moved the Device Training API from Brandmaker to Veeva Vault
 `React` `TypeScript` `Vite` `Azure Functions` `TanStack Query` `Turborepo` `GraphQL`
 
 ### ADAC Motorsport {#adac}
-2021 – 2025 · adac-motorsport.de · Lead developer
+2021 – 2025 · adac-motorsport.de · Lead engineer
 
 ![](site/assets/img/adac-keyvisual.webp "keyvisual")
 
@@ -79,7 +105,7 @@ The home of ADAC's racing series, from the DTM to the German Rally Championship:
 `Gatsby` `React` `TypeScript` `Contentful` `GraphQL` `GitHub Actions` `AWS Lambda`
 
 ### FC Bayern München {#fcbayern}
-2019 – 2022 · fcbayern.com · Lead developer
+2019 – 2022 · fcbayern.com · Lead engineer
 
 ![](site/assets/img/fcbayern-keyvisual.webp "keyvisual")
 
@@ -105,7 +131,7 @@ The webmobile team builds the services and apps around MediaMarkt's online shop.
 ### Senior Software Engineer · Satellytes
 2021 – today · Munich, remote from Fulda
 
-Lead developer for ZEISS, ADAC Motorsport and FC Bayern München, developer for MediaMarktSaturn.
+Lead engineer for ZEISS, ADAC Motorsport and FC Bayern München, developer for MediaMarktSaturn.
 
 ### Freelance Senior Web Developer
 2018 – 2021 · Munich
@@ -156,3 +182,6 @@ I'm open to senior and lead roles in web, mobile and full-stack development.
 
 ### Privacy
 This page sets no cookies and tracks no one. Its fonts are served from this site. GitHub Pages hosts it and may log IP addresses, see [GitHub's privacy statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+
+### Logos
+The logos are trademarks of their owners. They name companies I worked for, directly or through an agency, and imply no endorsement.

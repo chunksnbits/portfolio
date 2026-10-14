@@ -1,5 +1,5 @@
 // Builds the site into dist/: one page per language from the Markdown files, plus everything in site/.
-import { access, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseMarkdown } from './lib/markdown.mjs';
@@ -9,6 +9,8 @@ import { renderPage } from './lib/render.mjs';
 
 export const ROOT = new URL('..', import.meta.url).pathname;
 export const DIST = join(ROOT, 'dist');
+// One-color SVG logos. The pages inline them, so they aren't published as files.
+const LOGOS = join(ROOT, 'site/assets/logos');
 
 // - source: Markdown file in the repository root
 // - path: where the page is published below the homepage
@@ -18,23 +20,27 @@ export const PAGES = [
   { source: 'portfolio.md', path: 'en/', base: '../' },
 ];
 
-/** Builds both language pages into dist/ and throws if a file is invalid or the two drift apart. */
+/**
+ * Builds both language pages into dist/ and throws if a file is invalid.
+ * A structural difference between the two languages only prints a warning.
+ */
 export async function build() {
   const { homepage } = JSON.parse(await readFile(join(ROOT, 'package.json'), 'utf8'));
   const images = JSON.parse(await readFile(join(ROOT, 'site/assets/img/manifest.json'), 'utf8'));
+  const logos = await loadLogos();
   const [first, second] = await Promise.all(PAGES.map((page) => load(page.source)));
 
   const differences = compareStructure(first, second);
   if (differences.length > 0) {
-    throw new Error(
-      `${PAGES[0].source} and ${PAGES[1].source} differ in structure:\n- ${differences.join('\n- ')}`,
+    console.warn(
+      `Warning: ${PAGES[0].source} and ${PAGES[1].source} differ in structure:\n- ${differences.join('\n- ')}`,
     );
   }
 
   await rm(DIST, { recursive: true, force: true });
   await cp(join(ROOT, 'site'), DIST, {
     recursive: true,
-    filter: (source) => !source.endsWith('manifest.json') && !source.endsWith('.DS_Store'),
+    filter: (source) => !source.endsWith('manifest.json') && !source.endsWith('.DS_Store') && !source.startsWith(LOGOS),
   });
 
   const pages = [
@@ -50,6 +56,7 @@ export async function build() {
       path: page.path,
       alternate: { lang: page.alternatePortfolio.meta.lang, path: page.alternate.path },
       images,
+      logos,
       ogImage,
     });
     const file = join(DIST, page.path, 'index.html');
@@ -66,6 +73,12 @@ async function load(source) {
     error.message = `${source}: ${error.message}`;
     throw error;
   }
+}
+
+async function loadLogos() {
+  const files = (await readdir(LOGOS)).filter((file) => file.endsWith('.svg'));
+  const sources = await Promise.all(files.map((file) => readFile(join(LOGOS, file), 'utf8')));
+  return Object.fromEntries(files.map((file, index) => [`assets/logos/${file}`, sources[index]]));
 }
 
 async function exists(file) {

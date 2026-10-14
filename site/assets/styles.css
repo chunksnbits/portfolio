@@ -44,6 +44,8 @@
   --border-strong: #aab6c6;
   /* Outline of buttons and switches, at least 3:1 against the page. */
   --control: #64748b;
+  /* Client logos. Their cut-out letters show the page behind, so the grey keeps 4.5:1 against it. */
+  --logo: #64748b;
   --text: #0f172a;
   --text-body: #334155;
   --text-muted: #475569;
@@ -80,6 +82,7 @@
     --border: rgba(148, 163, 184, 0.14);
     --border-strong: rgba(148, 163, 184, 0.3);
     --control: #5f6e85;
+    --logo: #7f8ca1;
     --text: #f1f5f9;
     --text-body: #cbd5e1;
     --text-muted: #94a3b8;
@@ -113,6 +116,7 @@
     --border: rgba(148, 163, 184, 0.14);
     --border-strong: rgba(148, 163, 184, 0.3);
     --control: #5f6e85;
+    --logo: #7f8ca1;
     --text: #f1f5f9;
     --text-body: #cbd5e1;
     --text-muted: #94a3b8;
@@ -432,7 +436,7 @@ code {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding-block: 7px;
+  padding-block: 6px;
   color: var(--text-muted);
   font: 600 0.75rem/1.2 var(--font-mono);
   letter-spacing: 0.12em;
@@ -709,6 +713,38 @@ code {
   }
 
   .screen--about .entries {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Brands: the client logos, straight on the page. */
+
+.logos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 24px;
+  width: 100%;
+  margin-top: 68px;
+  padding: 0;
+  list-style: none;
+}
+
+.logos li {
+  display: grid;
+  place-items: center;
+  min-height: 76px;
+  color: var(--logo);
+}
+
+.logo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  fill: currentColor;
+}
+
+@media (min-width: 720px) {
+  .logos {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
@@ -1145,9 +1181,17 @@ code {
 }
 
 .screen--contact .entries {
+  display: grid;
+  gap: 12px 32px;
   margin-top: 36px;
   padding-top: 20px;
   border-top: 1px solid var(--border);
+}
+
+@media (min-width: 720px) {
+  .screen--contact .entries {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .screen--contact .entry__title {
@@ -1243,6 +1287,7 @@ code {
   .panel__visual,
   .panel__counter,
   .screen--about .entries,
+  .screen--brands .screen__inner > p,
   .screen--contact,
   .screen-only {
     display: none !important;
@@ -1310,6 +1355,7 @@ code {
 
   .eyebrow {
     margin-bottom: 6px;
+    break-after: avoid;
   }
 
   .lead {
@@ -1419,5 +1465,19 @@ code {
 
   .screen--skills .tags {
     margin-top: 0;
+  }
+
+  /* Brands print their logos only. */
+  .screen--brands .logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 56px;
+    margin-top: 0;
+    zoom: 0.5;
+  }
+
+  .screen--brands .logos li {
+    min-height: 0;
   }
 }

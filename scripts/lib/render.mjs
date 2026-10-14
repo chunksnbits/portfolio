@@ -10,6 +10,12 @@ const FRAMES = ['phone', 'plain'];
 // Image title that turns a project's image into the backdrop of its screen.
 const KEYVISUAL = 'keyvisual';
 
+// Image title that inlines a one-color SVG from site/assets/logos/, drawn in the logo grey of the theme.
+const LOGO = 'logo';
+
+// Box every logo is scaled to fit, as in a logo wall: compact logos fill its height, wide ones its width.
+const LOGO_BOX = { width: 168, height: 76 };
+
 // Tallest frame, as height over width. A taller capture scrolls inside the frame on hover.
 const MAX_FRAME_RATIO = { browser: 1.15, phone: 1.78 };
 
@@ -66,14 +72,15 @@ const FONTS = ['inter', 'plus-jakarta-sans', 'jetbrains-mono'];
  * `base` leads from the page back to the site root ('' for the root page, '../' for en/).
  * `path` and `alternate.path` place this page and the other language below `homepage`.
  * `images` is the manifest from scripts/images.mjs, keyed by published path.
+ * `logos` holds the SVG source of each logo, keyed by published path, since the page inlines them.
  */
-export function renderPage(portfolio, { base, homepage, path, alternate, images, ogImage = null }) {
+export function renderPage(portfolio, { base, homepage, path, alternate, images, logos = {}, ogImage = null }) {
   const { meta, sections } = portfolio;
   const ui = UI[meta.lang];
   if (!ui) {
     throw new Error(`frontmatter: lang "${meta.lang}" has no interface words, add them to UI in render.mjs`);
   }
-  const context = { meta, ui, base, homepage, path, alternate, images, ogImage };
+  const context = { meta, ui, base, homepage, path, alternate, images, logos, ogImage };
 
   return `<!doctype html>
 <html lang="${meta.lang}">
@@ -250,7 +257,7 @@ function renderMeta(meta, context) {
 
 function renderBlocks(blocks, context, { lead = false } = {}) {
   let leadPending = lead;
-  return blocks
+  return groupLogos(blocks)
     .map((block) => {
       switch (block.type) {
         case 'paragraph': {
@@ -267,6 +274,9 @@ function renderBlocks(blocks, context, { lead = false } = {}) {
           return `<ul class="tags" aria-label="${context.ui.tags}">${block.tags.map((tag) => `<li>${escapeHtml(tag)}</li>`).join('')}</ul>`;
         case 'image':
           return renderFigure(block, context);
+        // Safari stops announcing a list that has no bullets. The role restores it, so screen readers still count the logos.
+        case 'logos':
+          return `<ul class="logos" role="list">\n${block.logos.map((logo) => `<li>${renderLogo(logo, context)}</li>`).join('\n')}\n</ul>`;
         default:
           throw lineError(block.line, `${block.type} is not supported here`);
       }
@@ -276,11 +286,27 @@ function renderBlocks(blocks, context, { lead = false } = {}) {
 
 // Images and numbered lists form the visual column of a project panel.
 function isVisual(block) {
-  return (block.type === 'image' && !isKeyvisual(block)) || (block.type === 'list' && block.ordered);
+  return (block.type === 'image' && !isKeyvisual(block) && !isLogo(block)) || (block.type === 'list' && block.ordered);
 }
 
 function isKeyvisual(block) {
   return block.type === 'image' && block.title === KEYVISUAL;
+}
+
+function isLogo(block) {
+  return block.type === 'image' && block.title === LOGO;
+}
+
+// Consecutive logos become one list, which styles.css lays out as a grid.
+function groupLogos(blocks) {
+  const grouped = [];
+  for (const block of blocks) {
+    const previous = grouped.at(-1);
+    if (!isLogo(block)) grouped.push(block);
+    else if (previous?.type === 'logos') previous.logos.push(block);
+    else grouped.push({ type: 'logos', logos: [block], line: block.line });
+  }
+  return grouped;
 }
 
 function keyvisualOf(entry) {
@@ -353,6 +379,35 @@ function renderFigure(block, context) {
   return `<figure class="frame frame--${frame}${scrolls ? ' frame--scrolls' : ''}" style="${style.join('; ')}">
 ${bar}<div class="frame__viewport">${picture}</div>${caption ? `<figcaption class="frame__caption">${inline(caption, context)}</figcaption>` : ''}
 </figure>`;
+}
+
+// Inlines the logo, so it takes the theme's logo grey through currentColor.
+function renderLogo(block, context) {
+  const source = context.logos[publishedPath(block.src, block.line)];
+  if (source === undefined) {
+    throw lineError(block.line, `${block.src} does not exist`);
+  }
+  const svg = source.match(/<svg\b([^>]*)>([\s\S]*)<\/svg>/);
+  const viewBox = svg?.[1].match(/\bviewBox="([^"]+)"/)?.[1];
+  if (!viewBox) {
+    throw lineError(block.line, `${block.src} needs an <svg> element with a viewBox`);
+  }
+  const shapes = svg[2].replace(/<!--[\s\S]*?-->/g, '').trim();
+  const color = shapes.match(/\s(fill|stroke|style)=|<(style|image|linearGradient|radialGradient)\b/);
+  if (color) {
+    throw lineError(
+      block.line,
+      `${block.src} sets its own ${color[1] ?? `<${color[2]}>`}. Logos take the theme's grey, so draw them in one color without fill, stroke or style.`,
+    );
+  }
+  const { width, height } = logoSize(viewBox);
+  return `<svg class="logo" viewBox="${viewBox}" width="${width}" height="${height}" role="img" aria-label="${escapeHtml(inlineText(block.alt))}">\n${shapes}\n</svg>`;
+}
+
+function logoSize(viewBox) {
+  const [, , width, height] = viewBox.trim().split(/[\s,]+/).map(Number);
+  const scale = Math.min(LOGO_BOX.width / width, LOGO_BOX.height / height);
+  return { width: Math.round(width * scale), height: Math.round(height * scale) };
 }
 
 function renderActions({ meta, ui }) {

@@ -3,7 +3,7 @@ import { inlineLinks } from './markdown.mjs';
 // Contact details that must read the same in every language.
 const SHARED_KEYS = ['email', 'github', 'linkedin'];
 // Image titles that change how an image is shown. Any other title is a caption.
-const IMAGE_KINDS = ['phone', 'plain', 'keyvisual'];
+const IMAGE_KINDS = ['phone', 'plain', 'keyvisual', 'logo'];
 
 /**
  * Lists the structural differences between two language versions of the portfolio.

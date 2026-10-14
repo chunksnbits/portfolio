@@ -3,3 +3,5 @@ node_modules
 dist
 # Original screenshots, up to 24 MB each. Only the processed copies in site/assets/img are published.
 raw
+.plan/
+
