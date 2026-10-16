@@ -48,6 +48,32 @@ test('links the other language and declares both for search engines', () => {
   assert.match(html, /<a class="language" href="\.\.\/" hreflang="de" lang="de">/);
 });
 
+test('sends other sites no referrer, from the page and from every link to them', () => {
+  const body = DEFAULT_BODY.replace("Let's talk.", "Let's talk, see [my blog](https://example.com/blog).");
+  const html = renderPage(toPortfolio(parseMarkdown(portfolioSource({ body }))), OPTIONS);
+  const offSite = html.match(/<a [^>]*href="https:\/\/[^>]*>/g);
+
+  assert.match(html, /<meta name="referrer" content="no-referrer">/);
+  assert.equal(offSite.length, 5, 'LinkedIn and GitHub in the rail and as buttons, and the blog');
+  for (const link of offSite) {
+    assert.match(link, / rel="noopener noreferrer"/, link);
+  }
+});
+
+test('glues every separator in a meta line to the word before it', () => {
+  assert.match(
+    render(),
+    /<span class="meta__period">2025 – today<\/span><span class="meta__separator" aria-hidden="true">&nbsp;\+ <\/span><span class="meta__details">ZEISS Spectroscopy&nbsp;\+ Lead developer<\/span>/,
+  );
+});
+
+test('renders sub-items as a sublist inside their item, with no whitespace a line could break at', () => {
+  const body = DEFAULT_BODY.replace('- **13 years** experience\n', '- **13 years** experience\n- **Stack**\n  - React\n  - .NET\n');
+  const html = renderPage(toPortfolio(parseMarkdown(portfolioSource({ body }))), OPTIONS);
+
+  assert.match(html, /<li><strong>Stack<\/strong><ul class="sublist"><li>React<\/li><li>\.NET<\/li><\/ul><\/li>/);
+});
+
 test('rejects an image that has no processed copy', () => {
   assert.throws(() => render({ ...OPTIONS, images: {} }), /desktop\.webp/);
 });
@@ -63,8 +89,8 @@ const renderBody = (body) =>
 test('puts a keyvisual behind its project screens, once per image', () => {
   const html = renderBody(
     DEFAULT_BODY.replace('Lead developer\n', `Lead developer\n\n${KEYVISUAL}\n`).replace(
-      '2023 – 2025 · ZEISS\n',
-      `2023 – 2025 · ZEISS\n\n${KEYVISUAL}\n`,
+      '2023 – 2025 + ZEISS\n',
+      `2023 – 2025 + ZEISS\n\n${KEYVISUAL}\n`,
     ),
   );
 
@@ -104,8 +130,8 @@ test('rejects one keyvisual shown both as a photo and as ascii', () => {
     () =>
       renderBody(
         DEFAULT_BODY.replace('Lead developer\n', `Lead developer\n\n${KEYVISUAL}\n`).replace(
-          '2023 – 2025 · ZEISS\n',
-          `2023 – 2025 · ZEISS\n\n${ASCII_KEYVISUAL}\n`,
+          '2023 – 2025 + ZEISS\n',
+          `2023 – 2025 + ZEISS\n\n${ASCII_KEYVISUAL}\n`,
         ),
       ),
     /line \d+: .*lens\.webp/,
@@ -121,6 +147,41 @@ test('rejects a second keyvisual in one project', () => {
     () => renderBody(DEFAULT_BODY.replace('Lead developer\n', `Lead developer\n\n${KEYVISUAL}\n${KEYVISUAL}\n`)),
     /line \d+.*keyvisual/,
   );
+});
+
+test('shows the whole text of a project without a [show more] marker', () => {
+  const html = render();
+  const aura = html.slice(html.indexOf('id="aura"'), html.indexOf('id="myzeiss"'));
+
+  assert.match(aura, /<div class="panel__text">\s*<p>Companion app\.<\/p>\s*<ul class="tags"/);
+  assert.doesNotMatch(html, /class="more"/);
+});
+
+const MARKED = DEFAULT_BODY.replace('Companion app.\n', 'Companion app.\n\n[show more]\n\nIn depth.\n');
+
+test('hides the text after a [show more] marker behind the button, above the tags', () => {
+  assert.match(
+    renderBody(MARKED),
+    /<div class="panel__text">\s*<p>Companion app\.<\/p>\s*<div class="panel__rest" id="aura-rest">\s*<p>In depth\.<\/p>\s*<\/div>\s*<button class="more" type="button" aria-expanded="false" aria-controls="aura-rest">Show more<\/button>\s*<ul class="tags"/,
+  );
+});
+
+test('cuts a project without visuals at its [show more] marker', () => {
+  const html = renderBody(MARKED.replace('1. **Device**: measures\n2. **App**: predicts\n\n', ''));
+  const aura = html.slice(html.indexOf('id="aura"'), html.indexOf('id="myzeiss"'));
+
+  assert.match(aura, /<article class="panel panel--text">[\s\S]*<div class="panel__rest"[\s\S]*<button class="more"/);
+});
+
+test('rejects a more marker outside a project, twice in one, or without text after it', () => {
+  const bodies = [
+    DEFAULT_BODY.replace("Let's talk.", "Let's talk.\n\n[show more]\n\nSoon."),
+    MARKED.replace('In depth.\n', 'In depth.\n\n[show more]\n\nEven more.\n'),
+    DEFAULT_BODY.replace('Companion app.\n', 'Companion app.\n\n[show more]\n'),
+  ];
+  for (const body of bodies) {
+    assert.throws(() => renderBody(body), /line \d+: .*\[show more\]/, body);
+  }
 });
 
 const logo = (viewBox, shape = '<path d="M0 0h10v10H0z"/>') =>

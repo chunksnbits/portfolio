@@ -9,7 +9,7 @@ const IMAGE_KINDS = ['phone', 'plain', 'keyvisual', 'keyvisual ascii', 'logo'];
  * Lists the structural differences between two language versions of the portfolio.
  *
  * Wording may differ freely. Ids, the order and kind of blocks, image files and frames,
- * link targets, list lengths and tag counts must match.
+ * link targets and the number of list items, sub-items and tags must match.
  * An empty list means the versions are in step.
  */
 export function compareStructure(a, b) {
@@ -61,6 +61,14 @@ function compareBlocks(left, right, report) {
     if (x.type === 'list' && x.items.length !== y.items.length) {
       report(x, y, `list with ${x.items.length} vs ${y.items.length} items`);
     }
+    if (x.type === 'list') {
+      x.items.forEach((item, index) => {
+        const count = y.items[index]?.items.length;
+        if (count !== undefined && count !== item.items.length) {
+          report(x, y, `list item ${index + 1} with ${item.items.length} vs ${count} sub-items`);
+        }
+      });
+    }
     if (x.type === 'tags' && x.tags.length !== y.tags.length) {
       report(x, y, `${x.tags.length} vs ${y.tags.length} tags`);
     }
@@ -81,6 +89,7 @@ function kind(block) {
 }
 
 function links(block) {
-  const texts = block.type === 'paragraph' ? [block.text] : block.type === 'list' ? block.items : [];
+  const texts =
+    block.type === 'paragraph' ? [block.text] : block.type === 'list' ? block.items.flatMap((item) => [item.text, ...item.items]) : [];
   return texts.flatMap(inlineLinks).sort().join(', ');
 }

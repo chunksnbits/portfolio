@@ -28,7 +28,7 @@ test('reads a first line that starts with a year as the entry period and details
 
   assert.deepEqual(projects.entries[0].meta, {
     period: '2025 – today',
-    details: 'ZEISS Spectroscopy · Lead developer',
+    details: 'ZEISS Spectroscopy + Lead developer',
   });
   assert.deepEqual(
     projects.entries[0].blocks.map((block) => block.type),
@@ -56,7 +56,7 @@ test('rejects broken structure, naming the line', () => {
     ['Intro before any section.\n\n## About {#about}', /line 15/],
     ['## About', /line 15.*id/],
     ['## About {#about}\n\n## Again {#about}', /line 17.*about/],
-    ['## Projects {#projects}\n\n### Without id\n2024 · Client', /line 17.*id/],
+    ['## Projects {#projects}\n\n### Without id\n2024 + Client', /line 17.*id/],
   ];
   for (const [body, message] of cases) {
     assert.throws(() => toPortfolio(parseMarkdown(portfolioSource({ body }))), message, body);

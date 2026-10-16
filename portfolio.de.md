@@ -5,7 +5,7 @@ title: Senior Software Engineer
 subtitle: Web- und Mobile-Apps, vom UI bis zur Cloud
 status: Offen für Senior-Rollen
 intro: 13 Jahre große React- und Angular-Apps für ZEISS, FC Bayern, BMW und Allianz, inzwischen auch die Expo-Apps und .NET-Services dahinter.
-location: Fulda · remote
+location: Fulda + remote
 email: github.daniel.eissing@gmail.com
 github: https://github.com/chunksnbits
 linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
@@ -15,6 +15,13 @@ description: Senior Software Engineer aus Fulda. Lead Developer für Web- und Mo
 <!--
 Die deutsche Seite, veröffentlicht unter /portfolio/. Ihr englischer Zwilling ist portfolio.md.
 Wie diese Datei geschrieben wird: README.md, "Writing portfolio.md".
+
+Eigene Markdown-Syntax:
+- `==Text==`: hebt Wörter im ersten Absatz eines Abschnitts hervor
+- `a + b`: Trennzeichen, das Plus steht nie am Zeilenanfang
+- `  - Eintrag` unter einem Listenpunkt: Unterpunkte, in einer Zeile mit + verbunden
+- `{#id}`: ID einer Überschrift, z. B. `## Über mich {#about}`
+- `![Alt](site/… "phone")`: der Bildtitel wählt den Rahmen, siehe README.md
 -->
 
 ## Über mich {#about}
@@ -23,10 +30,16 @@ Ich baue große Web- und Mobile-Apps, die ==über Jahre live bleiben==.
 
 Dreizehn Jahre Frontend-Architektur, Designsysteme und Monorepos, erst bei SinnerSchrader, dann als Freiberufler und bei Satellytes. Seit 2023 zunehmend Full-Stack: GraphQL- und Node.js-Services, Azure und seit 2025 eine React-Native-App mit der .NET-Plattform dahinter. Ich leite seit 2014 Frontend-Teams und bin so gern Mentor, wie ich ausliefere.
 
-- **13 Jahre** in der Softwareentwicklung
-- **4 Lead-Rollen** seit 2019
-- **Web + Mobile** React · Expo · .NET
-- **Fulda** remote seit 2021
+- **13 Jahre**
+  - in der Softwareentwicklung
+- **4 Lead-Rollen**
+  - seit 2019
+- **Web + Mobile**
+  - React
+  - Expo
+  - .NET
+- **Fulda**
+  - remote seit 2021
 
 ### Architektur, die hält
 Monorepos, Micro-Frontends und Designsysteme für Produkte, die jahrelang laufen, von FC Bayern bis ZEISS.
@@ -56,7 +69,7 @@ Daran habe ich in Teams von SinnerSchrader, heute Accenture Song, und Satellytes
 ## Projekte {#projects}
 
 ### AURA Smart Analyzer {#aura}
-2025 – heute · ZEISS Spectroscopy · Lead Developer
+2025 – heute + ZEISS Spectroscopy + Lead Developer
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
@@ -69,7 +82,7 @@ Begleit-App für das tragbare Nahinfrarot-Spektrometer von ZEISS, fast vollstän
 `Expo` `React Native` `TypeScript` `XState` `Skia` `ONNX` `.NET` `GraphQL` `Azure`
 
 ### MyZEISS {#myzeiss}
-2023 – 2025 · ZEISS Vision Care · ZEISS Meditec · Lead Developer
+2023 – 2025 + ZEISS Vision Care + ZEISS Meditec + Lead Developer
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
@@ -84,7 +97,7 @@ Für ZEISS Meditec habe ich die Device Training API von Brandmaker auf Veeva Vau
 `React` `TypeScript` `Vite` `Azure Functions` `TanStack Query` `Turborepo` `GraphQL`
 
 ### ADAC Motorsport {#adac}
-2021 – 2025 · adac-motorsport.de · Lead Developer
+2021 – 2025 + adac-motorsport.de + Lead Developer
 
 ![](site/assets/img/adac-keyvisual.webp "keyvisual ascii")
 
@@ -95,7 +108,7 @@ Das Zuhause der ADAC-Rennserien, von der DTM bis zur Deutschen Rallye-Meistersch
 `Gatsby` `React` `TypeScript` `Contentful` `GraphQL` `GitHub Actions` `AWS Lambda`
 
 ### FC Bayern München {#fcbayern}
-2019 – 2022 · fcbayern.com · Lead Developer
+2019 – 2022 + fcbayern.com + Lead Developer
 
 ![](site/assets/img/fcbayern-keyvisual.webp "keyvisual ascii")
 
@@ -106,7 +119,7 @@ Relaunch von fcbayern.com auf einem Headless CMS mit einem Satellytes-Team von s
 `Gatsby` `React` `TypeScript` `GraphQL` `Apollo` `Lerna` `Storybook` `Jest`
 
 ### MediaMarktSaturn {#mediamarktsaturn}
-2022 – 2023 · webmobile-Team · Developer
+2022 – 2023 + webmobile-Team + Developer
 
 ![](site/assets/img/mms-keyvisual.webp "keyvisual ascii")
 
@@ -118,34 +131,34 @@ Das webmobile-Team baut die Services und Apps rund um den Onlineshop von MediaMa
 
 ## Erfahrung {#experience}
 
-### Senior Software Engineer · Satellytes
-2021 – heute · München, remote aus Fulda
+### Senior Software Engineer + Satellytes
+2021 – heute + München, remote aus Fulda
 
 Lead Developer für ZEISS, ADAC Motorsport und FC Bayern München, Developer für MediaMarktSaturn.
 
 ### Freiberuflicher Senior Web Developer
-2018 – 2021 · München
+2018 – 2021 + München
 
 Für Satellytes ab 2019 und für jambit als externer Senior Software Architect bei einem süddeutschen Automobilhersteller: Angular-Framework und -Libraries, Spring-WebFlux-Backends, CI/CD mit Jenkins und Cloud Foundry.
 
-### (Senior) Product Engineer · SinnerSchrader
-2013 – 2018 · München, heute Accenture Song
+### (Senior) Product Engineer + SinnerSchrader
+2013 – 2018 + München, heute Accenture Song
 
 Frontend-Lead für BMW eRetail und Allianz MyInvest, ein Living Styleguide für Audi und eine Pattern Library für die Allianz. Senior ab 2016.
 
-### Software Engineer · TomTec Imaging Systems
-2013 · Unterschleißheim
+### Software Engineer + TomTec Imaging Systems
+2013 + Unterschleißheim
 
 Reporting-Features in Java und JavaScript, ein Selenium-Testframework in Ruby, Tests für ein C++-Konvertierungstool.
 
-### Diplom-Informatiker · Universität Koblenz-Landau
-2005 – 2013 · Computervisualistik
+### Diplom-Informatiker + Universität Koblenz-Landau
+2005 – 2013 + Computervisualistik
 
 Computergrafik, Interface-Design und Forschung zum Semantic Web. Young Talent Award 2011.
 
-- [strukt: A Pattern System for Integrating Individual and Organizational Knowledge Work](site/docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf) · ISWC 2011
-- [Analysis and Comparison of Models for Individual and Organisational Knowledge Work](site/docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf) · MKWI 2012
-- [A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology](site/docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf) · IJSC 2012
+- [strukt: A Pattern System for Integrating Individual and Organizational Knowledge Work](site/docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf) + ISWC 2011
+- [Analysis and Comparison of Models for Individual and Organisational Knowledge Work](site/docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf) + MKWI 2012
+- [A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology](site/docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf) + IJSC 2012
 
 ## Skills {#skills}
 

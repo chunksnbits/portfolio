@@ -65,6 +65,10 @@
   /* A hovered tile rises one step: a shadow in the light theme, a lighter surface and edge in the dark theme. */
   --surface-raised: var(--surface);
   --shadow-raised: 0 16px 32px -20px rgba(15, 23, 42, 0.3);
+  /* Warm indoor light the show-more button flashes when the pointer enters its panel: reddish lamp light, swept by a yellow glint.
+   * The lamp colors the button's text, so it keeps 4.5:1 against the panel. */
+  --lamp: #c2410c;
+  --glint: #f59e0b;
   --keyvisual-opacity: 0.35;
   /* The photo's opacity behind the rail. Higher values let a black or white spot in it push the rail's button outlines below 3:1. */
   --keyvisual-rail-opacity: 0.17;
@@ -99,6 +103,8 @@
     --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
     --surface-raised: var(--surface-hover);
     --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
+    --lamp: #ff8f5a;
+    --glint: #fff0c7;
     --keyvisual-opacity: 0.5;
     --keyvisual-rail-opacity: 0.075;
     --frame: #1e293b;
@@ -133,6 +139,8 @@
     --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
     --surface-raised: var(--surface-hover);
     --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
+    --lamp: #ff8f5a;
+    --glint: #fff0c7;
     --keyvisual-opacity: 0.5;
     --keyvisual-rail-opacity: 0.075;
     --frame: #1e293b;
@@ -623,11 +631,27 @@ code {
   padding-left: 1.1em;
 }
 
+/* Sub-items read as one line: React + Expo + .NET. */
+
+.sublist {
+  display: inline;
+  padding: 0;
+  list-style: none;
+}
+
+.sublist li {
+  display: inline;
+}
+
+.sublist li + li::before {
+  content: '\00a0+ ';
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 14px;
+  margin-top: 28px;
   padding: 0;
   list-style: none;
 }
@@ -667,7 +691,7 @@ code {
   list-style: none;
 }
 
-.screen--about .list li {
+.screen--about .list > li {
   padding: 12px 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -820,7 +844,8 @@ code {
   line-height: 1.6;
 }
 
-.panel__text p + p {
+.panel__text p + p,
+.panel__rest {
   margin-top: 10px;
 }
 
@@ -839,6 +864,75 @@ code {
   position: relative;
   display: grid;
   justify-items: start;
+}
+
+/* Show more: main.js hides a project's text after its [show more] marker behind a button, see setUpShowMore() there.
+ * The button looks like a text link, and only shows while the rest is hidden.
+ * The rest is hidden only on screen, so the printed CV shows the whole text. */
+
+.more {
+  display: none;
+  width: fit-content;
+  margin-top: 10px;
+  margin-bottom: -4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: 600 0.9375rem/1.6 var(--font-body);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.more:hover {
+  text-decoration-thickness: 2px;
+}
+
+@media screen {
+  .panel__text[data-collapsed] .more {
+    display: block;
+  }
+
+  .panel__text[data-collapsed] .panel__rest {
+    display: none;
+  }
+}
+
+/* When the pointer enters its panel, the button lights up in lamp light once, with a glint sweeping through its letters.
+ * The glint is a background clipped to the letters, waiting left of them until the glint animation moves it across. */
+@media (hover: hover) {
+  .panel:hover .more {
+    background: linear-gradient(110deg, currentColor 43%, var(--glint) 50%, currentColor 57%) 100% 0 / 250% 100% no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: lamp 1.6s ease-in-out;
+  }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .panel:hover .more {
+    animation:
+      lamp 1.6s ease-in-out,
+      glint 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+  }
+}
+
+/* Warms the letters up, then lets them cool back to the button's own color. */
+@keyframes lamp {
+  25%,
+  70% {
+    color: var(--lamp);
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--lamp) 45%, transparent));
+  }
+}
+
+@keyframes glint {
+  to {
+    background-position: 0 0;
+  }
 }
 
 /* Keyvisuals: the customer's photo behind the project being read, coming into focus as main.js shows it.
@@ -1230,7 +1324,7 @@ code {
 /* Tiles rise on hover, see --surface-raised.
  * They aren't links, so they don't move or change the cursor. */
 
-.screen--about .list li,
+.screen--about .list > li,
 .screen--about .entry,
 .screen--experience .entry,
 .screen--skills .entry,
@@ -1244,7 +1338,7 @@ code {
 }
 
 @media (hover: hover) {
-  .screen--about .list li:hover,
+  .screen--about .list > li:hover,
   .screen--about .entry:hover,
   .screen--experience .entry:hover,
   .screen--skills .entry:hover {
@@ -1382,7 +1476,7 @@ code {
     margin-top: 8px;
   }
 
-  .screen--about .list li {
+  .screen--about .list > li {
     padding: 6px 10px;
   }
 
@@ -1425,7 +1519,8 @@ code {
     line-height: 1.5;
   }
 
-  .panel__text p + p {
+  .panel__text p + p,
+  .panel__rest {
     margin-top: 4px;
   }
 
@@ -1451,7 +1546,7 @@ code {
   }
 
   .tags li + li::before {
-    content: ' · ';
+    content: '\00a0· ';
   }
 
   .screen--experience .entry {

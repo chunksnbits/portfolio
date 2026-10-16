@@ -1,4 +1,4 @@
-import { lineError } from './markdown.mjs';
+import { lineError, SEPARATOR } from './markdown.mjs';
 
 /** Id of the section whose entries each get their own sliding screen. */
 export const PROJECTS = 'projects';
@@ -18,7 +18,7 @@ const FRONTMATTER_KEYS = [
 ];
 
 // A meta line opens with a year.
-// E.g. "2021 – today · Munich".
+// E.g. "2021 – today + Munich".
 const META_LINE = /^\d{4}\b/;
 
 /**
@@ -26,7 +26,7 @@ const META_LINE = /^\d{4}\b/;
  *
  * Each `##` heading opens a section and each `###` heading an entry inside it.
  * An entry whose first paragraph starts with a year gets that line as `meta`:
- * its first ` · ` part is the `period`, the rest the `details`.
+ * its part before the first `+` separator is the `period`, the rest the `details`.
  * Throws on a missing id or frontmatter key.
  */
 export function toPortfolio({ frontmatter, blocks }) {
@@ -65,8 +65,8 @@ export function toPortfolio({ frontmatter, blocks }) {
     } else if (!entry) {
       section.blocks.push(block);
     } else if (entry.blocks.length === 0 && !entry.meta && block.type === 'paragraph' && META_LINE.test(block.text)) {
-      const [period, ...details] = block.text.split(' · ');
-      entry.meta = { period, details: details.join(' · ') };
+      const [period, ...details] = block.text.split(SEPARATOR);
+      entry.meta = { period, details: details.join(' + ') };
     } else {
       entry.blocks.push(block);
     }

@@ -8,6 +8,7 @@ setUpThemeToggle();
 setUpPrintButtons();
 setUpSpotlight();
 setUpNavHighlight();
+setUpShowMore();
 setUpPanelSlideIn();
 setUpKeyvisuals();
 setUpLanguageSwitch();
@@ -115,6 +116,26 @@ function setUpPanelSlideIn() {
   update();
 }
 
+// Hides a project's text after its [show more] marker behind a button that shows the rest.
+// styles.css hides it while the text column has data-collapsed, so without this script the whole text shows.
+// A text the visitor opened stays open, and its button goes away.
+function setUpShowMore() {
+  for (const button of document.querySelectorAll('.more')) {
+    const column = button.closest('.panel__text');
+    const rest = column.querySelector('.panel__rest');
+    column.toggleAttribute('data-collapsed', true);
+    button.addEventListener('click', () => {
+      const focused = document.activeElement === button;
+      column.removeAttribute('data-collapsed');
+      // The button disappears, so keyboard focus moves on to the text it opened.
+      if (focused) {
+        rest.tabIndex = -1;
+        rest.focus({ preventScroll: true });
+      }
+    });
+  }
+}
+
 // Shows the keyvisual of the project screen that crosses the middle of the window and hides the others.
 // Projects of the same customer share a keyvisual, which then stays shown between their screens.
 function setUpKeyvisuals() {
@@ -124,7 +145,7 @@ function setUpKeyvisuals() {
   const asciiDrawings = new Map(
     [...layers]
       .filter(([, layer]) => layer.classList.contains('keyvisual--ascii'))
-      .map(([key, layer]) => [key, setUpAsciiKeyvisual(layer, screens.filter((screen) => screen.dataset.keyvisual === key))]),
+      .map(([key, layer]) => [key, setUpAsciiKeyvisual(layer)]),
   );
 
   let current = null;
@@ -161,9 +182,9 @@ function setUpKeyvisuals() {
 }
 
 // Draws an ASCII keyvisual: its photo as colored dots on a canvas, after https://ascii.rest/storm-plains/.
-// Flashes go off in the photo while the page scrolls through the keyvisual's screens, and freeze when it stops.
-// Returns a function that paints the canvas for the current window size, theme and scroll position.
-function setUpAsciiKeyvisual(layer, screens) {
+// Flashes go off in the photo every second or so while the keyvisual is shown, wherever the page is scrolled.
+// Returns a function that paints the canvas for the current window size and theme, and starts the flashes.
+function setUpAsciiKeyvisual(layer) {
   // Width and height of a cell, in CSS pixels.
   const CELL = 6;
   // Dot radius of each step, as a fraction of the cell: none, ·, • and ●.
@@ -185,11 +206,11 @@ function setUpAsciiKeyvisual(layer, screens) {
     'assets/img/fcbayern-keyvisual.webp': { area: [0, 0.02, 1, 0.2], cells: 'dark' },
     'assets/img/mms-keyvisual.webp': { area: [0.45, 0.17, 0.95, 0.44], cells: 'bright' },
   };
-  // Scroll distances in CSS pixels: between bursts of flashes, at most between two cameras of a burst,
+  // Times in milliseconds: between bursts of flashes on average, at most between two cameras of a burst,
   // and over which a flash fades to a third.
-  const FLASH_SPACING = 80;
-  const FLASH_SPREAD = 20;
-  const FLASH_FADE = 36;
+  const FLASH_SPACING = 2200;
+  const FLASH_SPREAD = 400;
+  const FLASH_FADE = 120;
   // Cells a flash lights in each direction, and the cool white it adds.
   const FLASH_REACH = 16;
   const FLASH_COLOR = [0.92, 0.95, 1];
@@ -206,6 +227,8 @@ function setUpAsciiKeyvisual(layer, screens) {
   const kernel = Float32Array.from({ length: side * side }, (_, i) => glow((i % side) - FLASH_REACH, Math.floor(i / side) - FLASH_REACH));
   // The grid on the canvas. A resize or a theme switch drops it, and the next draw rebuilds it.
   let art = null;
+  let burstTimer = 0;
+  let frame = 0;
 
   const draw = () => {
     // A broken image leaves the canvas empty, and so does a canvas without a size, like in print.
@@ -214,7 +237,7 @@ function setUpAsciiKeyvisual(layer, screens) {
       art = sample();
       for (let cell = 0; cell < art.drawn.length; cell++) paint(cell, 0);
     }
-    if (!reducedMotion.matches) flash();
+    if (!reducedMotion.matches) burstTimer ||= setTimeout(burst, FLASH_SPACING);
   };
 
   // Reads the photo at one pixel per cell, placed as object-fit: cover would place it, and clears the canvas.
@@ -226,6 +249,7 @@ function setUpAsciiKeyvisual(layer, screens) {
     const rows = Math.ceil(height / CELL);
     canvas.width = Math.round(width * scale);
     canvas.height = Math.round(height * scale);
+    canvas.style.filter = '';
 
     const fit = Math.max(width / image.naturalWidth, height / image.naturalHeight) / CELL;
     const photoWidth = image.naturalWidth * fit;
@@ -282,8 +306,8 @@ function setUpAsciiKeyvisual(layer, screens) {
       drawn: new Int32Array(cols * rows),
       // Flash light per cell in the last frame.
       lit: new Map(),
-      // Spots each burst can go off in, by burst number.
-      open: new Map(),
+      // Flashes of the bursts so far that haven't faded, each with the cell it lights and when it goes off.
+      flashes: [],
     };
   };
 
@@ -335,13 +359,14 @@ function setUpAsciiKeyvisual(layer, screens) {
     context.fill();
   };
 
-  // Lights the cells around the flashes at the current scroll position, and restores the cells earlier flashes lit.
-  const flash = () => {
-    const position = innerHeight / 2 - screens[0].getBoundingClientRect().top;
+  // Lights the cells around the flashes still going off, and restores the cells earlier flashes lit.
+  const flash = (now) => {
     const { cols, rows } = art;
     const lit = new Map();
     let lift = 0;
-    for (const { spot, strength } of flashesAt(position)) {
+    for (const { spot, start } of art.flashes) {
+      if (now < start) continue;
+      const strength = Math.exp(-(now - start) / FLASH_FADE);
       lift += FLASH_LIFT * strength;
       if (spot === null) continue;
       const spotX = spot % cols;
@@ -364,43 +389,47 @@ function setUpAsciiKeyvisual(layer, screens) {
     canvas.style.filter = lift > 0.01 ? `brightness(${(1 + lift).toFixed(3)})` : '';
   };
 
-  // Lists the flashes going off at a scroll position, in bursts of one to three cameras.
-  // A flash fades as the page scrolls on, and every visit sees the same flashes at the same positions.
+  // Sets off a burst of one to three cameras, and schedules the next burst.
   // A flash with a spot of null has no visible stands to go off in, and only brightens the picture.
-  const flashesAt = (position) => {
-    const flashes = [];
-    if (art.spots.length === 0) return flashes;
-    const last = Math.floor(position / FLASH_SPACING);
-    for (let burst = last - Math.ceil((5 * FLASH_FADE + 2 * FLASH_SPREAD) / FLASH_SPACING); burst <= last; burst++) {
-      const start = (burst + 0.6 * hash(burst, 1)) * FLASH_SPACING;
-      const cameras = 1 + Math.floor(3 * hash(burst, 2));
-      for (let camera = 0; camera < cameras; camera++) {
-        const age = position - start - camera * FLASH_SPREAD * (0.3 + 0.7 * hash(burst, 3 + camera));
-        if (age < 0 || age > 5 * FLASH_FADE) continue;
-        if (!art.open.has(burst)) art.open.set(burst, openSpots(position - start));
-        const open = art.open.get(burst);
-        const spot = open.length > 0 ? open[Math.floor(hash(burst, 10 + camera) * open.length)] : null;
-        flashes.push({ spot, strength: Math.exp(-age / FLASH_FADE) });
-      }
+  const burst = () => {
+    burstTimer = setTimeout(burst, FLASH_SPACING * (0.4 + 1.2 * Math.random()));
+    // A background tab skips its bursts, since it draws no frames and its flashes would only pile up.
+    if (!art || art.spots.length === 0 || document.hidden) return;
+    const open = openSpots();
+    const cameras = 1 + Math.floor(3 * Math.random());
+    let start = performance.now();
+    for (let camera = 0; camera < cameras; camera++) {
+      const spot = open.length > 0 ? open[Math.floor(Math.random() * open.length)] : null;
+      art.flashes.push({ spot, start });
+      start += FLASH_SPREAD * (0.3 + 0.7 * Math.random());
     }
-    return flashes;
+    frame ||= requestAnimationFrame(animate);
   };
 
-  // Lists the spots a burst can be seen in, given how far the page has scrolled since the burst started.
+  // Draws a frame of the flashes, until the last one has faded.
+  const animate = (now) => {
+    frame = 0;
+    // A hidden layer drops its grid when it repaints or frees its canvas.
+    if (!art) return;
+    art.flashes = art.flashes.filter(({ start }) => now - start <= 5 * FLASH_FADE);
+    flash(now);
+    if (art.flashes.length > 0) frame = requestAnimationFrame(animate);
+  };
+
+  // Lists the spots a burst can be seen in.
   // The burst keeps these spots, so its flashes stay put while the panels move.
-  const openSpots = (scrolled) => {
+  const openSpots = () => {
     // The rail's side of the picture is dimmed, so flashes keep to the right of the content's left edge.
     const contentLeft = document.querySelector('.content')?.getBoundingClientRect().left ?? 0;
-    // Panels without their slide-in, which move exactly as far as the page scrolls.
-    // When the burst started, they sat lower by the distance scrolled since.
+    // The screens hold their panels without the slide-in, so flashes also keep clear of a panel still sliding in.
     const panels = [...document.querySelectorAll('.screen--project .screen__inner')]
       .map((inner) => inner.getBoundingClientRect())
-      .filter((rect) => rect.bottom + scrolled > 0 && rect.top + scrolled < innerHeight);
+      .filter((rect) => rect.bottom > 0 && rect.top < innerHeight);
     const { offsetLeft, offsetTop } = layer;
     return art.spots.filter((spot) => {
       const x = offsetLeft + ((spot % art.cols) + 0.5) * CELL;
       const y = offsetTop + (Math.floor(spot / art.cols) + 0.5) * CELL;
-      return x >= contentLeft && !panels.some((rect) => x >= rect.left && x <= rect.right && y >= rect.top + scrolled && y <= rect.bottom + scrolled);
+      return x >= contentLeft && !panels.some((rect) => x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom);
     });
   };
 
@@ -421,34 +450,20 @@ function setUpAsciiKeyvisual(layer, screens) {
   new MutationObserver(repaint).observe(root, { attributeFilter: ['data-theme'] });
   prefersDark.addEventListener('change', repaint);
 
-  // A hidden layer frees its canvas after its fade-out in styles.css, so only the keyvisual on show holds a full-window bitmap.
+  // A hidden layer stops its bursts, and frees its canvas after its fade-out in styles.css,
+  // so only the keyvisual on show holds a full-window bitmap.
   let releaseTimer = 0;
   new MutationObserver(() => {
     clearTimeout(releaseTimer);
     if (layer.classList.contains('is-shown')) return;
+    clearTimeout(burstTimer);
+    burstTimer = 0;
     releaseTimer = setTimeout(() => {
       art = null;
       canvas.width = 0;
       canvas.height = 0;
     }, 1000);
   }).observe(layer, { attributeFilter: ['class'] });
-
-  if (!reducedMotion.matches) {
-    let pending = false;
-    addEventListener(
-      'scroll',
-      () => {
-        if (pending || !art || !layer.classList.contains('is-shown')) return;
-        pending = true;
-        requestAnimationFrame(() => {
-          pending = false;
-          // A repaint in between drops the grid of a layer it no longer shows.
-          if (art) flash();
-        });
-      },
-      { passive: true },
-    );
-  }
 
   return draw;
 }

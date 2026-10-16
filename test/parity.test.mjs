@@ -16,7 +16,7 @@ test('accepts a translation that keeps the structure', () => {
 });
 
 test('names a keyvisual when the block kinds differ', () => {
-  const english = DEFAULT_BODY.replace('2023 – 2025 · ZEISS\n', '2023 – 2025 · ZEISS\n\n![](site/assets/img/lens.webp "keyvisual")\n');
+  const english = DEFAULT_BODY.replace('2023 – 2025 + ZEISS\n', '2023 – 2025 + ZEISS\n\n![](site/assets/img/lens.webp "keyvisual")\n');
   const german = english.replace('"keyvisual"', '"phone"');
 
   const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
@@ -25,7 +25,7 @@ test('names a keyvisual when the block kinds differ', () => {
 });
 
 test('names an ascii keyvisual when the block kinds differ', () => {
-  const english = DEFAULT_BODY.replace('2023 – 2025 · ZEISS\n', '2023 – 2025 · ZEISS\n\n![](site/assets/img/lens.webp "keyvisual ascii")\n');
+  const english = DEFAULT_BODY.replace('2023 – 2025 + ZEISS\n', '2023 – 2025 + ZEISS\n\n![](site/assets/img/lens.webp "keyvisual ascii")\n');
   const german = english.replace('"keyvisual ascii"', '"keyvisual"');
 
   const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
@@ -47,6 +47,15 @@ test('reports every structural difference with both line numbers', () => {
   assert.match(differences.join('\n'), /paper\.pdf/);
   assert.match(differences.join('\n'), /tags/);
   assert.match(differences.join('\n'), /contact.*kontakt/);
+});
+
+test('reports a list item whose sub-items differ in number', () => {
+  const english = DEFAULT_BODY.replace('- **13 years** experience\n', '- **13 years** experience\n- **Stack**\n  - React\n  - .NET\n');
+  const german = english.replace('  - .NET\n', '');
+
+  const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
+
+  assert.match(differences.join('\n'), /list item 2 with 2 vs 1 sub-items/);
 });
 
 test('names a logo when the block kinds differ', () => {

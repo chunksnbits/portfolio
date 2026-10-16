@@ -9,10 +9,20 @@ const TAGS_ONLY = /^(?:\s*`[^`]+`)+\s*$/;
 const HEADING = /^(#{1,6})\s+(.+?)\s*$/;
 const HEADING_ID = /^(.*?)\s*\{#([a-z0-9-]+)\}$/;
 const LIST_ITEM = /^(?:(-)|\d+\.)\s+(.*)$/;
+const SUBITEM = /^\s{2,}-\s+(.*)$/;
 const INLINE = /`([^`]+)`|\[([^\]]+)\]\(([^)\s]+)\)/g;
+const OFF_SITE = /^https?:\/\//i;
+// A line of its own that marks where "Show more" cuts a project's text.
+const MORE = /^\[show more\]$/i;
+// The marker inside a line of text, which is an error.
+// A link named after it, like [show more](url), stays a link.
+const MORE_IN_LINE = /\[show more\](?!\()/i;
+
+/** Matches a separator: a plus between spaces, as in `React + Expo`. */
+export const SEPARATOR = / +\+ +/g;
 
 const UNSUPPORTED = [
-  [/^\s+(?:-|\d+\.)\s/, 'nested lists are not supported'],
+  [/^\s+(?:-|\d+\.)\s/, 'sub-items go under a bullet list item, as "  - item"'],
   [/^\s*</, 'raw HTML is not supported'],
   [/^\s*\|/, 'tables are not supported'],
   [/^\s*(?:```|~~~)/, 'code blocks are not supported'],
@@ -21,15 +31,29 @@ const UNSUPPORTED = [
   [/^\s*(?:-{3,}|\*{3,}|_{3,}|={3,})\s*$/, 'horizontal rules and underlined headings are not supported'],
 ];
 
+const UNSUPPORTED_ANYWHERE = [
+  // A typed · can end up at the start of a line, unlike a separator.
+  [/·/, 'write the separator as " + ", e.g. React + Expo'],
+  [/&#?\w+;/, 'HTML entities are not supported'],
+];
+
 /**
  * Parses portfolio Markdown into its frontmatter and a flat list of blocks.
  *
- * Blocks are `heading` (level 2 or 3, with an optional `{#id}`), `paragraph`, `list`,
- * `image` (one per image on an images-only line) and `tags` (a line of code spans).
+ * Blocks are `heading` (level 2 or 3, with an optional `{#id}`), `paragraph`, `list`
+ * (each item a `{ text, items }` with its sub-items in `items`), `image` (one per image
+ * on an images-only line), `tags` (a line of code spans) and `more` (a `[show more]`
+ * marker on its own line).
  * Every block carries the 1-based source `line` it starts on.
  */
 export function parseMarkdown(source) {
   const lines = stripComments(source.replace(/\r\n?/g, '\n')).split('\n');
+  for (const [index, text] of lines.entries()) {
+    const unsupported = UNSUPPORTED_ANYWHERE.find(([pattern]) => pattern.test(text));
+    if (unsupported) {
+      throw lineError(index + 1, unsupported[1]);
+    }
+  }
 
   if (lines[0] !== '---') {
     return { frontmatter: {}, blocks: parseBlocks(lines, 0) };
@@ -45,23 +69,35 @@ export function parseMarkdown(source) {
 }
 
 /**
- * Renders inline Markdown: `code`, [links](href), **strong**, *emphasis* and ==highlights==.
+ * Renders inline Markdown: `code`, [links](href), **strong**, *emphasis*, ==highlights==
+ * and `a + b` separators.
  *
  * `href` rewrites each link target before it is written, e.g. to map `site/` paths
- * onto the published site. Emphasis cannot span a link or a code span.
+ * onto the published site. Emphasis cannot span a link or a code span. A separator
+ * stays on the line of the word before it.
  */
 export function renderInline(source, { href = (url) => url } = {}) {
   let html = '';
   let last = 0;
   for (const match of source.matchAll(INLINE)) {
     html += formatText(source.slice(last, match.index));
-    html +=
-      match[1] === undefined
-        ? `<a href="${escapeHtml(encodeHref(href(match[3])))}">${formatText(match[2])}</a>`
-        : `<code>${escapeHtml(match[1])}</code>`;
+    if (match[1] === undefined) {
+      const url = encodeHref(href(match[3]));
+      html += `<a href="${escapeHtml(url)}"${linkRel(url)}>${formatText(match[2])}</a>`;
+    } else {
+      html += `<code>${escapeHtml(match[1])}</code>`;
+    }
     last = match.index + match[0].length;
   }
   return html + formatText(source.slice(last));
+}
+
+/**
+ * Returns the rel attribute, with its leading space, that keeps a link to another site
+ * from sending a referrer, or '' for a link within the site.
+ */
+export function linkRel(url) {
+  return OFF_SITE.test(url) ? ' rel="noopener noreferrer"' : '';
 }
 
 /** Lists the link targets in inline Markdown, ignoring code spans. */
@@ -130,6 +166,15 @@ function parseBlocks(lines, start) {
       continue;
     }
 
+    if (MORE.test(text.trim())) {
+      flush();
+      blocks.push({ type: 'more', line });
+      continue;
+    }
+    if (MORE_IN_LINE.test(text)) {
+      throw lineError(line, 'put [show more] on its own line');
+    }
+
     const heading = text.match(HEADING);
     if (heading) {
       flush();
@@ -153,7 +198,13 @@ function parseBlocks(lines, start) {
       const ordered = item[1] === undefined;
       if (paragraph || (list && list.ordered !== ordered)) flush();
       list ??= { type: 'list', ordered, items: [], line };
-      list.items.push(item[2].trim());
+      list.items.push({ text: item[2].trim(), items: [] });
+      continue;
+    }
+
+    const subitem = list?.ordered === false ? text.match(SUBITEM) : null;
+    if (subitem) {
+      list.items.at(-1).items.push(subitem[1].trim());
       continue;
     }
 
@@ -166,7 +217,12 @@ function parseBlocks(lines, start) {
       if (!/^\s{2,}\S/.test(text)) {
         throw lineError(line, 'separate a paragraph from the list above with a blank line');
       }
-      list.items[list.items.length - 1] += ` ${text.trim()}`;
+      const last = list.items.at(-1);
+      if (last.items.length > 0) {
+        last.items[last.items.length - 1] += ` ${text.trim()}`;
+      } else {
+        last.text += ` ${text.trim()}`;
+      }
       continue;
     }
 
@@ -206,7 +262,8 @@ function formatText(text) {
   return escapeHtml(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/==(.+?)==/g, '<mark>$1</mark>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(SEPARATOR, '&nbsp;+ ');
 }
 
 // Percent-encodes only non-ASCII characters, so existing %-escapes stay intact.

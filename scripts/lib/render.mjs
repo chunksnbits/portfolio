@@ -1,4 +1,4 @@
-import { escapeHtml, inlineText, lineError, renderInline } from './markdown.mjs';
+import { escapeHtml, inlineText, lineError, linkRel, renderInline } from './markdown.mjs';
 import { PROJECTS } from './portfolio.mjs';
 
 // Section that also gets the email, LinkedIn, GitHub and PDF buttons.
@@ -36,6 +36,7 @@ const UI = {
     darkTheme: 'Dunkles Design',
     writeEmail: 'E-Mail schreiben',
     tags: 'Technologien',
+    showMore: 'Mehr anzeigen',
   },
   en: {
     locale: 'en_US',
@@ -46,6 +47,7 @@ const UI = {
     darkTheme: 'Dark theme',
     writeEmail: 'Write an email',
     tags: 'Technologies',
+    showMore: 'Show more',
   },
 };
 
@@ -121,6 +123,7 @@ function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
   return [
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
+    '<meta name="referrer" content="no-referrer">',
     `<title>${title}</title>`,
     `<meta name="description" content="${description}">`,
     `<link rel="canonical" href="${url}">`,
@@ -212,6 +215,7 @@ function renderProjects(section, index, context) {
   const projects = section.entries.map((entry, position) => {
     const visuals = entry.blocks.filter(isVisual);
     const text = entry.blocks.filter((block) => !isVisual(block) && !isKeyvisual(block));
+    const marked = text.some((block) => block.type === 'more');
     const keyvisual = keyvisualOf(entry);
     const keyvisualAttribute = keyvisual ? ` data-keyvisual="${publishedPath(keyvisual.src, keyvisual.line)}"` : '';
     const projectTitleId = `${entry.id}-title`;
@@ -227,7 +231,7 @@ ${renderMeta(entry.meta, context)}
 <div class="panel__body">
 ${visuals.length > 0 ? `<div class="panel__visual">\n${visuals.map((block) => renderVisual(block, context)).join('\n')}\n</div>` : ''}
 <div class="panel__text">
-${renderBlocks(text, context)}
+${marked ? renderShowMore(entry, text, context) : renderBlocks(text, context)}
 </div>
 </div>
 </article>
@@ -242,6 +246,28 @@ ${projects.join('\n')}
 </section>`;
 }
 
+// Splits a project's text at its [show more] marker, so main.js can hide the rest behind a button.
+// The tags stay below the button, always in view.
+function renderShowMore(entry, blocks, context) {
+  const copy = blocks.filter((block) => block.type !== 'tags');
+  const [marker, second] = copy.filter((block) => block.type === 'more');
+  if (second) {
+    throw lineError(second.line, `"${entry.title}" already has a [show more] marker on line ${marker.line}`);
+  }
+  const at = copy.indexOf(marker);
+  if (at === 0 || at === copy.length - 1) {
+    throw lineError(marker.line, 'a [show more] marker needs text before and after it');
+  }
+  const id = `${entry.id}-rest`;
+
+  return `${renderBlocks(copy.slice(0, at), context)}
+<div class="panel__rest" id="${id}">
+${renderBlocks(copy.slice(at + 1), context)}
+</div>
+<button class="more" type="button" aria-expanded="false" aria-controls="${id}">${context.ui.showMore}</button>
+${renderBlocks(blocks.filter((block) => block.type === 'tags'), context)}`;
+}
+
 function renderEntry(entry, context) {
   return `<article class="entry"${entry.id ? ` id="${entry.id}"` : ''}>
 <h3 class="entry__title">${inline(entry.title, context)}</h3>
@@ -253,7 +279,7 @@ ${renderBlocks(entry.blocks, context)}
 function renderMeta(meta, context) {
   if (!meta) return '';
   const details = meta.details
-    ? `<span class="meta__separator" aria-hidden="true"> · </span><span class="meta__details">${inline(meta.details, context)}</span>`
+    ? `<span class="meta__separator" aria-hidden="true">&nbsp;+ </span><span class="meta__details">${inline(meta.details, context)}</span>`
     : '';
   return `<p class="meta"><span class="meta__period">${inline(meta.period, context)}</span>${details}</p>`;
 }
@@ -270,7 +296,7 @@ function renderBlocks(blocks, context, { lead = false } = {}) {
         }
         case 'list': {
           const tag = block.ordered ? 'ol' : 'ul';
-          const items = block.items.map((item) => `<li>${inline(item, context)}</li>`).join('');
+          const items = block.items.map((item) => `<li>${inline(item.text, context)}${renderSublist(item.items, context)}</li>`).join('');
           return `<${tag} class="list">${items}</${tag}>`;
         }
         case 'tags':
@@ -280,11 +306,20 @@ function renderBlocks(blocks, context, { lead = false } = {}) {
         // Safari stops announcing a list that has no bullets. The role restores it, so screen readers still count the logos.
         case 'logos':
           return `<ul class="logos" role="list">\n${block.logos.map((logo) => `<li>${renderLogo(logo, context)}</li>`).join('\n')}\n</ul>`;
+        case 'more':
+          throw lineError(block.line, 'a [show more] marker belongs under a ### project in the projects section');
         default:
           throw lineError(block.line, `${block.type} is not supported here`);
       }
     })
     .join('\n');
+}
+
+// `.sublist li + li::before` in styles.css draws the separator.
+// Whitespace between the items would let a line break right before it.
+function renderSublist(items, context) {
+  if (items.length === 0) return '';
+  return `<ul class="sublist">${items.map((item) => `<li>${inline(item, context)}</li>`).join('')}</ul>`;
 }
 
 // Images and numbered lists form the visual column of a project panel.
@@ -354,10 +389,10 @@ function renderVisual(block, context) {
   }
   const steps = block.items.map((item) => {
     // "**Title**: description" puts the title on its own line, without the colon.
-    const titled = item.match(/^\*\*(.+?)\*\*:?\s*(.*)$/);
+    const titled = item.text.match(/^\*\*(.+?)\*\*:?\s*(.*)$/);
     const content = titled
       ? `<strong>${inline(titled[1], context)}</strong><span>${inline(titled[2], context)}</span>`
-      : inline(item, context);
+      : inline(item.text, context);
     return `<li class="flow__step">${content}</li>`;
   });
   return `<ol class="flow">\n${steps.join('\n')}\n</ol>`;
@@ -426,8 +461,8 @@ function logoSize(viewBox) {
 function renderActions({ meta, ui }) {
   return `<div class="actions">
 <a class="button button--primary" href="mailto:${escapeHtml(meta.email)}">${icon('mail')}${ui.writeEmail}</a>
-<a class="button" href="${escapeHtml(meta.linkedin)}">${icon('linkedin')}LinkedIn</a>
-<a class="button" href="${escapeHtml(meta.github)}">${icon('github')}GitHub</a>
+<a class="button" href="${escapeHtml(meta.linkedin)}"${linkRel(meta.linkedin)}>${icon('linkedin')}LinkedIn</a>
+<a class="button" href="${escapeHtml(meta.github)}"${linkRel(meta.github)}>${icon('github')}GitHub</a>
 <button class="button" type="button" data-print>${icon('download')}${ui.print}</button>
 </div>`;
 }
@@ -435,7 +470,7 @@ function renderActions({ meta, ui }) {
 // On screen the link shows the network's name, in print its address.
 function profileLink(url, name, iconName) {
   const address = decodeURI(url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''));
-  return `<a href="${escapeHtml(url)}">${icon(iconName)}<span class="screen-only">${name}</span><span class="print-only">${escapeHtml(address)}</span></a>`;
+  return `<a href="${escapeHtml(url)}"${linkRel(url)}>${icon(iconName)}<span class="screen-only">${name}</span><span class="print-only">${escapeHtml(address)}</span></a>`;
 }
 
 function eyebrow(index, title, context) {

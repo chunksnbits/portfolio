@@ -31,7 +31,7 @@ Monorepos and design systems.
 ## Projects {#projects}
 
 ### AURA {#aura}
-2025 – today · ZEISS Spectroscopy · Lead developer
+2025 – today + ZEISS Spectroscopy + Lead developer
 
 1. **Device**: measures
 2. **App**: predicts
@@ -41,7 +41,7 @@ Companion app.
 \`Expo\` \`.NET\`
 
 ### MyZEISS {#myzeiss}
-2023 – 2025 · ZEISS
+2023 – 2025 + ZEISS
 
 ![Dashboard](site/assets/img/desktop.webp)
 ![On a phone](site/assets/img/phone.webp "phone")
