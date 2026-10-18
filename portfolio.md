@@ -116,7 +116,7 @@ For MyZEISS vision, in the role of lead full stack engineer, I worked on the key
 
 Driving the first realization of a right to left (RTL) UI within MyZEISS, I made the experience feel native for Arabic users, contributing new components and development tools to the Beyond Online design system. With implementation of the new major mobile first re-design, I was able to handover the project with a stable running app, clean codebase to the hands of the in-house team supporting the product going forward.
 
-For ZEISS Meditec, I led the migration of Media Asset Management (MAM) systems, built an automated notification and email service for device events, and contributed to an evolving ecosystem of micro-frontend applications that enabled a first-in-class active service experiencew for the customers.
+For ZEISS Meditec, I led the migration of Media Asset Management (MAM) systems, built an automated notification and email service for device events, and contributed to an evolving ecosystem of micro-frontend applications that enabled a first-in-class service experience and embeds seamlessly into the core AEM system.
 
 `React` `TypeScript` `Azure Functions`  `Turborepo` `GraphQL` `Node Microservices` `Microfrontends` `Azure DevOps`
 

@@ -60,9 +60,10 @@ In enger Abstimmung mit PMs und Designern: Vom Anwendungscode über Backend-Serv
 
 Produkte für Marken, ==die man kennt==.
 
-Ich habe den Großteil meiner Laufbahn im Auftrag einiger der größten Unternehmen und bekanntesten Marken Deutschlands arbeiten dürfen.
+Ich habe den Großteil meiner Laufbahn im Umfeld einiger der größten Unternehmen und bekanntesten Marken Deutschlands verbracht.Daher bringe ich umfassende Erfahrungen im Konzernnumfeld mit.
 
-Daher bringe ich umfassende Erfahrungen im Konzernnumfel. Dabei übernahm ich stets Verantwortung, von der technischen Umsetzung bis hin zur Product Ownership: Ich begleite und steuere den gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- und Mid-Level-Entwicklern.
+Diese Projekte haben es mir erlaubt reichhaltige Erfahrungen zu sammeln.
+Von der technischen Umsetzung bis hin zur Product Ownership: Meine Aufgaben umfassten all Bereiche des gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- und Mid-Level-Entwicklern.
 
 ![Allianz](site/assets/logos/allianz.svg "logo")
 ![BMW](site/assets/logos/bmw.svg "logo")
@@ -83,9 +84,9 @@ Daher bringe ich umfassende Erfahrungen im Konzernnumfel. Dabei übernahm ich st
 
 1. **AURA NIR**: misst die Probe
 2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Gerät, UI – online und offline
-3. **Cloud-Plattform**: Kalibrierungen, Authentifizierung, Firmware- und App-Over-the-Air-Updates
+3. **Cloud-Plattform**: Kalibrierungen, Authentifizierung, Over-the-Air App und Firmware-Updates
 
-ZEISS Aura® ist die Begleit-App für ein neues Nahinfrarot-Spektrometer von ZEISS, das Kunden präzise Einblicke in ihre Ernte und Futtermittel liefert.
+ZEISS Aura® ist die Companion App für ein neues Nahinfrarot-Spektrometer von ZEISS, das Kunden präzise Einblicke in ihre Ernte und Futtermittel liefert.
 
 Die App verbindet sich per Bluetooth LE mit der Hardware, führt Kalibriermodelle nativ direkt auf dem Gerät aus und funktioniert nahtlos mit oder ohne Internetverbindung.
 
@@ -93,10 +94,9 @@ Ein zweiter Modus kombiniert Kamera, Gerätesensoren und Bilderkennung, um Anwen
 
 [show more]
 
-In diesem Projekt konnte ich das Produkt in all seinen Facetten mitgestalten: von der Produktverantwortung über die UX- und UI-Führung bis zum Anforderungsmanagement.
-Auf technischer Seite habe ich Kernfunktionen implementiert, die App in bestehende Cloud-Infrastrukturen eingebunden und die flankierende .NET-Plattform mitentwickelt.
+In diesem Projekt konnte ich das Produkt in all seinen Facetten mitgestalten: von der Produktverantwortung über die UX- und UI-Führung, Anforderungsmanagement bis zur Steuerung der QA- und Release-Prozesse.
 
-Durch die Steuerung der App-Store-Einreichungen und Release-Prozesse wurde die App termingerecht ausgeliefert.
+Auf technischer Seite habe ich Kernfunktionen implementiert, die App in bestehende Cloud-Infrastrukturen eingebunden und die angeschlossene .NET-Plattform mitentwickelt.
 
 `Expo` `React Native` `TypeScript` `XState` `Skia` `ONNX` `.NET` `GraphQL` `Azure`
 
@@ -112,9 +112,11 @@ Eingebettet in die gewachsene Infrastruktur der MyZEISS Digital Platform (ZDP) h
 
 Für MyZEISS Vision verantwortete ich als Lead Full-Stack Engineer das Schlüsselprojekt, über das Nutzer ihre Gläsereinsätze für die neue Apple Vision Pro verwalten und bestellen konnten.
 
-Mit der ersten Realisierung einer Right-to-Left-(RTL-)Oberfläche innerhalb von MyZEISS schuf ich ein natives Nutzungserlebnis für arabischsprachige Anwender und erweiterte das „Beyond Online“-Designsystem um neue Komponenten und Entwickler-Tools. Nach der Umsetzung des großen Mobile-First-Redesigns übergab ich das Projekt mit einer stabilen Anwendung und sauberer Codebasis an das interne Produktteam.
+[show more]
 
-Für ZEISS Meditec leitete ich die Migration von Media-Asset-Management-Systemen (MAM), baute einen automatisierten Benachrichtigungs- und E-Mail-Service für Geräteereignisse auf und entwickelte an einem wachsenden Ökosystem aus Micro-Frontend-Anwendungen mit, das Kunden ein erstklassiges, proaktives Serviceerlebnis bietet.
+Mit der ersten Realisierung einer Right-to-Left-(RTL-)Oberfläche innerhalb von MyZEISS schuf ich ein natives Nutzungserlebnis für arabischsprachige Anwender. Als First Consumer, unterstützte ich das Kernteam das „Beyond Online“-Designsystem, steuerte neue Komponenten und Entwickler-Tools bei um RTL zu ermöglichen. Nach der Umsetzung des großen Mobile-First-Redesigns übergab ich das Projekt mit einer stabilen Anwendung und sauberer Codebasis an das interne Produktteam.
+
+Für ZEISS Meditec leitete ich die Migration von Media-Asset-Management-Systemen (MAM), baute einen automatisierten Benachrichtigungs- und E-Mail-Service für Geräteereignisse auf und entwickelte leitend an einem wachsenden Ökosystem aus Micro-Frontend-Anwendungen mit, das Kunden ein erstklassiges Serviceerlebnis bietet und sich nahtlos in das AEM Kernsystem einbindet.
 
 `React` `TypeScript` `Azure Functions` `Turborepo` `GraphQL` `Node Microservices` `Microfrontends` `Azure DevOps`
 
@@ -127,11 +129,11 @@ Für ZEISS Meditec leitete ich die Migration von Media-Asset-Management-Systemen
 
 Die Heimat der ADAC-Rennserien – vom ADAC GT Masters bis zu den regionalen Klassik-Cups.
 
-Neben der laufenden Feature-Entwicklung und Wartung habe ich die [Migration von Gatsby Cloud und Netlify auf eine maßgeschneiderte Engine mit vereinfachtem Stack auf GitHub Actions und DigitalOcean geplant, konzipiert und geleitet](https://satellytes.com/blog/post/gatsbyjs-cd-pipeline-github-actions-digital-ocean/) – und so die monatlichen Hosting-Kosten um mehrere tausend Euro gesenkt.
+Neben der laufenden Feature-Entwicklung und Wartung habe ich die [Migration von Gatsby Cloud und Netlify auf eine maßgeschneiderte Engine auf Basis von GitHub Actions und DigitalOcean geplant, konzipiert und geleitet](https://satellytes.com/blog/post/gatsbyjs-cd-pipeline-github-actions-digital-ocean/). Durch die Umsetzung dieses Projekts konnten die monatlichen Hosting-Kosten um mehrere tausend Euro gesenkt werden.
 
 [show more]
 
-Automatische Bereitstellung von Build-Agents, eine Contentful-basierte Publish-Pipeline und automatisiertes Monitoring gehörten zum Projektumfang. Das Ergebnis: rund 60 % schnellere Builds, deutlich weniger Build-Probleme und null Ausfallzeiten seit dem Umzug – zu weniger als 10 % der Kosten der angebotenen Enterprise-Lösungen.
+Automatische Bereitstellung von Build-Agents, eine an Contentful angebundene Publish-Pipeline und automatisiertes Monitoring gehörten selbstverständlich zum Projektumfang. Das Ergebnis: rund 60 % schnellere Builds, deutlich weniger Build-Probleme und null Ausfallzeiten seit dem Umzug – zu weniger als 60% der Kosten der angebotenen Enterprise-Lösungen.
 
 `Gatsby` `React` `TypeScript` `Contentful` `GraphQL` `GitHub Actions` `AWS Lambda`
 
@@ -142,7 +144,7 @@ Automatische Bereitstellung von Build-Agents, eine Contentful-basierte Publish-P
 
 ![Matchcenter, Statistiken und News von fcbayern.com auf Smartphones](site/assets/img/fcbayern-mobile.webp "plain")
 
-Für den FC Bayern haben wir den Relaunch von fcbayern.com umgesetzt und ein bestehendes CMS an eine interne Headless-Engine angebunden. Das Projekt umfasste die Migration von rund 100.000 statisch generierten Seiten mit inkrementellen Updates, Live-News und Liveticker, Echtzeit-Ergebnissen, einem eigens entwickelten Audio-Player, hellem und dunklem Theme, WCAG 2.0 und über 2.000 Unit-Tests.
+Als neues Team bei Satellytes, verantworteten wir den Relaunch von fcbayern.com. Eine besondere Herausforderung war die Einbindung eines bestehenden Content Management System über eine intern entwickelte Headless-Engine. Das Projekt umfasste die Migration von rund 100.000 statisch generierten Seiten mit inkrementellen Updates, Live-News und Liveticker, Echtzeit-Ergebnissen, einem eigens entwickelten Audio-Player, hellem und dunklem Theme, WCAG 2.0 und über 2.000 Unit-Tests.
 
 Zeitkritische Features wie das stark frequentierte Online-Kondolenzbuch für Gerd Müller entstanden ohne Vorlauf in weniger als zwei Tagen.
 
@@ -155,7 +157,7 @@ Zeitkritische Features wie das stark frequentierte Online-Kondolenzbuch für Ger
 
 ![Eine MediaMarkt-Kampagnenseite](site/assets/img/mms-campaign.webp "Kampagnenseiten auf der webmobile-Plattform")
 
-Bei MediaMarktSaturn habe ich im webmobile-Team Pilotprojekte umgesetzt – etwa ein digitales Prospekt und einen Registrierungs-Service für das Produkttester-Programm „Testpiloten“. Die Einbindung in eine komplexe bestehende Infrastruktur erforderte kreative technische Lösungen, um die Anforderungen der Stakeholder punktgenau zu erfüllen.
+Bei MediaMarktSaturn habe ich im webmobile-Team Pilotprojekte umgesetzt. Highglights waren ein neues Konzept für digitale Online-Prospekte und einen Registrierungs-Service für das Produkttester-Programm „Testpiloten“. Die Einbindung in eine komplexe bestehende Infrastruktur erforderte kreative technische Lösungen, um die Anforderungen der Stakeholder punktgenau zu erfüllen.
 
 `Next.js` `React` `NestJS` `Contentful` `Nx` `GraphQL`
 
@@ -174,12 +176,12 @@ Für Satellytes und jambit als externer Senior Software Architect: Entwicklung v
 ### (Senior) Product Engineer + SinnerSchrader, heute Accenture Song
 2013 – 2018 + München
 
-Frontend-Entwickler und Lead für BMW Group eRetail und Allianz MyInvest, Living Styleguide für Audi und Pattern Library für die Allianz. Senior ab 2016.
+Frontend-Entwickler und Lead für BMW Group eRetail und Allianz MyInvest Projekte. Neuentwicklung eines Living Styleguide für Audi. Weiterentwicklung der Pattern Library für die Allianz Antragsstrecken. Senior ab 2016.
 
 ### Software Engineer + TomTec Imaging Systems
 2013 + Unterschleißheim
 
-Entwicklung klinischer Reporting-Funktionen in Java und JavaScript, eines Selenium-Testframeworks in Ruby und eines C++-Konvertierungstools für medizinische DICOM-Bilddatensätze.
+Entwicklung klinischer Reporting-Funktionen in Java und JavaScript. Weiterentwicklung und stabilisierung eines weitreichenden Selenium-Testframeworks in Ruby. Entwicklung eines C++-Konvertierungstools für medizinische DICOM-Bilddatensätze.
 
 ### Diplom-Informatiker + Universität Koblenz-Landau
 2005 – 2013 + Computervisualistik
@@ -217,12 +219,12 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Kontakt {#contact}
 
-Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Sprechen wir.==
+Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Dann sprechen wir.==
 
 Ich bin offen für Senior- und Lead-Rollen in der Web-, Mobile- und Full-Stack-Entwicklung.
 
 ### Datenschutz
-Diese Seite setzt keine Cookies und erhebt keine Analysedaten. Alle Schriften werden lokal ausgeliefert. Das Hosting über GitHub Pages kann IP-Adressen protokollieren, siehe [Datenschutzerklärung von GitHub](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+Diese Seite setzt keine Cookies und trackt keine Aufrufdaten. Alle Schriften werden lokal ausgeliefert. Das Hosting erfolgt über GitHub. Github Pages können IP-Adressen protokollieren, siehe [Datenschutzerklärung von GitHub](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
 ### Logos
 Die Logos sind Marken ihrer Inhaber. Sie nennen Unternehmen, für die ich gearbeitet habe, direkt oder über eine Agentur, und bedeuten keine Empfehlung.
