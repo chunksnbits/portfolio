@@ -19,6 +19,10 @@ const LOGO = 'logo';
 // Box every logo is scaled to fit, as in a logo wall: compact logos fill its height, wide ones its width.
 const LOGO_BOX = { width: 168, height: 76 };
 
+// Image title that inlines a colored SVG from site/assets/badges/.
+// Its fixed colors stay, the parts with a class take the theme's colors from styles.css.
+const BADGE = 'badge';
+
 // Tallest frame, as height over width. A taller capture scrolls inside the frame on hover.
 const MAX_FRAME_RATIO = { browser: 1.15, phone: 1.78 };
 
@@ -77,15 +81,15 @@ const FONTS = ['inter', 'plus-jakarta-sans', 'jetbrains-mono'];
  * `base` leads from the page back to the site root ('' for the root page, '../' for en/).
  * `path` and `alternate.path` place this page and the other language below `homepage`.
  * `images` is the manifest from scripts/images.mjs, keyed by published path.
- * `logos` holds the SVG source of each logo, keyed by published path, since the page inlines them.
+ * `logos` and `badges` hold the SVG source of each logo and badge, keyed by published path, since the page inlines them.
  */
-export function renderPage(portfolio, { base, homepage, path, alternate, images, logos = {}, ogImage = null }) {
+export function renderPage(portfolio, { base, homepage, path, alternate, images, logos = {}, badges = {}, ogImage = null }) {
   const { meta, sections } = portfolio;
   const ui = UI[meta.lang];
   if (!ui) {
     throw new Error(`frontmatter: lang "${meta.lang}" has no interface words, add them to UI in render.mjs`);
   }
-  const context = { meta, ui, base, homepage, path, alternate, images, logos, ogImage };
+  const context = { meta, ui, base, homepage, path, alternate, images, logos, badges, ogImage };
 
   return `<!doctype html>
 <html lang="${meta.lang}">
@@ -402,6 +406,9 @@ function renderFigure(block, context) {
   if (isKeyvisual(block)) {
     throw lineError(block.line, 'a keyvisual belongs under a ### project in the projects section');
   }
+  if (block.title === BADGE) {
+    return renderBadge(block, context);
+  }
   const { file, image } = processedImage(block, context);
 
   const frame = FRAMES.includes(block.title) ? block.title : 'browser';
@@ -431,16 +438,7 @@ ${bar}<div class="frame__viewport">${picture}</div>${caption ? `<figcaption clas
 
 // Inlines the logo, so it takes the theme's logo grey through currentColor.
 function renderLogo(block, context) {
-  const source = context.logos[publishedPath(block.src, block.line)];
-  if (source === undefined) {
-    throw lineError(block.line, `${block.src} does not exist`);
-  }
-  const svg = source.match(/<svg\b([^>]*)>([\s\S]*)<\/svg>/);
-  const viewBox = svg?.[1].match(/\bviewBox="([^"]+)"/)?.[1];
-  if (!viewBox) {
-    throw lineError(block.line, `${block.src} needs an <svg> element with a viewBox`);
-  }
-  const shapes = svg[2].replace(/<!--[\s\S]*?-->/g, '').trim();
+  const { viewBox, shapes } = readSvg(block, context.logos);
   const color = shapes.match(/\s(fill|stroke|style)=|<(style|image|linearGradient|radialGradient)\b/);
   if (color) {
     throw lineError(
@@ -450,6 +448,28 @@ function renderLogo(block, context) {
   }
   const { width, height } = logoSize(viewBox);
   return `<svg class="logo" viewBox="${viewBox}" width="${width}" height="${height}" role="img" aria-label="${escapeHtml(inlineText(block.alt))}">\n${shapes}\n</svg>`;
+}
+
+// Inlines the badge. Without alt text it only repeats the text beside it, so screen readers skip it.
+function renderBadge(block, context) {
+  const { viewBox, shapes } = readSvg(block, context.badges);
+  const label = inlineText(block.alt);
+  const name = label ? `role="img" aria-label="${escapeHtml(label)}"` : 'aria-hidden="true"';
+  return `<svg class="badge" viewBox="${viewBox}" ${name}>\n${shapes}\n</svg>`;
+}
+
+// Returns the viewBox and the shapes of an inlined SVG, without its comments.
+function readSvg(block, sources) {
+  const source = sources[publishedPath(block.src, block.line)];
+  if (source === undefined) {
+    throw lineError(block.line, `${block.src} does not exist`);
+  }
+  const svg = source.match(/<svg\b([^>]*)>([\s\S]*)<\/svg>/);
+  const viewBox = svg?.[1].match(/\bviewBox="([^"]+)"/)?.[1];
+  if (!viewBox) {
+    throw lineError(block.line, `${block.src} needs an <svg> element with a viewBox`);
+  }
+  return { viewBox, shapes: svg[2].replace(/<!--[\s\S]*?-->/g, '').trim() };
 }
 
 function logoSize(viewBox) {

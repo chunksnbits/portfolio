@@ -31,6 +31,14 @@
   initial-value: 1;
 }
 
+/* How brightly the lamp light of the show-more button or a highlight shines: 0 off, 1 fully lit.
+ * The lamp keyframes drive it, and each element turns it into its own glow. */
+@property --lit {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
 :root {
   --font-body: 'Inter', system-ui, sans-serif;
   --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
@@ -65,10 +73,15 @@
   /* A hovered tile rises one step: a shadow in the light theme, a lighter surface and edge in the dark theme. */
   --surface-raised: var(--surface);
   --shadow-raised: 0 16px 32px -20px rgba(15, 23, 42, 0.3);
-  /* Warm indoor light the show-more button flashes when the pointer enters its panel: reddish lamp light, swept by a yellow glint.
+  /* A badge's disc and the wordmark on it: white and navy as issued, a dark disc with light letters in the dark theme. */
+  --badge-disc: #ffffff;
+  --badge-ink: #405a70;
+  /* Warm indoor light the show-more button and highlights light up in: reddish lamp light, swept by a yellow glint.
    * The lamp colors the button's text, so it keeps 4.5:1 against the panel. */
   --lamp: #c2410c;
   --glint: #f59e0b;
+  /* The glint across a highlight, light enough to show on its amber in both themes. */
+  --mark-glint: #fff3d1;
   --keyvisual-opacity: 0.35;
   /* The photo's opacity behind the rail. Higher values let a black or white spot in it push the rail's button outlines below 3:1. */
   --keyvisual-rail-opacity: 0.17;
@@ -105,6 +118,8 @@
     --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
     --lamp: #ff8f5a;
     --glint: #fff0c7;
+    --badge-disc: #0b1120;
+    --badge-ink: #e2e8f0;
     --keyvisual-opacity: 0.5;
     --keyvisual-rail-opacity: 0.075;
     --frame: #1e293b;
@@ -141,6 +156,8 @@
     --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
     --lamp: #ff8f5a;
     --glint: #fff0c7;
+    --badge-disc: #0b1120;
+    --badge-ink: #e2e8f0;
     --keyvisual-opacity: 0.5;
     --keyvisual-rail-opacity: 0.075;
     --frame: #1e293b;
@@ -873,7 +890,6 @@ code {
 .more {
   display: none;
   width: fit-content;
-  margin-top: 10px;
   margin-bottom: -4px;
   padding: 0;
   border: 0;
@@ -891,8 +907,16 @@ code {
 }
 
 @media screen {
+  /* The button sits on the last line of the text above it, which fades out under it.
+   * Masked text paints over elements that aren't positioned, so the button needs its position to stay on top and clickable. */
   .panel__text[data-collapsed] .more {
     display: block;
+    position: relative;
+    margin-top: -1lh;
+  }
+
+  .panel__text[data-collapsed] > :has(+ .panel__rest) {
+    mask-image: linear-gradient(to bottom, #000 calc(100% - 2.5lh), transparent calc(100% - 0.5lh));
   }
 
   .panel__text[data-collapsed] .panel__rest {
@@ -900,37 +924,77 @@ code {
   }
 }
 
-/* When the pointer enters its panel, the button lights up in lamp light once, with a glint sweeping through its letters.
- * The glint is a background clipped to the letters, waiting left of them until the glint animation moves it across. */
+/* Lamp light: when the pointer enters a panel, its show-more button lights up, with a glint sweeping through its letters.
+ * Highlights do the same when the pointer enters their screen.
+ * Both light up again every 5 s while the pointer stays.
+ * With "reduce motion" they light up once, without the glint. */
+
+/* The glint is a background clipped to the letters, waiting left of them until the glint animation moves it across. */
 @media (hover: hover) {
   .panel:hover .more {
+    color: color-mix(in srgb, var(--lamp) calc(100% * var(--lit)), var(--accent));
+    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--lamp) calc(45% * var(--lit)), transparent));
     background: linear-gradient(110deg, currentColor 43%, var(--glint) 50%, currentColor 57%) 100% 0 / 250% 100% no-repeat;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: lamp 1.6s ease-in-out;
+    animation: lamp 5s ease-in-out;
   }
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .panel:hover .more {
     animation:
-      lamp 1.6s ease-in-out,
-      glint 0.9s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+      lamp 5s ease-in-out infinite,
+      glint 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 }
 
-/* Warms the letters up, then lets them cool back to the button's own color. */
+/* A highlight's letters keep their dark color, since lamp light on them would drop below 3:1 against the amber.
+ * The marker lights up instead, and the glint sweeps across it behind the letters. */
+@media screen and (hover: hover) {
+  .screen__inner:hover mark {
+    filter: brightness(calc(1 + 0.08 * var(--lit)))
+      drop-shadow(0 0 10px color-mix(in srgb, var(--lamp) calc(50% * var(--lit)), transparent));
+    animation: lamp 5s ease-in-out;
+  }
+}
+
+@media screen and (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .screen__inner:hover mark {
+    animation: lamp 5s ease-in-out infinite;
+  }
+
+  /* The rotation makes the highlight a stacking context, so z-index -1 paints the glint between its marker and its letters. */
+  .screen__inner:hover mark::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0 0.22em;
+    background: linear-gradient(110deg, transparent 42%, var(--mark-glint) 50%, transparent 58%) 100% 0 / 250% 100% no-repeat;
+    animation: glint 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+}
+
+/* Keyframes of one 5 s cycle: the light warms up by 0.4 s, holds, and has cooled down by 1.6 s.
+ * The glint sweeps across from 0.3 s to 1.2 s. */
 @keyframes lamp {
-  25%,
-  70% {
-    color: var(--lamp);
-    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--lamp) 45%, transparent));
+  8%,
+  22% {
+    --lit: 1;
+  }
+  32% {
+    --lit: 0;
   }
 }
 
 @keyframes glint {
-  to {
+  0%,
+  6% {
+    background-position: 100% 0;
+  }
+  24%,
+  100% {
     background-position: 0 0;
   }
 }
@@ -1266,6 +1330,45 @@ code {
   }
 }
 
+/* Badges keep the colors they were issued in, except the parts with a class. */
+
+/* About as tall as a certification's title and text, so the badge adds no height to the skills screen. */
+.badge {
+  display: block;
+  width: 56px;
+  height: auto;
+}
+
+.badge__disc {
+  fill: var(--badge-disc);
+}
+
+.badge__ink {
+  fill: var(--badge-ink);
+}
+
+/* A certification's badge stands left of its title and text, which center beside it. */
+@media screen {
+  .screen--skills .entry:has(> .badge) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: 1fr auto auto 1fr;
+    column-gap: 20px;
+  }
+
+  .screen--skills .entry > .badge {
+    grid-area: 1 / 1 / -1 / 2;
+  }
+
+  .screen--skills .entry:has(> .badge) > .entry__title {
+    grid-area: 2 / 2;
+  }
+
+  .screen--skills .entry:has(> .badge) > p {
+    grid-area: 3 / 2;
+  }
+}
+
 /* Contact */
 
 .screen--contact .screen__inner {
@@ -1391,6 +1494,7 @@ code {
   .actions,
   .status,
   .panel__visual,
+  .badge,
   .panel__counter,
   .screen--about .entries,
   .screen--brands .screen__inner > p,
@@ -1570,7 +1674,8 @@ code {
     font-size: 1rem;
   }
 
-  .screen--skills .tags {
+  .screen--skills .tags,
+  .screen--skills .entry p {
     margin-top: 0;
   }
 

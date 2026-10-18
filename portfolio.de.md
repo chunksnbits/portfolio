@@ -1,15 +1,15 @@
 ---
 lang: de
 name: Daniel Eissing
-title: Senior Software Engineer
-subtitle: Web- und Mobile-Apps, vom UI bis zur Cloud
+title: Lead Software Engineer
+subtitle: Web- und Mobile-Apps, vom Interface bis zur Cloud
 status: Offen für Senior-Rollen
-intro: 13 Jahre große React- und Angular-Apps für ZEISS, FC Bayern, BMW und Allianz, inzwischen auch die Expo-Apps und .NET-Services dahinter.
-location: Fulda + remote
+intro: 15 Jahre Erfahrung in der Entwicklung großer React- und Angular-Fullstack-Anwendungen und Integrationen für Kunden wie ZEISS, FC Bayern, BMW und Allianz
+location: Fulda, Deutschland
 email: github.daniel.eissing@gmail.com
 github: https://github.com/chunksnbits
 linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
-description: Senior Software Engineer aus Fulda. Lead Developer für Web- und Mobile-Apps mit React, TypeScript, Expo und .NET für ZEISS, ADAC Motorsport und FC Bayern München.
+description: Lead Software Engineer mit Weitblick für Architektur, technischem Urteilsvermögen und klarem Fokus. 15 Jahre Erfahrung in der Entwicklung großer React- und Angular-Fullstack-Anwendungen und Integrationen für Kunden wie ZEISS, ADAC Motorsport, FC Bayern München, BMW und Allianz.
 ---
 
 <!--
@@ -18,7 +18,6 @@ Wie diese Datei geschrieben wird: README.md, "Writing portfolio.md".
 
 Eigene Markdown-Syntax:
 - `==Text==`: hebt Wörter im ersten Absatz eines Abschnitts hervor
-- `a + b`: Trennzeichen, das Plus steht nie am Zeilenanfang
 - `  - Eintrag` unter einem Listenpunkt: Unterpunkte, in einer Zeile mit + verbunden
 - `{#id}`: ID einer Überschrift, z. B. `## Über mich {#about}`
 - `![Alt](site/… "phone")`: der Bildtitel wählt den Rahmen, siehe README.md
@@ -26,35 +25,44 @@ Eigene Markdown-Syntax:
 
 ## Über mich {#about}
 
-Ich baue große Web- und Mobile-Apps, die ==über Jahre live bleiben==.
+Ich baue Web- und Mobile-Systeme, die ==Bestand haben==.
 
-Dreizehn Jahre Frontend-Architektur, Designsysteme und Monorepos, erst bei SinnerSchrader, dann als Freiberufler und bei Satellytes. Seit 2023 zunehmend Full-Stack: GraphQL- und Node.js-Services, Azure und seit 2025 eine React-Native-App mit der .NET-Plattform dahinter. Ich leite seit 2014 Frontend-Teams und bin so gern Mentor, wie ich ausliefere.
+Fünfzehn Jahre Erfahrung in der Entwicklung und Betreuung unternehmenskritischer Anwendungen bereiten mich ideal auf die nächste Phase der KI-gestützten Softwareentwicklung vor.
 
-- **13 Jahre**
+Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrund: Liebe zum Detail, fundierte Erfahrung im Einsatz und in der Entwicklung von Softwarearchitekturen und die Möglichkeit über den Tellerrand hinaus zu blicken, erlauben es mir kreative Lösungen für komplexe Probleme zu finden, die Ihr Unternehmen voranbringen.
+
+- **15 Jahre**
   - in der Softwareentwicklung
-- **4 Lead-Rollen**
-  - seit 2019
-- **Web + Mobile**
-  - React
+- **Team-Lead**
+  - seit 2016
+- **Fullstack**
+  - React [Native]
   - Expo
+  - Angular
+  - Node.js
   - .NET
-- **Fulda**
-  - remote seit 2021
+- **E2E**
+  - Frontend
+  - Backend
+  - CI/CD
+  - Cloud
 
 ### Architektur, die hält
-Monorepos, Micro-Frontends und Designsysteme für Produkte, die jahrelang laufen, von FC Bayern bis ZEISS.
+Micro-Frontends, Designsysteme und Cloud-Services für Produkte, die über Jahre laufen – von BMW, Allianz und dem FC Bayern bis zu ZEISS.
 
-### Führen durch Bauen
-Lead Developer, der weiter viel Code selbst schreibt, mit Releases, Reviews, Onboarding und Mentoring.
+### Mit gutem Beispiel vorangehen
+Hands-on-Lead mit klarem technischem Urteilsvermögen, kontinuierlichem Mentoring und konstruktiven Code-Reviews.
 
-### Vom Interface bis in die Cloud
-Angefangen habe ich mit Interface-Design und Computergrafik. Heute baue ich auch die APIs, Pipelines und Cloud-Infrastruktur hinter dem Interface.
+### Vom Pixel bis zur Cloud
+In enger Abstimmung mit PMs und Designern: Vom Anwendungscode über Backend-Services bis zum automatisierten Deployment in die Cloud.
 
-## Marken {#brands}
+## Brands {#brands}
 
-Produkte für Marken, ==die Sie kennen==.
+Produkte für Marken, ==die man kennt==.
 
-Daran habe ich in Teams von SinnerSchrader, heute Accenture Song, und Satellytes gearbeitet, an den meisten mehrere Jahre lang. Ich weiß also, wie große Unternehmen Software bauen: mit Designsystemen, Barrierefreiheit, Release-Prozessen und vielen Beteiligten rund um ein Produkt.
+Ich habe den Großteil meiner Laufbahn im Auftrag einiger der größten Unternehmen und bekanntesten Marken Deutschlands arbeiten dürfen.
+
+Daher bringe ich umfassende Erfahrungen im Konzernnumfel. Dabei übernahm ich stets Verantwortung, von der technischen Umsetzung bis hin zur Product Ownership: Ich begleite und steuere den gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- und Mid-Level-Entwicklern.
 
 ![Allianz](site/assets/logos/allianz.svg "logo")
 ![BMW](site/assets/logos/bmw.svg "logo")
@@ -68,93 +76,115 @@ Daran habe ich in Teams von SinnerSchrader, heute Accenture Song, und Satellytes
 
 ## Projekte {#projects}
 
-### AURA Smart Analyzer {#aura}
-2025 – heute + ZEISS Spectroscopy + Lead Developer
+### ZEISS AURA® Smart Analyzer {#aura}
+2025 – heute + ZEISS Spectroscopy + Lead Engineer
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
 1. **AURA NIR**: misst die Probe
-2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Smartphone, komplett offline
-3. **Cloud-Plattform**: Kalibrierungen, Anmeldung und Over-the-Air-Updates
+2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Gerät, UI – online und offline
+3. **Cloud-Plattform**: Kalibrierungen, Authentifizierung, Firmware- und App-Over-the-Air-Updates
 
-Begleit-App für das tragbare Nahinfrarot-Spektrometer von ZEISS, fast vollständig von mir geschrieben. Sie verbindet sich per Bluetooth LE, rechnet ONNX-Kalibriermodelle ohne Netz direkt auf dem Smartphone und aktualisiert die Firmware des Geräts over the air. Dazu habe ich den Update-Service auf Azure Functions, einen Hardware-in-the-Loop-Prüfstand und ein TypeScript-SDK mit Protocol Buffers gebaut und an der .NET-Plattform mitgearbeitet. 70 Releases seit Januar 2026.
+ZEISS Aura® ist die Begleit-App für ein neues Nahinfrarot-Spektrometer von ZEISS, das Kunden präzise Einblicke in ihre Ernte und Futtermittel liefert.
+
+Die App verbindet sich per Bluetooth LE mit der Hardware, führt Kalibriermodelle nativ direkt auf dem Gerät aus und funktioniert nahtlos mit oder ohne Internetverbindung.
+
+Ein zweiter Modus kombiniert Kamera, Gerätesensoren und Bilderkennung, um Anwender durch einen neuartigen Probenmessprozess zu leiten.
+
+[show more]
+
+In diesem Projekt konnte ich das Produkt in all seinen Facetten mitgestalten: von der Produktverantwortung über die UX- und UI-Führung bis zum Anforderungsmanagement.
+Auf technischer Seite habe ich Kernfunktionen implementiert, die App in bestehende Cloud-Infrastrukturen eingebunden und die flankierende .NET-Plattform mitentwickelt.
+
+Durch die Steuerung der App-Store-Einreichungen und Release-Prozesse wurde die App termingerecht ausgeliefert.
 
 `Expo` `React Native` `TypeScript` `XState` `Skia` `ONNX` `.NET` `GraphQL` `Azure`
 
 ### MyZEISS {#myzeiss}
-2023 – 2025 + ZEISS Vision Care + ZEISS Meditec + Lead Developer
+2023 – 2025 + ZEISS Vision Care + ZEISS Meditec + Lead Engineer
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
 ![MyZEISS Vision Dashboard am Desktop](site/assets/img/myzeiss-vision-desktop.webp)
-![MyZEISS Vision auf dem iPhone](site/assets/img/myzeiss-vision-phone.webp "phone")
+![MyZEISS Vision auf einem iPhone](site/assets/img/myzeiss-vision-phone.webp "phone")
 
-<!-- Daniel: die nächsten zwei Absätze bitte in eigenen Worten neu schreiben. Sie behaupten nur, was die Commits zeigen. -->
-In MyZEISS Vision registrieren Menschen, die ZEISS-Gläser tragen, ihre Produkte, machen einen Online-Sehtest und lesen ihre Sehberichte. Ich habe die Web-App Ende-zu-Ende verantwortet: 16 der 17 Produktiv-Releases seit November 2024, die neu gestalteten Produkt-, Rezept- und Garantieseiten und die App-Shell des Redesigns, das heute live ist.
+Eingebettet in die gewachsene Infrastruktur der MyZEISS Digital Platform (ZDP) habe ich zentrale Projekte für MyZEISS Vision und Meditec vorangetrieben.
 
-Für ZEISS Meditec habe ich die Device Training API von Brandmaker auf Veeva Vault umgezogen und den Service gebaut, der Kunden über ihre Geräte benachrichtigt.
+Für MyZEISS Vision verantwortete ich als Lead Full-Stack Engineer das Schlüsselprojekt, über das Nutzer ihre Gläsereinsätze für die neue Apple Vision Pro verwalten und bestellen konnten.
 
-`React` `TypeScript` `Vite` `Azure Functions` `TanStack Query` `Turborepo` `GraphQL`
+Mit der ersten Realisierung einer Right-to-Left-(RTL-)Oberfläche innerhalb von MyZEISS schuf ich ein natives Nutzungserlebnis für arabischsprachige Anwender und erweiterte das „Beyond Online“-Designsystem um neue Komponenten und Entwickler-Tools. Nach der Umsetzung des großen Mobile-First-Redesigns übergab ich das Projekt mit einer stabilen Anwendung und sauberer Codebasis an das interne Produktteam.
+
+Für ZEISS Meditec leitete ich die Migration von Media-Asset-Management-Systemen (MAM), baute einen automatisierten Benachrichtigungs- und E-Mail-Service für Geräteereignisse auf und entwickelte an einem wachsenden Ökosystem aus Micro-Frontend-Anwendungen mit, das Kunden ein erstklassiges, proaktives Serviceerlebnis bietet.
+
+`React` `TypeScript` `Azure Functions` `Turborepo` `GraphQL` `Node Microservices` `Microfrontends` `Azure DevOps`
 
 ### ADAC Motorsport {#adac}
-2021 – 2025 + adac-motorsport.de + Lead Developer
+2021 – 2025 + adac-motorsport.de + Lead Engineer
 
 ![](site/assets/img/adac-keyvisual.webp "keyvisual ascii")
 
 ![Seiten der Deutschen Rallye-Meisterschaft auf adac-motorsport.de](site/assets/img/adac-drm.webp)
 
-Das Zuhause der ADAC-Rennserien, von der DTM bis zur Deutschen Rallye-Meisterschaft: Gatsby und React auf Contentful, mit Serverless-Tools auf AWS für Content-Migrationen. Als Gatsby Cloud eingestellt wurde und Netlify 2.700–5.700 $ im Monat anbot, habe ich die Builds auf GitHub Actions umgezogen, mit Build-Servern auf DigitalOcean, die ein Workflow selbst aufsetzt: 140 $ im Monat, 10 % schneller und 40 % günstiger als zuvor, ohne Ausfall.
+Die Heimat der ADAC-Rennserien – vom ADAC GT Masters bis zu den regionalen Klassik-Cups.
+
+Neben der laufenden Feature-Entwicklung und Wartung habe ich die [Migration von Gatsby Cloud und Netlify auf eine maßgeschneiderte Engine mit vereinfachtem Stack auf GitHub Actions und DigitalOcean geplant, konzipiert und geleitet](https://satellytes.com/blog/post/gatsbyjs-cd-pipeline-github-actions-digital-ocean/) – und so die monatlichen Hosting-Kosten um mehrere tausend Euro gesenkt.
+
+[show more]
+
+Automatische Bereitstellung von Build-Agents, eine Contentful-basierte Publish-Pipeline und automatisiertes Monitoring gehörten zum Projektumfang. Das Ergebnis: rund 60 % schnellere Builds, deutlich weniger Build-Probleme und null Ausfallzeiten seit dem Umzug – zu weniger als 10 % der Kosten der angebotenen Enterprise-Lösungen.
 
 `Gatsby` `React` `TypeScript` `Contentful` `GraphQL` `GitHub Actions` `AWS Lambda`
 
 ### FC Bayern München {#fcbayern}
-2019 – 2022 + fcbayern.com + Lead Developer
+2019 – 2022 + fcbayern.com + Lead Engineer
 
 ![](site/assets/img/fcbayern-keyvisual.webp "keyvisual ascii")
 
 ![Matchcenter, Statistiken und News von fcbayern.com auf Smartphones](site/assets/img/fcbayern-mobile.webp "plain")
 
-Relaunch von fcbayern.com auf einem Headless CMS mit einem Satellytes-Team von sechs Leuten. Ich habe im Juli 2019 den ersten Prototyp des Frontend-Monorepos aufgesetzt und fast drei Jahre darauf aufgebaut. Die Website umfasst rund 100.000 statisch generierte Seiten mit inkrementellen Updates, Liveticker und Echtzeit-Ergebnisse, helles und dunkles Theme, WCAG 2.0 und über 2.000 Unit-Tests. Im August 2021 habe ich in drei Tagen den Großteil des Online-Kondolenzbuchs für Gerd Müller gebaut.
+Für den FC Bayern haben wir den Relaunch von fcbayern.com umgesetzt und ein bestehendes CMS an eine interne Headless-Engine angebunden. Das Projekt umfasste die Migration von rund 100.000 statisch generierten Seiten mit inkrementellen Updates, Live-News und Liveticker, Echtzeit-Ergebnissen, einem eigens entwickelten Audio-Player, hellem und dunklem Theme, WCAG 2.0 und über 2.000 Unit-Tests.
+
+Zeitkritische Features wie das stark frequentierte Online-Kondolenzbuch für Gerd Müller entstanden ohne Vorlauf in weniger als zwei Tagen.
 
 `Gatsby` `React` `TypeScript` `GraphQL` `Apollo` `Lerna` `Storybook` `Jest`
 
 ### MediaMarktSaturn {#mediamarktsaturn}
-2022 – 2023 + webmobile-Team + Developer
+2022 – 2023 + webmobile team + Developer
 
 ![](site/assets/img/mms-keyvisual.webp "keyvisual ascii")
 
 ![Eine MediaMarkt-Kampagnenseite](site/assets/img/mms-campaign.webp "Kampagnenseiten auf der webmobile-Plattform")
 
-Das webmobile-Team baut die Services und Apps rund um den Onlineshop von MediaMarkt. Ich habe Jotform-Formulare an Kampagnen- und Redaktionsseiten angebunden, für das Produkttester-Programm „Testpiloten“ die Formulare und den Einsendungs-Service als Contentful-App und NestJS-API gebaut und der Kampagnenplattform eine Tracking-Bibliothek hinzugefügt.
+Bei MediaMarktSaturn habe ich im webmobile-Team Pilotprojekte umgesetzt – etwa ein digitales Prospekt und einen Registrierungs-Service für das Produkttester-Programm „Testpiloten“. Die Einbindung in eine komplexe bestehende Infrastruktur erforderte kreative technische Lösungen, um die Anforderungen der Stakeholder punktgenau zu erfüllen.
 
 `Next.js` `React` `NestJS` `Contentful` `Nx` `GraphQL`
 
 ## Erfahrung {#experience}
 
 ### Senior Software Engineer + Satellytes
-2021 – heute + München, remote aus Fulda
+2021 – heute + München, Fulda
 
-Lead Developer für ZEISS, ADAC Motorsport und FC Bayern München, Developer für MediaMarktSaturn.
+Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
 
 ### Freiberuflicher Senior Web Developer
 2018 – 2021 + München
 
-Für Satellytes ab 2019 und für jambit als externer Senior Software Architect bei einem süddeutschen Automobilhersteller: Angular-Framework und -Libraries, Spring-WebFlux-Backends, CI/CD mit Jenkins und Cloud Foundry.
+Für Satellytes und jambit als externer Senior Software Architect: Entwicklung von Full-Stack-Webanwendungen und Kernframeworks als Basis für neue Applikationen von Kunden wie Audi und dem FC Bayern. Toolchain u. a. Angular, Spring WebFlux, CI/CD mit Jenkins und Cloud Foundry.
 
-### (Senior) Product Engineer + SinnerSchrader
-2013 – 2018 + München, heute Accenture Song
+### (Senior) Product Engineer + SinnerSchrader, heute Accenture Song
+2013 – 2018 + München
 
-Frontend-Lead für BMW eRetail und Allianz MyInvest, ein Living Styleguide für Audi und eine Pattern Library für die Allianz. Senior ab 2016.
+Frontend-Entwickler und Lead für BMW Group eRetail und Allianz MyInvest, Living Styleguide für Audi und Pattern Library für die Allianz. Senior ab 2016.
 
 ### Software Engineer + TomTec Imaging Systems
 2013 + Unterschleißheim
 
-Reporting-Features in Java und JavaScript, ein Selenium-Testframework in Ruby, Tests für ein C++-Konvertierungstool.
+Entwicklung klinischer Reporting-Funktionen in Java und JavaScript, eines Selenium-Testframeworks in Ruby und eines C++-Konvertierungstools für medizinische DICOM-Bilddatensätze.
 
 ### Diplom-Informatiker + Universität Koblenz-Landau
 2005 – 2013 + Computervisualistik
 
-Computergrafik, Interface-Design und Forschung zum Semantic Web. Young Talent Award 2011.
+Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Award 2011.
 
 - [strukt: A Pattern System for Integrating Individual and Organizational Knowledge Work](site/docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf) + ISWC 2011
 - [Analysis and Comparison of Models for Individual and Organisational Knowledge Work](site/docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf) + MKWI 2012
@@ -166,7 +196,7 @@ Computergrafik, Interface-Design und Forschung zum Semantic Web. Young Talent Aw
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright` `d3.js`
 
 ### Mobile
-`Expo` `React Native` `Expo Router` `Skia` `Bluetooth LE` `SQLite` `Over-the-Air-Updates`
+`Expo` `React Native` `Expo Router` `Skia` `Bluetooth LE` `SQLite` `Over-the-air updates`
 
 ### Backend und Cloud
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
@@ -175,16 +205,24 @@ Computergrafik, Interface-Design und Forschung zum Semantic Web. Young Talent Aw
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
 
 ### Arbeitsweise
-`Tech-Lead` `Mentoring` `Code-Reviews` `Scrum` `Remote-Teams` `KI-Coding-Agenten`
+`Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
+
+### Sprachkenntnisse
+`Deutsch (Muttersprache)` `Englisch (verhandlungssicher)` `Französisch (gute Kenntnisse)`
+
+### Zertifizierungen
+![](site/assets/badges/pspo-1.svg "badge")
+
+[Professional Scrum Product Owner™ I (PSPO I)](https://www.credly.com/badges/9f36896a-7623-46d5-a36e-3800703bcdef) + Scrum.org
 
 ## Kontakt {#contact}
 
-Sie suchen einen Senior Engineer, der vorangeht und selbst baut? ==Sprechen wir.==
+Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Sprechen wir.==
 
 Ich bin offen für Senior- und Lead-Rollen in der Web-, Mobile- und Full-Stack-Entwicklung.
 
 ### Datenschutz
-Diese Seite setzt keine Cookies und verfolgt niemanden. Die Schriften liegen auf dieser Website. GitHub Pages hostet sie und kann IP-Adressen protokollieren, siehe [Datenschutzerklärung von GitHub](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+Diese Seite setzt keine Cookies und erhebt keine Analysedaten. Alle Schriften werden lokal ausgeliefert. Das Hosting über GitHub Pages kann IP-Adressen protokollieren, siehe [Datenschutzerklärung von GitHub](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
 ### Logos
 Die Logos sind Marken ihrer Inhaber. Sie nennen Unternehmen, für die ich gearbeitet habe, direkt oder über eine Agentur, und bedeuten keine Empfehlung.

@@ -30,6 +30,13 @@ A single page per language, built from two plain Markdown files.
 5. For a new `"keyvisual ascii"`, add the area its flashes go off in to `FLASH_AREAS` in `site/assets/main.js`. Without an entry it gets no flashes.
 6. If the top of the page changed, run `node scripts/check.mjs --og` to redraw the link preview images.
 
+## Adding a certification badge
+
+1. Download the issuer's SVG into `site/assets/badges/`, e.g. Scrum.org's from `https://static.scrum.org/web/badges/`.
+2. Move its colors into `fill` attributes, and drop its ids, so they can't clash with the page.
+3. For the dark theme, give its white disc the class `badge__disc` and the dark text on it `badge__ink`. `styles.css` colors both per theme. See `site/assets/badges/pspo-1.svg`.
+4. Reference it in both Markdown files on its own line above the certificate, e.g. `![](site/assets/badges/pspo-1.svg "badge")`.
+
 ## Adding a client logo
 
 1. Download the client's current logo as SVG into `raw/logos/`, ideally from the client's own website or press page.
@@ -97,6 +104,7 @@ Write a **separator** as a plus between spaces, e.g. `2021 – today + Munich`. 
   - `"keyvisual"`: no frame. In a project, the image fills the window behind its screen, see [Keyvisuals](#how-it-works). Projects of one customer can share it.
   - `"keyvisual ascii"`: a keyvisual drawn as colored ASCII art, see [ASCII keyvisuals](#how-it-works). Projects that share the image must all use this title.
   - `"logo"`: a one-color SVG from `site/assets/logos/`, drawn in the logo grey of the theme. Consecutive logos form a grid, see [Logos](#how-it-works).
+  - `"badge"`: a colored SVG from `site/assets/badges/`, inlined. Without alt text, screen readers skip it, since the text beside it names the certificate. See [Adding a certification badge](#adding-a-certification-badge).
   - any other text: browser frame with that caption
 - A numbered list in a project becomes a flow diagram. `1. **Device**: measures the sample` gives each step a title.
 - `[show more]` on its own line in a project hides the text after it behind a "Show more" link. It needs text before and after it, once per project. Without it, the project shows its whole text. See [Show more](#how-it-works).
@@ -131,7 +139,8 @@ test/                           ← node --test
 - **ASCII keyvisuals.** A `"keyvisual ascii"` draws its photo on a canvas as colored dots, after [Storm Plains on ascii.rest](https://ascii.rest/storm-plains/). Bright parts of the photo get large dots. In the light theme the dots are ink, so dark parts get them. Flashes go off every second or so while the keyvisual is shown, whether the page scrolls or not: cameras in the stands of the FC Bayern and ADAC photos, glints on the store lamps of MediaMarkt and on the ZEISS microscope. Each burst also brightens the whole picture, so it shows while a panel covers the flashes. `FLASH_AREAS` in `site/assets/main.js` sets where each photo's flashes go off. With "reduce motion" the dots stay still. A hidden keyvisual frees its canvas, so only the one on screen holds a full-window bitmap.
 - **Logos.** Client logos are inlined, so they take the logo grey of the theme, and their holes show the page behind them. The build scales every logo to fit the same box, as in a logo wall: a round crest fills its height, a wide wordmark its width.
 - **Hover.** Tiles rise one step under the mouse: a lighter surface and edge in the dark theme, a soft shadow in the light theme. They don't move, since they aren't links.
-- **Show more.** A project with a `[show more]` marker shows its text up to the marker, then a "Show more" link, then its tags. The link opens the rest for good and goes away. Each time the pointer enters the panel, the link lights up once in warm lamp light, a glint sweeps through its letters, and it returns to its own color. The printed CV shows the whole text. `npm run check` measures the screens with the rest hidden.
+- **Show more.** A project with a `[show more]` marker shows its text up to the marker, then a "Show more" link, then its tags. The last lines above the link fade out, and the link sits on the last one. The link opens the rest for good and goes away. When the pointer enters the panel, the link lights up in warm lamp light, a glint sweeps through its letters, and it returns to its own color. This repeats every 5 seconds while the pointer stays. With "reduce motion" the link lights up once, without the glint. The printed CV shows the whole text. `npm run check` measures the screens with the rest hidden.
+- **Highlights.** A `==highlight==` lights up like the "Show more" link when the pointer enters its screen, every 5 seconds while it stays. The amber marker glows and the glint sweeps across it, behind the letters. The letters stay dark, so they keep their contrast on the amber.
 - **Spotlight.** A soft glow follows the mouse, modeled on [brittanychiang.com](https://brittanychiang.com/). Touch screens don't show it.
 - **Themes.** The page follows the system theme until the visitor picks one with the switch. Text reaches 4.5:1 against its background, large text and the outlines of buttons 3:1.
 - **Printed CV.** "Save as PDF" prints the page as a white A4 CV of up to two pages, without screenshots. The brands print as their logos only.

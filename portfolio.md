@@ -112,6 +112,8 @@ Embedded into the large infrastructure of the MyZEISS Digital Platform (ZDP), I'
 
 For MyZEISS vision, in the role of lead full stack engineer, I worked on the key project, that enabled users to service their lens inserts for new Apple Vision Pro glasses.
 
+[show more]
+
 Driving the first realization of a right to left (RTL) UI within MyZEISS, I made the experience feel native for Arabic users, contributing new components and development tools to the Beyond Online design system. With implementation of the new major mobile first re-design, I was able to handover the project with a stable running app, clean codebase to the hands of the in-house team supporting the product going forward.
 
 For ZEISS Meditec, I led the migration of Media Asset Management (MAM) systems, built an automated notification and email service for device events, and contributed to an evolving ecosystem of micro-frontend applications that enabled a first-in-class active service experiencew for the customers.
@@ -207,6 +209,14 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 
 ### Ways of working
 `Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
+
+### Spoken languages
+`German (native speaker)` `English (full professional proficiency)` `French (limited working proficiency)`
+
+### Certifications
+![](site/assets/badges/pspo-1.svg "badge")
+
+[Professional Scrum Product Owner™ I (PSPO I)](https://www.credly.com/badges/9f36896a-7623-46d5-a36e-3800703bcdef) + Scrum.org
 
 ## Contact {#contact}
 

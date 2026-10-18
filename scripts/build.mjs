@@ -9,8 +9,10 @@ import { renderPage } from './lib/render.mjs';
 
 export const ROOT = new URL('..', import.meta.url).pathname;
 export const DIST = join(ROOT, 'dist');
-// One-color SVG logos. The pages inline them, so they aren't published as files.
+// One-color SVG logos and colored certification badges.
+// The pages inline them, so they aren't published as files.
 const LOGOS = join(ROOT, 'site/assets/logos');
+const BADGES = join(ROOT, 'site/assets/badges');
 
 // - source: Markdown file in the repository root
 // - path: where the page is published below the homepage
@@ -27,7 +29,8 @@ export const PAGES = [
 export async function build() {
   const { homepage } = JSON.parse(await readFile(join(ROOT, 'package.json'), 'utf8'));
   const images = JSON.parse(await readFile(join(ROOT, 'site/assets/img/manifest.json'), 'utf8'));
-  const logos = await loadLogos();
+  const logos = await loadSvgs(LOGOS, 'assets/logos');
+  const badges = await loadSvgs(BADGES, 'assets/badges');
   const [first, second] = await Promise.all(PAGES.map((page) => load(page.source)));
 
   const differences = compareStructure(first, second);
@@ -40,7 +43,7 @@ export async function build() {
   await rm(DIST, { recursive: true, force: true });
   await cp(join(ROOT, 'site'), DIST, {
     recursive: true,
-    filter: (source) => !source.endsWith('manifest.json') && !source.endsWith('.DS_Store') && !source.startsWith(LOGOS),
+    filter: (source) => !source.endsWith('manifest.json') && !source.endsWith('.DS_Store') && !source.startsWith(LOGOS) && !source.startsWith(BADGES),
   });
 
   const pages = [
@@ -57,6 +60,7 @@ export async function build() {
       alternate: { lang: page.alternatePortfolio.meta.lang, path: page.alternate.path },
       images,
       logos,
+      badges,
       ogImage,
     });
     const file = join(DIST, page.path, 'index.html');
@@ -75,10 +79,11 @@ async function load(source) {
   }
 }
 
-async function loadLogos() {
-  const files = (await readdir(LOGOS)).filter((file) => file.endsWith('.svg'));
-  const sources = await Promise.all(files.map((file) => readFile(join(LOGOS, file), 'utf8')));
-  return Object.fromEntries(files.map((file, index) => [`assets/logos/${file}`, sources[index]]));
+// Reads the SVG files in a folder, keyed by their published path.
+async function loadSvgs(folder, published) {
+  const files = (await readdir(folder)).filter((file) => file.endsWith('.svg'));
+  const sources = await Promise.all(files.map((file) => readFile(join(folder, file), 'utf8')));
+  return Object.fromEntries(files.map((file, index) => [`${published}/${file}`, sources[index]]));
 }
 
 async function exists(file) {

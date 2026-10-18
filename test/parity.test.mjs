@@ -33,6 +33,15 @@ test('names an ascii keyvisual when the block kinds differ', () => {
   assert.match(differences.join('\n'), /image \(keyvisual ascii\).*image \(keyvisual\)/);
 });
 
+test('names a badge when the block kinds differ', () => {
+  const english = DEFAULT_BODY.replace("Let's talk.", 'Let\'s talk.\n\n![](site/assets/badges/cert.svg "badge")');
+  const german = english.replace('"badge"', '"plain"');
+
+  const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
+
+  assert.match(differences.join('\n'), /image \(badge\).*image \(plain\)/);
+});
+
 test('reports every structural difference with both line numbers', () => {
   const german = DEFAULT_BODY.replace('desktop.webp', 'other.webp')
     .replace('site/docs/paper.pdf', 'site/docs/other.pdf')

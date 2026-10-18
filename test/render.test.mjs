@@ -225,6 +225,31 @@ test('rejects a logo with colors of its own', () => {
   assert.throws(() => renderLogos({ logos: colored }), /line \d+: .*crest\.svg.*fill/);
 });
 
+const BADGE_SVG =
+  '<?xml version="1.0"?>\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">\n<!-- Source: example.org -->\n<path fill="#80a33e" d="M0 0h10v10H0z"/>\n<path class="badge__disc" d="M1 1h8v8H1z"/>\n</svg>\n';
+const renderBadge = (line, badges = { 'assets/badges/cert.svg': BADGE_SVG }) => {
+  const body = DEFAULT_BODY.replace("Let's talk.", `Let's talk.\n\n${line}`);
+  return renderPage(toPortfolio(parseMarkdown(portfolioSource({ body }))), { ...OPTIONS, badges });
+};
+
+test('inlines a badge with its own colors, hidden from screen readers without alt text', () => {
+  const html = renderBadge('![](site/assets/badges/cert.svg "badge")');
+
+  assert.match(
+    html,
+    /<svg class="badge" viewBox="0 0 100 100" aria-hidden="true">\s*<path fill="#80a33e" d="M0 0h10v10H0z"\/>\s*<path class="badge__disc" d="M1 1h8v8H1z"\/>\s*<\/svg>/,
+  );
+  assert.doesNotMatch(html, /Source: example\.org|<\?xml/);
+});
+
+test('names a badge for screen readers by its alt text', () => {
+  assert.match(renderBadge('![PSPO I](site/assets/badges/cert.svg "badge")'), /<svg class="badge" viewBox="0 0 100 100" role="img" aria-label="PSPO I">/);
+});
+
+test('rejects a badge that has no file', () => {
+  assert.throws(() => renderBadge('![](site/assets/badges/cert.svg "badge")', {}), /line \d+: site\/assets\/badges\/cert\.svg does not exist/);
+});
+
 test('rejects a logo that has no file', () => {
   assert.throws(() => renderLogos({ logos: {} }), /line \d+: site\/assets\/logos\/crest\.svg does not exist/);
 });
