@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## 1.0.0 (unreleased)
+
+### Features
+
+* rebuilds the portfolio as one page per language, generated from `portfolio.de.md` and `portfolio.md` without dependencies
+* adds full-screen sections that fit a 13" MacBook Air, checked in CI with headless Chrome
+* adds project panels that slide in on scroll, screenshots that scroll on hover, and a cursor spotlight
+* adds light and dark themes that follow the system, with a switch
+* adds a print stylesheet that turns the page into a two-page A4 CV
+* replaces the 2019 projects with recent client work for ZEISS, ADAC Motorsport, FC Bayern and MediaMarktSaturn
+
+### BREAKING CHANGES
+
+* replaces the VuePress site and its downloadable CV files
+
 ## [0.8.0](https://github.com/chunksnbits/portfolio/compare/v0.6.2...v0.8.0) (2019-07-31)
 
 

@@ -1,0 +1,47 @@
+# Tests, builds and checks the portfolio on every push, and publishes master to GitHub Pages.
+# see: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+#
+# NOTE: the repository's Pages source must be set to "GitHub Actions", not the gh-pages branch.
+name: Pages
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: npm test
+      # Builds dist/ and fails if the printed CV runs past two pages
+      # or a color misses the WCAG AA contrast minimum.
+      - run: npm run check
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
