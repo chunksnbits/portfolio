@@ -318,3 +318,8 @@ test('links back to the portfolio and over to the CV in the other language', () 
 test('rejects a CV in another language than its portfolio', () => {
   assert.throws(() => renderCvSource(cvSource({ lang: 'de' })), /frontmatter: .*"de".*"en"/);
 });
+
+test('declares the dark theme to the browser before the stylesheets load, whatever the system prefers', () => {
+  assert.match(render(), /<meta name="color-scheme" content="dark">/);
+  assert.match(renderCvSource(), /<meta name="color-scheme" content="dark">/);
+});

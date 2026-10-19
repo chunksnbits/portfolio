@@ -45,19 +45,10 @@
   --shadow: 0 24px 48px -28px rgba(15, 23, 42, 0.45);
 }
 
-@media screen and (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    color-scheme: dark;
-    --desk: #0b1120;
-    --desk-text: #f1f5f9;
-    --control: #5f6e85;
-    --focus: #38bdf8;
-    --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
-  }
-}
-
+/* Dark is the default on screen, whatever the system prefers.
+ * A visitor who picked light on the portfolio gets it here too. */
 @media screen {
-  :root[data-theme='dark'] {
+  :root:not([data-theme='light']) {
     color-scheme: dark;
     --desk: #0b1120;
     --desk-text: #f1f5f9;

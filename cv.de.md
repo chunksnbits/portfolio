@@ -4,7 +4,7 @@ lang: de
 
 ## Über mich {#about}
 
-Lead Software Engineer mit mehr 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web- Anwendungen und Mobile Apps. AI first developer mit Fokus auf Agentic Software Engineering und KI-gestützte Softwareentwicklung. Hands-on-Lead mit klarem technischem Urteilsvermögen und Projektverantwortung.
+Lead Software Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web- Anwendungen und Mobile Apps. AI-first developer mit Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen und Projektverantwortung.
 
 ## Erfahrung {#experience}
 

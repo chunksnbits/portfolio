@@ -68,11 +68,12 @@
   --tag-bg: #115e59;
   --tag-text: #f0fdfa;
   --status: #0f766e;
-  --spot: rgba(2, 132, 199, 0.08);
+  --spotlight: none;
   --shadow: 0 24px 48px -28px rgba(15, 23, 42, 0.28);
   /* A hovered tile rises one step: a shadow in the light theme, a lighter surface and edge in the dark theme. */
   --surface-raised: var(--surface);
-  --shadow-raised: 0 16px 32px -20px rgba(15, 23, 42, 0.3);
+  --border-raised: color-mix(in srgb, var(--border), var(--border-strong));
+  --shadow-raised: 0 12px 24px -18px rgba(15, 23, 42, 0.18);
   /* A badge's disc and the wordmark on it: white and navy as issued, a dark disc with light letters in the dark theme. */
   --badge-disc: #ffffff;
   --badge-ink: #405a70;
@@ -82,7 +83,7 @@
   --glint: #f59e0b;
   /* The glint across a highlight, light enough to show on its amber in both themes. */
   --mark-glint: #fff3d1;
-  --keyvisual-opacity: 0.35;
+  --keyvisual-opacity: 0.6;
   /* The photo's opacity behind the rail. Higher values let a black or white spot in it push the rail's button outlines below 3:1. */
   --keyvisual-rail-opacity: 0.17;
   --frame: #e2e8f0;
@@ -90,7 +91,9 @@
   --moon: block;
 }
 
-@media screen and (prefers-color-scheme: dark) {
+/* Dark is the default on screen, whatever the system prefers.
+ * The light theme is opt-in through the theme toggle, and print always uses it. */
+@media screen {
   :root:not([data-theme='light']) {
     color-scheme: dark;
     --bg: #0b1120;
@@ -112,47 +115,11 @@
     --tag-bg: var(--chip-bg);
     --tag-text: var(--chip-text);
     --status: #2dd4bf;
-    --spot: rgba(29, 78, 216, 0.15);
+    --spot: rgba(29, 78, 216, 0.09);
+    --spotlight: block;
     --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
     --surface-raised: var(--surface-hover);
-    --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
-    --lamp: #ff8f5a;
-    --glint: #fff0c7;
-    --badge-disc: #0b1120;
-    --badge-ink: #e2e8f0;
-    --keyvisual-opacity: 0.5;
-    --keyvisual-rail-opacity: 0.075;
-    --frame: #1e293b;
-    --sun: block;
-    --moon: none;
-  }
-}
-
-@media screen {
-  :root[data-theme='dark'] {
-    color-scheme: dark;
-    --bg: #0b1120;
-    --surface: #0f172a;
-    --surface-hover: #162036;
-    --border: rgba(148, 163, 184, 0.14);
-    --border-strong: rgba(148, 163, 184, 0.3);
-    --control: #5f6e85;
-    --logo: #7f8ca1;
-    --text: #f1f5f9;
-    --text-body: #cbd5e1;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
-    --accent-strong: #7dd3fc;
-    --on-accent: #0b1120;
-    --amber: #fbbf24;
-    --chip-bg: rgba(45, 212, 191, 0.1);
-    --chip-text: #5eead4;
-    --tag-bg: var(--chip-bg);
-    --tag-text: var(--chip-text);
-    --status: #2dd4bf;
-    --spot: rgba(29, 78, 216, 0.15);
-    --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
-    --surface-raised: var(--surface-hover);
+    --border-raised: var(--border-strong);
     --shadow-raised: inset 0 1px 0 rgba(148, 163, 184, 0.1), 0 16px 32px -20px rgba(2, 6, 23, 0.9);
     --lamp: #ff8f5a;
     --glint: #fff0c7;
@@ -290,9 +257,10 @@ code {
   top: 16px;
 }
 
-/* Cursor spotlight, like brittanychiang.com: a soft glow that follows the mouse. */
+/* Cursor spotlight, like brittanychiang.com: a soft glow that follows the mouse, in the dark theme only. */
 
 .spotlight {
+  display: var(--spotlight);
   position: fixed;
   inset: 0;
   z-index: 30;
@@ -932,9 +900,9 @@ code {
 /* The glint is a background clipped to the letters, waiting left of them until the glint animation moves it across. */
 @media (hover: hover) {
   .panel:hover .more {
-    color: color-mix(in srgb, var(--lamp) calc(100% * var(--lit)), var(--accent));
-    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--lamp) calc(45% * var(--lit)), transparent));
-    background: linear-gradient(110deg, currentColor 43%, var(--glint) 50%, currentColor 57%) 100% 0 / 250% 100% no-repeat;
+    color: color-mix(in srgb, var(--lamp) calc(60% * var(--lit)), var(--accent));
+    filter: drop-shadow(0 0 4px color-mix(in srgb, var(--lamp) calc(25% * var(--lit)), transparent));
+    background: linear-gradient(110deg, currentColor 43%, color-mix(in srgb, var(--glint) 50%, currentColor) 50%, currentColor 57%) 100% 0 / 250% 100% no-repeat;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -954,8 +922,8 @@ code {
  * The marker lights up instead, and the glint sweeps across it behind the letters. */
 @media screen and (hover: hover) {
   .screen__inner:hover mark {
-    filter: brightness(calc(1 + 0.08 * var(--lit)))
-      drop-shadow(0 0 10px color-mix(in srgb, var(--lamp) calc(50% * var(--lit)), transparent));
+    filter: brightness(calc(1 + 0.05 * var(--lit)))
+      drop-shadow(0 0 6px color-mix(in srgb, var(--lamp) calc(30% * var(--lit)), transparent));
     animation: lamp 5s ease-in-out;
   }
 }
@@ -971,7 +939,7 @@ code {
     position: absolute;
     z-index: -1;
     inset: 0 0.22em;
-    background: linear-gradient(110deg, transparent 42%, var(--mark-glint) 50%, transparent 58%) 100% 0 / 250% 100% no-repeat;
+    background: linear-gradient(110deg, transparent 42%, color-mix(in srgb, var(--mark-glint) 60%, transparent) 50%, transparent 58%) 100% 0 / 250% 100% no-repeat;
     animation: glint 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 }
@@ -1445,7 +1413,7 @@ code {
   .screen--about .entry:hover,
   .screen--experience .entry:hover,
   .screen--skills .entry:hover {
-    border-color: var(--border-strong);
+    border-color: var(--border-raised);
     background-color: var(--surface-raised);
     box-shadow: var(--shadow-raised);
   }
@@ -1453,7 +1421,7 @@ code {
   /* Large tiles rise half a step, so the flow steps inside a panel stay lighter than the panel. */
   .screen--contact .screen__inner:hover,
   .panel:hover {
-    border-color: var(--border-strong);
+    border-color: var(--border-raised);
     background-color: color-mix(in srgb, var(--surface), var(--surface-raised));
     box-shadow: var(--shadow), var(--shadow-raised);
   }
