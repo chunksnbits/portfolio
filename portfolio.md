@@ -12,17 +12,6 @@ linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
 description: Lead Software Engineer. 10x engineer with intent, a vision for the architecture, and judgment. 15 years of experience in building large scale React and Angular full-stack applications and integrations for customers like ZEISS, ADAC Motorsport, FC Bayern München, BMW and Allianz.
 ---
 
-<!--
-The English page, published at /portfolio/en/. Its German twin is portfolio.de.md.
-How to write this file: README.md, "Writing portfolio.md".
-
-Custom Markdown:
-- `==text==`: highlights words in a section's first paragraph
-- `  - item` under a list item: sub-items, shown on one line joined by +
-- `{#id}`: id of a heading, e.g. `## About {#about}`
-- `![alt](site/… "phone")`: the image title picks the frame, see README.md
--->
-
 ## About {#about}
 
 I engineer web and mobile systems that ==are built to last==.

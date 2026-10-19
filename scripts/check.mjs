@@ -1,10 +1,10 @@
 // Checks the built pages in headless Chrome, for both languages:
 // - every desktop screen and the rail fit the viewport below, and nothing scrolls sideways
-// - the printed CV stays within two A4 pages
+// - the printed CV stays within two A4 pages, and the one-page CV within one
 // - text and controls meet the WCAG 2.2 AA contrast minimums, in the light and the dark theme
 //
 // Options:
-// - --shots <dir>: also save a screenshot per screen and the CV as PDF, for review
+// - --shots <dir>: also save a screenshot per screen and both CVs as PDF, for review
 // - --theme light|dark: color scheme for the screenshots (default: dark)
 // - --mobile: add the same screenshots at phone width
 // - --scale <n>: device pixel ratio of the screenshots, e.g. 2 for a Retina display (default: 1)
@@ -17,7 +17,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { build, DIST, PAGES, ROOT } from './build.mjs';
+import { build, CV_PATH, DIST, PAGES, ROOT } from './build.mjs';
 import { serve } from './lib/server.mjs';
 
 // A 13" MacBook Air at its default 1470×956, minus the menu bar, Chrome's toolbars and the Dock.
@@ -202,17 +202,10 @@ try {
     if (railOver) failures.push(`${page.source}: the rail is ${result.rail.needed - result.rail.available} px too tall`);
     if (result.sideways > 0) failures.push(`${page.source}: the page scrolls sideways by ${result.sideways} px`);
 
-    for (const theme of ['light', 'dark']) {
-      await setTheme(tab, theme);
-      const problems = await evaluate(tab.send, `(${auditContrast})()`);
-      console.log(`  ${problems.length > 0 ? '✗' : '✓'} ${`contrast, ${theme}`.padEnd(18)} ${problems.length} below the minimum`);
-      failures.push(...problems.map((problem) => `${page.source}, ${theme} theme: ${problem}`));
-    }
-    await setTheme(tab, options.theme);
+    failures.push(...(await auditThemes(tab, page.source, 'contrast')));
 
-    const { data } = await tab.send('Page.printToPDF', { preferCSSPageSize: true, printBackground: true });
-    const pdf = Buffer.from(data, 'base64');
-    const cvPages = pdf.toString('latin1').match(/\/Type\s*\/Page\b/g)?.length ?? 0;
+    const pdf = await printPdf(tab);
+    const cvPages = countPages(pdf);
     console.log(`  ${cvPages > MAX_CV_PAGES ? '✗' : '✓'} ${'printed CV'.padEnd(18)} ${cvPages} of ${MAX_CV_PAGES} pages`);
     if (cvPages > MAX_CV_PAGES) failures.push(`${page.source}: the printed CV has ${cvPages} pages`);
 
@@ -220,6 +213,18 @@ try {
       await saveShots(tab, options.shots, lang, result.screens, pdf);
     }
     await tab.close();
+
+    const cv = await openTab(chrome.client, server.url + page.path + CV_PATH, { ...VIEWPORT, theme: options.theme });
+    failures.push(...(await auditThemes(cv, page.cvSource, 'CV contrast')));
+    const sheet = await printPdf(cv);
+    const sheets = countPages(sheet);
+    console.log(`  ${sheets > 1 ? '✗' : '✓'} ${'one-page CV'.padEnd(18)} ${sheets} of 1 page`);
+    if (sheets > 1) failures.push(`${page.cvSource}: the one-page CV prints on ${sheets} pages`);
+    if (options.shots) {
+      await mkdir(options.shots, { recursive: true });
+      await writeFile(join(options.shots, `${lang}-cv-one-page.pdf`), sheet);
+    }
+    await cv.close();
 
     if (options.shots && options.mobile) {
       const phone = await openTab(chrome.client, server.url + page.path, { ...PHONE, theme: options.theme });
@@ -264,6 +269,29 @@ async function saveShots(tab, folder, lang, screens, pdf = null) {
     if (screen.keyvisual) await new Promise((done) => setTimeout(done, KEYVISUAL_FOCUS_MS));
     await screenshot(tab, join(folder, `${lang}-${options.theme}-${String(index + 1).padStart(2, '0')}-${screen.id}.png`));
   }
+}
+
+// Audits the contrast in the light and the dark theme, prints a line for each, and returns the problems.
+// The tab is left in the theme the screenshots use.
+async function auditThemes(tab, source, label) {
+  const problems = [];
+  for (const theme of ['light', 'dark']) {
+    await setTheme(tab, theme);
+    const found = await evaluate(tab.send, `(${auditContrast})()`);
+    console.log(`  ${found.length > 0 ? '✗' : '✓'} ${`${label}, ${theme}`.padEnd(18)} ${found.length} below the minimum`);
+    problems.push(...found.map((problem) => `${source}, ${theme} theme: ${problem}`));
+  }
+  await setTheme(tab, options.theme);
+  return problems;
+}
+
+async function printPdf(tab) {
+  const { data } = await tab.send('Page.printToPDF', { preferCSSPageSize: true, printBackground: true });
+  return Buffer.from(data, 'base64');
+}
+
+function countPages(pdf) {
+  return pdf.toString('latin1').match(/\/Type\s*\/Page\b/g)?.length ?? 0;
 }
 
 async function scrollTo(tab, top) {

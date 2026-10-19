@@ -5,7 +5,7 @@ const prefersDark = matchMedia('(prefers-color-scheme: dark)');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
 setUpThemeToggle();
-setUpPrintButtons();
+setUpCvPrinting();
 setUpSpotlight();
 setUpNavHighlight();
 setUpShowMore();
@@ -35,10 +35,47 @@ function setUpThemeToggle() {
   sync();
 }
 
-function setUpPrintButtons() {
-  for (const button of document.querySelectorAll('[data-print]')) {
-    button.addEventListener('click', () => print());
+// "Save as PDF" links to the one-page CV. Here it prints the CV from a hidden frame, so the visitor stays on the page.
+// Touch screens follow the link instead, since some mobile browsers print the page around a frame.
+function setUpCvPrinting() {
+  const links = document.querySelectorAll('[data-print]');
+  if (links.length === 0 || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  // The CV loads once, as soon as the pointer or the keyboard reaches a link, so it is ready by the click.
+  let cv = null;
+  const load = (url) => (cv ??= loadFrame(url));
+  for (const link of links) {
+    link.addEventListener('pointerenter', () => load(link.href));
+    link.addEventListener('focus', () => load(link.href));
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      load(link.href)
+        .then((view) => view.print())
+        .catch(() => location.assign(link.href));
+    });
   }
+}
+
+// Resolves with the window of a hidden frame showing `url`, once the fonts it uses have loaded.
+// The frame stays rendered, only transparent and 1px wide, since browsers print a frame without layout blank.
+function loadFrame(url) {
+  return new Promise((resolve, reject) => {
+    const frame = document.createElement('iframe');
+    frame.style.cssText = 'position: fixed; top: 0; left: 0; width: 1px; height: 1px; border: 0; opacity: 0; pointer-events: none';
+    frame.setAttribute('aria-hidden', 'true');
+    frame.tabIndex = -1;
+    frame.addEventListener(
+      'load',
+      () => {
+        const view = frame.contentWindow;
+        Promise.all([...view.document.fonts].map((font) => font.load())).then(() => resolve(view), reject);
+      },
+      { once: true },
+    );
+    frame.addEventListener('error', reject, { once: true });
+    frame.src = url;
+    document.body.append(frame);
+  });
 }
 
 function setUpSpotlight() {

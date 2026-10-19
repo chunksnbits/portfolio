@@ -1,11 +1,11 @@
-// Builds the site into dist/: one page per language from the Markdown files, plus everything in site/.
+// Builds the site into dist/: a page and a one-page CV per language from the Markdown files, plus everything in site/.
 import { access, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseMarkdown } from './lib/markdown.mjs';
 import { compareStructure } from './lib/parity.mjs';
-import { toPortfolio } from './lib/portfolio.mjs';
-import { renderPage } from './lib/render.mjs';
+import { toCv, toPortfolio } from './lib/portfolio.mjs';
+import { renderCv, renderPage } from './lib/render.mjs';
 
 export const ROOT = new URL('..', import.meta.url).pathname;
 export const DIST = join(ROOT, 'dist');
@@ -14,16 +14,20 @@ export const DIST = join(ROOT, 'dist');
 const LOGOS = join(ROOT, 'site/assets/logos');
 const BADGES = join(ROOT, 'site/assets/badges');
 
-// - source: Markdown file in the repository root
+// - source: Markdown file of the page in the repository root
+// - cvSource: Markdown file of the page's one-page CV
 // - path: where the page is published below the homepage
 // - base: the way from the page back to the site root
 export const PAGES = [
-  { source: 'portfolio.de.md', path: '', base: '' },
-  { source: 'portfolio.md', path: 'en/', base: '../' },
+  { source: 'portfolio.de.md', cvSource: 'cv.de.md', path: '', base: '' },
+  { source: 'portfolio.md', cvSource: 'cv.md', path: 'en/', base: '../' },
 ];
 
+// Where a page's one-page CV is published, below the page.
+export const CV_PATH = 'cv/';
+
 /**
- * Builds both language pages into dist/ and throws if a file is invalid.
+ * Builds both language pages and their CVs into dist/ and throws if a file is invalid.
  * A structural difference between the two languages only prints a warning.
  */
 export async function build() {
@@ -31,14 +35,10 @@ export async function build() {
   const images = JSON.parse(await readFile(join(ROOT, 'site/assets/img/manifest.json'), 'utf8'));
   const logos = await loadSvgs(LOGOS, 'assets/logos');
   const badges = await loadSvgs(BADGES, 'assets/badges');
-  const [first, second] = await Promise.all(PAGES.map((page) => load(page.source)));
-
-  const differences = compareStructure(first, second);
-  if (differences.length > 0) {
-    console.warn(
-      `Warning: ${PAGES[0].source} and ${PAGES[1].source} differ in structure:\n- ${differences.join('\n- ')}`,
-    );
-  }
+  const [first, second] = await Promise.all(PAGES.map((page) => load(page.source, toPortfolio)));
+  const [firstCv, secondCv] = await Promise.all(PAGES.map((page) => load(page.cvSource, toCv)));
+  warnOnDrift(PAGES[0].source, PAGES[1].source, compareStructure(first, second));
+  warnOnDrift(PAGES[0].cvSource, PAGES[1].cvSource, compareStructure(firstCv, secondCv));
 
   await rm(DIST, { recursive: true, force: true });
   await cp(join(ROOT, 'site'), DIST, {
@@ -47,36 +47,68 @@ export async function build() {
   });
 
   const pages = [
-    { ...PAGES[0], portfolio: first, alternate: PAGES[1], alternatePortfolio: second },
-    { ...PAGES[1], portfolio: second, alternate: PAGES[0], alternatePortfolio: first },
+    { ...PAGES[0], portfolio: first, cv: firstCv, alternate: PAGES[1], alternatePortfolio: second },
+    { ...PAGES[1], portfolio: second, cv: secondCv, alternate: PAGES[0], alternatePortfolio: first },
   ];
   for (const page of pages) {
     const lang = page.portfolio.meta.lang;
+    const alternateLang = page.alternatePortfolio.meta.lang;
     const ogImage = (await exists(join(ROOT, 'site', `og-${lang}.png`))) ? `${homepage}og-${lang}.png` : null;
-    const html = renderPage(page.portfolio, {
-      base: page.base,
-      homepage,
-      path: page.path,
-      alternate: { lang: page.alternatePortfolio.meta.lang, path: page.alternate.path },
-      images,
-      logos,
-      badges,
-      ogImage,
-    });
-    const file = join(DIST, page.path, 'index.html');
-    await mkdir(dirname(file), { recursive: true });
-    await writeFile(file, html);
+    const html = prefixErrors(page.source, () =>
+      renderPage(page.portfolio, {
+        base: page.base,
+        homepage,
+        path: page.path,
+        cvPath: page.path + CV_PATH,
+        alternate: { lang: alternateLang, path: page.alternate.path },
+        images,
+        logos,
+        badges,
+        ogImage,
+      }),
+    );
+    await write(join(DIST, page.path, 'index.html'), html);
+
+    const cv = prefixErrors(page.cvSource, () =>
+      renderCv(page.cv, {
+        meta: page.portfolio.meta,
+        base: `${page.base}../`,
+        homepage,
+        path: page.path + CV_PATH,
+        portfolioPath: page.path,
+        alternate: { lang: alternateLang, path: page.alternate.path + CV_PATH },
+        images,
+        logos,
+        badges,
+      }),
+    );
+    await write(join(DIST, page.path, CV_PATH, 'index.html'), cv);
   }
 }
 
-async function load(source) {
+async function load(source, toModel) {
   const markdown = await readFile(join(ROOT, source), 'utf8');
+  return prefixErrors(source, () => toModel(parseMarkdown(markdown)));
+}
+
+function prefixErrors(source, work) {
   try {
-    return toPortfolio(parseMarkdown(markdown));
+    return work();
   } catch (error) {
     error.message = `${source}: ${error.message}`;
     throw error;
   }
+}
+
+function warnOnDrift(first, second, differences) {
+  if (differences.length > 0) {
+    console.warn(`Warning: ${first} and ${second} differ in structure:\n- ${differences.join('\n- ')}`);
+  }
+}
+
+async function write(file, html) {
+  await mkdir(dirname(file), { recursive: true });
+  await writeFile(file, html);
 }
 
 // Reads the SVG files in a folder, keyed by their published path.

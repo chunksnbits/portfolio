@@ -1,0 +1,502 @@
+/* One-page CV: an A4 sheet laid out like the 2019 CV, with the career on the left and contact and skills on the right.
+ * The sheet stays white in both themes, like paper. Only the desk around it and the toolbar follow the theme.
+ * `npm run check` fails when either language prints to more than one page. */
+
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/inter.woff2') format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('fonts/plus-jakarta-sans.woff2') format('woff2');
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('fonts/jetbrains-mono.woff2') format('woff2');
+  font-weight: 100 800;
+  font-display: swap;
+}
+
+:root {
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+
+  /* The sheet, in the portfolio's print colors. */
+  --ink: #0f172a;
+  --body: #1e293b;
+  --muted: #475569;
+  --accent: #075985;
+  --amber: #92400e;
+  --rule: #94a3b8;
+
+  color-scheme: light;
+  --desk: #e2e8f0;
+  --desk-text: #0f172a;
+  /* Outline of the print button, at least 3:1 against the desk. */
+  --control: #64748b;
+  --focus: #075985;
+  --shadow: 0 24px 48px -28px rgba(15, 23, 42, 0.45);
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --desk: #0b1120;
+    --desk-text: #f1f5f9;
+    --control: #5f6e85;
+    --focus: #38bdf8;
+    --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
+  }
+}
+
+@media screen {
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --desk: #0b1120;
+    --desk-text: #f1f5f9;
+    --control: #5f6e85;
+    --focus: #38bdf8;
+    --shadow: 0 28px 56px -28px rgba(2, 6, 23, 0.9);
+  }
+}
+
+/* Base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--desk);
+  color: var(--desk-text);
+  font: 400 1rem/1.5 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+p,
+ul {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Toolbar above the sheet, on screen only. */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 210mm;
+  margin-inline: auto;
+  padding: 20px 0 16px;
+}
+
+.toolbar__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--desk-text);
+  font: 600 0.875rem/1 var(--font-body);
+  text-decoration: none;
+}
+
+.toolbar__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-left: auto;
+  padding: 9px 12px;
+  border: 1px solid var(--control);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--desk-text);
+  font: 600 0.8125rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: var(--desk-text);
+}
+
+/* The sheet: header and career on the left, contact and skills on the right. */
+
+.sheet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 55mm;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'header aside'
+    'main aside';
+  column-gap: 7mm;
+  width: 210mm;
+  min-height: 297mm;
+  margin: 0 auto 48px;
+  padding: 11mm 13mm 10mm;
+  background: #ffffff;
+  color: var(--body);
+  box-shadow: var(--shadow);
+  font: 400 8.3pt/1.42 var(--font-body);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.sheet a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.sheet a:hover {
+  text-decoration: underline;
+}
+
+.sheet strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.sheet mark {
+  background: none;
+  color: inherit;
+}
+
+.cv-header {
+  grid-area: header;
+  margin-bottom: 5mm;
+}
+
+.cv-main {
+  grid-area: main;
+}
+
+.cv-aside {
+  grid-area: aside;
+}
+
+/* No negative letter-spacing here: PDF readers would merge the name into one word. */
+.cv-header__name {
+  color: var(--ink);
+  font: 700 2.7em/1.05 var(--font-display);
+}
+
+.cv-header__title {
+  margin-top: 1.6mm;
+  color: var(--accent);
+  font: 600 1.25em/1.3 var(--font-body);
+}
+
+.cv-header__subtitle {
+  margin-top: 0.4mm;
+  color: var(--muted);
+}
+
+.cv-section + .cv-section {
+  margin-top: 4.5mm;
+}
+
+/* As in the 2019 CV: an uppercase title over a bar as wide as the title. */
+.cv-section__title {
+  display: inline-block;
+  margin-bottom: 2.6mm;
+  color: var(--accent);
+  font: 700 0.9em/1 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cv-section__title::after {
+  content: '';
+  display: block;
+  margin-top: 1.4mm;
+  border-top: 2px solid var(--ink);
+}
+
+.cv-section > p + p {
+  margin-top: 1.5mm;
+}
+
+.lead {
+  color: var(--ink);
+}
+
+.entry__title {
+  color: var(--ink);
+  font: 700 1.1em/1.3 var(--font-display);
+}
+
+.meta {
+  color: var(--muted);
+  font: 500 0.82em/1.45 var(--font-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.meta__period {
+  color: var(--amber);
+}
+
+.entry > p:not(.meta),
+.entry > .list {
+  margin-top: 1.2mm;
+}
+
+.list {
+  padding-left: 3.5mm;
+  list-style-type: '– ';
+}
+
+.list li::marker {
+  color: var(--muted);
+}
+
+.list li + li {
+  margin-top: 0.5mm;
+}
+
+/* Timeline as in the 2019 CV: each period stands in a gutter left of its entry, above a rule that runs down to the next one.
+ * A grid rather than absolute positioning keeps the PDF's text in reading order: title, period, details, text. */
+.cv-main .entry {
+  display: grid;
+  /* In em, so the gutter grows with the type on phones. At print size it is 15mm. */
+  grid-template-columns: 5.1em minmax(0, 1fr);
+  column-gap: 0.85em;
+  padding-bottom: 3mm;
+}
+
+.cv-main .entry > *,
+.cv-main .meta__details {
+  grid-column: 2;
+}
+
+.cv-main .meta {
+  display: contents;
+}
+
+.cv-main .meta__period {
+  grid-column: 1;
+  /* More rows than any entry has, so the period's rule runs down the whole entry. */
+  grid-row: 1 / span 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.4mm;
+  white-space: nowrap;
+}
+
+.cv-main .meta__period::after {
+  content: '';
+  flex: 1;
+  margin: 1.3mm 0 -3mm;
+  border-left: 1px solid var(--rule);
+}
+
+.cv-main .entry:last-child {
+  padding-bottom: 0;
+}
+
+.cv-main .entry:last-child .meta__period::after {
+  margin-bottom: 0;
+}
+
+.cv-main .meta__separator {
+  display: none;
+}
+
+.cv-main .meta__details {
+  margin-top: 0.3mm;
+}
+
+/* Sidebar */
+
+.cv-aside {
+  font-size: 0.94em;
+}
+
+.cv-aside .entry + .entry {
+  margin-top: 2.2mm;
+}
+
+.cv-aside .entry__title {
+  font: 600 1em/1.3 var(--font-body);
+}
+
+.cv-aside .meta {
+  margin-top: 0.3mm;
+}
+
+.cv-aside .list {
+  font-size: 0.94em;
+}
+
+/* Small enough that the longest address, the LinkedIn profile, fits on one line. */
+.contact-list {
+  display: grid;
+  gap: 1.4mm;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9em;
+}
+
+.contact-list li,
+.contact-list a {
+  display: flex;
+  align-items: center;
+  gap: 1.6mm;
+  min-width: 0;
+}
+
+.contact-list span {
+  overflow-wrap: anywhere;
+}
+
+.contact-list .icon {
+  width: 1.15em;
+  height: 1.15em;
+  color: var(--accent);
+}
+
+/* Tags read as one line of text, which applicant tracking systems parse as well.
+ * A tag never breaks inside, so "Englisch (verhandlungssicher)" stays together. */
+.tags {
+  margin-top: 0.6mm;
+  padding: 0;
+  list-style: none;
+  line-height: 1.5;
+}
+
+.tags li {
+  display: inline-block;
+  margin-right: 0.35em;
+}
+
+.tags li:not(:last-child)::after {
+  content: '\00a0·';
+  color: var(--muted);
+}
+
+/* The certification's title lines up with the other groups.
+ * Its badge sits below the title, with the text beside it. */
+.cv-aside .entry:has(> .badge) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 2.5mm;
+}
+
+.cv-aside .entry:has(> .badge) > .entry__title {
+  grid-column: 1 / -1;
+}
+
+/* Trimmed to the capitals, so its margin measures to the top of the letters, as the badge's does to its top edge. */
+.cv-aside .entry:has(> .badge) > p {
+  margin-top: 1.8mm;
+  text-box: trim-start cap alphabetic;
+}
+
+.badge {
+  display: block;
+  width: 11mm;
+  height: auto;
+  margin-top: 1.4mm;
+}
+
+.badge__disc {
+  fill: #ffffff;
+}
+
+.badge__ink {
+  fill: #405a70;
+}
+
+/* Phones get the sheet as one column. Print keeps A4 whatever the screen. */
+@media screen and (max-width: 860px) {
+  .toolbar {
+    width: auto;
+    padding-inline: 16px;
+  }
+
+  .sheet {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      'header'
+      'main'
+      'aside';
+    width: auto;
+    min-height: 0;
+    margin: 0 16px 32px;
+    padding: 28px 20px;
+    font-size: 10.5pt;
+  }
+
+  .cv-aside {
+    margin-top: 6mm;
+  }
+}
+
+/* The sheet's padding is the page margin, which leaves no room for the browser's date and address lines. */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+@media print {
+  html {
+    background: #ffffff;
+  }
+
+  .toolbar {
+    display: none;
+  }
+
+  .sheet {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+}

@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { parseMarkdown } from '../scripts/lib/markdown.mjs';
-import { toPortfolio } from '../scripts/lib/portfolio.mjs';
-import { portfolioSource } from './fixtures.mjs';
+import { toCv, toPortfolio } from '../scripts/lib/portfolio.mjs';
+import { cvSource, portfolioSource } from './fixtures.mjs';
 
 const load = (options) => toPortfolio(parseMarkdown(portfolioSource(options)));
 
@@ -61,4 +61,28 @@ test('rejects broken structure, naming the line', () => {
   for (const [body, message] of cases) {
     assert.throws(() => toPortfolio(parseMarkdown(portfolioSource({ body }))), message, body);
   }
+});
+
+test('reads a CV into sections and entries like a portfolio', () => {
+  const cv = toCv(parseMarkdown(cvSource()));
+
+  assert.deepEqual(cv.meta, { lang: 'en' });
+  assert.deepEqual(
+    cv.sections.map((section) => [section.id, section.entries.map((entry) => entry.title)]),
+    [
+      ['about', []],
+      ['experience', ['Senior Software Engineer + Satellytes']],
+      ['skills', ['Frontend']],
+      ['education', ['Diplom-Informatiker + University of Koblenz-Landau']],
+    ],
+  );
+  assert.deepEqual(cv.sections[1].entries[0].meta, { period: '2021 – today', details: 'Munich, Fulda' });
+});
+
+test('takes only the language as CV frontmatter, since the header comes from the portfolio', () => {
+  const extra = cvSource().replace('lang: en', 'lang: en\nname: Daniel Eissing');
+  assert.throws(() => toCv(parseMarkdown(extra)), /name/);
+
+  const missing = cvSource().replace('lang: en\n', '');
+  assert.throws(() => toCv(parseMarkdown(missing)), /lang/);
 });

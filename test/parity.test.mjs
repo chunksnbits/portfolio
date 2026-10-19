@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { parseMarkdown } from '../scripts/lib/markdown.mjs';
-import { toPortfolio } from '../scripts/lib/portfolio.mjs';
+import { toCv, toPortfolio } from '../scripts/lib/portfolio.mjs';
 import { compareStructure } from '../scripts/lib/parity.mjs';
-import { DEFAULT_BODY, portfolioSource } from './fixtures.mjs';
+import { CV_BODY, cvSource, DEFAULT_BODY, portfolioSource } from './fixtures.mjs';
 
 const load = (options) => toPortfolio(parseMarkdown(portfolioSource(options)));
 
@@ -74,4 +74,12 @@ test('names a logo when the block kinds differ', () => {
   const differences = compareStructure(load({ body: english }), load({ lang: 'de', body: german }));
 
   assert.match(differences.join('\n'), /image \(logo\).*image \(plain\)/);
+});
+
+test('compares two CVs, which have no contact details of their own', () => {
+  const english = toCv(parseMarkdown(cvSource()));
+  const german = toCv(parseMarkdown(cvSource({ lang: 'de', body: CV_BODY.slice(0, CV_BODY.indexOf('## Education')) })));
+
+  assert.deepEqual(compareStructure(english, toCv(parseMarkdown(cvSource({ lang: 'de' })))), []);
+  assert.deepEqual(compareStructure(english, german), ['number of sections: 4 vs 3']);
 });

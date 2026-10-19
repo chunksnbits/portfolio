@@ -41,6 +41,9 @@ const UI = {
     writeEmail: 'E-Mail schreiben',
     tags: 'Technologien',
     showMore: 'Mehr anzeigen',
+    cv: 'Lebenslauf',
+    contact: 'Kontakt',
+    portfolio: 'Portfolio',
   },
   en: {
     locale: 'en_US',
@@ -52,12 +55,21 @@ const UI = {
     writeEmail: 'Write an email',
     tags: 'Technologies',
     showMore: 'Show more',
+    cv: 'CV',
+    contact: 'Contact',
+    portfolio: 'Portfolio',
   },
 };
 
 // Applies a theme picked on an earlier visit before the first paint, so the page doesn't flash.
 const THEME_BOOT =
   "try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}";
+
+// Wires the CV's print button, since the CV page loads no main.js.
+const PRINT_BUTTON = "document.querySelector('[data-print]').addEventListener('click',function(){print()})";
+
+// The CV's sidebar holds the contact details, then this section and every section after it.
+const CV_SIDEBAR_START = 'skills';
 
 // Outline icons from Lucide (ISC license), drawn with currentColor.
 const ICONS = {
@@ -71,6 +83,8 @@ const ICONS = {
     '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/>',
   sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-17.07 1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
   moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/>',
+  arrowLeft: '<path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>',
 };
 
 const FONTS = ['inter', 'plus-jakarta-sans', 'jetbrains-mono'];
@@ -79,17 +93,14 @@ const FONTS = ['inter', 'plus-jakarta-sans', 'jetbrains-mono'];
  * Renders one language version of the portfolio as a complete HTML page.
  *
  * `base` leads from the page back to the site root ('' for the root page, '../' for en/).
- * `path` and `alternate.path` place this page and the other language below `homepage`.
+ * `path`, `cvPath` and `alternate.path` place this page, its one-page CV and the other language below `homepage`.
  * `images` is the manifest from scripts/images.mjs, keyed by published path.
  * `logos` and `badges` hold the SVG source of each logo and badge, keyed by published path, since the page inlines them.
  */
-export function renderPage(portfolio, { base, homepage, path, alternate, images, logos = {}, badges = {}, ogImage = null }) {
+export function renderPage(portfolio, { base, homepage, path, cvPath, alternate, images, logos = {}, badges = {}, ogImage = null }) {
   const { meta, sections } = portfolio;
-  const ui = UI[meta.lang];
-  if (!ui) {
-    throw new Error(`frontmatter: lang "${meta.lang}" has no interface words, add them to UI in render.mjs`);
-  }
-  const context = { meta, ui, base, homepage, path, alternate, images, logos, badges, ogImage };
+  const ui = interfaceWords(meta.lang);
+  const context = { meta, ui, base, homepage, path, cvPath, alternate, images, logos, badges, ogImage };
 
   return `<!doctype html>
 <html lang="${meta.lang}">
@@ -108,6 +119,62 @@ ${sections.map((section, index) => renderSection(section, index, context)).join(
 </body>
 </html>
 `;
+}
+
+/**
+ * Renders one language version of the one-page CV as a complete HTML page.
+ *
+ * `meta` is the frontmatter of the portfolio in the same language, which supplies the header and contact details.
+ * `path`, `portfolioPath` and `alternate.path` place this CV, its portfolio and the other language's CV below `homepage`.
+ * Links to `site/` paths lead to the published site, so a saved PDF links there wherever it was printed.
+ */
+export function renderCv(cv, { meta, base, homepage, path, portfolioPath, alternate, images = {}, logos = {}, badges = {} }) {
+  if (cv.meta.lang !== meta.lang) {
+    throw new Error(`frontmatter: the CV is in "${cv.meta.lang}", its portfolio in "${meta.lang}"`);
+  }
+  const ui = interfaceWords(meta.lang);
+  const context = { meta, ui, base, linkBase: homepage, homepage, path, portfolioPath, alternate, images, logos, badges };
+  const start = cv.sections.findIndex((section) => section.id === CV_SIDEBAR_START);
+  const main = start === -1 ? cv.sections : cv.sections.slice(0, start);
+  const sidebar = start === -1 ? [] : cv.sections.slice(start);
+
+  return `<!doctype html>
+<html lang="${meta.lang}">
+<head>
+${renderCvHead(context)}
+</head>
+<body>
+<nav class="toolbar">
+<a class="toolbar__link" href="${base}${portfolioPath}">${icon('arrowLeft')}${ui.portfolio}</a>
+${languageLink('toolbar__link', `${base}${alternate.path}`, alternate.lang)}
+<button class="button" type="button" data-print>${icon('download')}${ui.print}</button>
+</nav>
+<main class="sheet">
+<header class="cv-header">
+<h1 class="cv-header__name">${escapeHtml(meta.name)}</h1>
+<p class="cv-header__title">${inline(meta.title, context)}</p>
+<p class="cv-header__subtitle">${inline(meta.subtitle, context)}</p>
+</header>
+<div class="cv-main">
+${main.map((section) => renderCvSection(section, context)).join('\n')}
+</div>
+<aside class="cv-aside">
+${renderCvContact(context)}
+${sidebar.map((section) => renderCvSection(section, context)).join('\n')}
+</aside>
+</main>
+<script>${PRINT_BUTTON}</script>
+</body>
+</html>
+`;
+}
+
+function interfaceWords(lang) {
+  const ui = UI[lang];
+  if (!ui) {
+    throw new Error(`frontmatter: lang "${lang}" has no interface words, add them to UI in render.mjs`);
+  }
+  return ui;
 }
 
 function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
@@ -130,10 +197,7 @@ function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
     '<meta name="referrer" content="no-referrer">',
     `<title>${title}</title>`,
     `<meta name="description" content="${description}">`,
-    `<link rel="canonical" href="${url}">`,
-    `<link rel="alternate" hreflang="${meta.lang}" href="${url}">`,
-    `<link rel="alternate" hreflang="${alternate.lang}" href="${alternateUrl}">`,
-    `<link rel="alternate" hreflang="x-default" href="${meta.lang === 'en' ? url : alternateUrl}">`,
+    ...languageLinks(meta.lang, url, alternate.lang, alternateUrl),
     '<meta property="og:type" content="profile">',
     `<meta property="og:title" content="${title}">`,
     `<meta property="og:description" content="${description}">`,
@@ -143,9 +207,7 @@ function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
     `<meta name="twitter:card" content="${ogImage ? 'summary_large_image' : 'summary'}">`,
     '<meta name="color-scheme" content="dark light">',
     `<link rel="icon" href="${base}favicon.svg" type="image/svg+xml">`,
-    ...FONTS.map(
-      (font) => `<link rel="preload" href="${base}assets/fonts/${font}.woff2" as="font" type="font/woff2" crossorigin>`,
-    ),
+    ...fontPreloads(base),
     `<link rel="stylesheet" href="${base}assets/styles.css">`,
     `<script>${THEME_BOOT}</script>`,
     `<script src="${base}assets/main.js" defer></script>`,
@@ -153,6 +215,35 @@ function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
   ]
     .filter(Boolean)
     .join('\n');
+}
+
+function renderCvHead({ meta, ui, base, homepage, path, alternate }) {
+  return [
+    '<meta charset="utf-8">',
+    '<meta name="viewport" content="width=device-width, initial-scale=1">',
+    '<meta name="referrer" content="no-referrer">',
+    `<title>${escapeHtml(`${inlineText(meta.name)} · ${ui.cv}`)}</title>`,
+    `<meta name="description" content="${escapeHtml(inlineText(meta.description))}">`,
+    ...languageLinks(meta.lang, homepage + path, alternate.lang, homepage + alternate.path),
+    '<meta name="color-scheme" content="light dark">',
+    `<link rel="icon" href="${base}favicon.svg" type="image/svg+xml">`,
+    ...fontPreloads(base),
+    `<link rel="stylesheet" href="${base}assets/cv.css">`,
+    `<script>${THEME_BOOT}</script>`,
+  ].join('\n');
+}
+
+function languageLinks(lang, url, alternateLang, alternateUrl) {
+  return [
+    `<link rel="canonical" href="${url}">`,
+    `<link rel="alternate" hreflang="${lang}" href="${url}">`,
+    `<link rel="alternate" hreflang="${alternateLang}" href="${alternateUrl}">`,
+    `<link rel="alternate" hreflang="x-default" href="${lang === 'en' ? url : alternateUrl}">`,
+  ];
+}
+
+function fontPreloads(base) {
+  return FONTS.map((font) => `<link rel="preload" href="${base}assets/fonts/${font}.woff2" as="font" type="font/woff2" crossorigin>`);
 }
 
 function renderRail(sections, context) {
@@ -185,8 +276,8 @@ ${nav}
 <li>${profileLink(meta.github, 'GitHub', 'github')}</li>
 </ul>
 <div class="switches">
-<button class="button button--small" type="button" data-print>${icon('download')}${ui.print}</button>
-<a class="language" href="${base}${alternate.path}" hreflang="${alternate.lang}" lang="${alternate.lang}"><span aria-hidden="true">${alternate.lang.toUpperCase()}</span><span class="visually-hidden">${UI[alternate.lang].language}</span></a>
+${printLink('button button--small', context)}
+${languageLink('language', `${base}${alternate.path}`, alternate.lang)}
 <button class="theme-toggle" type="button" aria-pressed="false" aria-label="${ui.darkTheme}" data-theme-toggle>${icon('sun')}${icon('moon')}</button>
 </div>
 </div>
@@ -207,6 +298,32 @@ ${renderBlocks(section.blocks, context, { lead: true })}
 ${section.id === CONTACT ? renderActions(context) : ''}
 ${entries ? `<div class="entries">\n${entries}\n</div>` : ''}
 </div>
+</section>`;
+}
+
+function renderCvSection(section, context) {
+  return [
+    `<section class="cv-section cv-section--${section.id}" id="${section.id}">`,
+    `<h2 class="cv-section__title">${inline(section.title, context)}</h2>`,
+    renderBlocks(section.blocks, context, { lead: true }),
+    ...section.entries.map((entry) => renderEntry(entry, context)),
+    '</section>',
+  ]
+    .filter(Boolean)
+    .join('\n');
+}
+
+function renderCvContact(context) {
+  const { meta, ui, homepage, portfolioPath } = context;
+  return `<section class="cv-section cv-section--contact">
+<h2 class="cv-section__title">${ui.contact}</h2>
+<ul class="contact-list">
+<li>${icon('pin')}<span>${inline(meta.location, context)}</span></li>
+<li><a href="mailto:${escapeHtml(meta.email)}">${icon('mail')}<span>${escapeHtml(meta.email)}</span></a></li>
+<li>${addressLink(meta.linkedin, 'linkedin')}</li>
+<li>${addressLink(meta.github, 'github')}</li>
+<li>${addressLink(homepage + portfolioPath, 'globe')}</li>
+</ul>
 </section>`;
 }
 
@@ -478,27 +595,45 @@ function logoSize(viewBox) {
   return { width: Math.round(width * scale), height: Math.round(height * scale) };
 }
 
-function renderActions({ meta, ui }) {
+function renderActions(context) {
+  const { meta, ui } = context;
   return `<div class="actions">
 <a class="button button--primary" href="mailto:${escapeHtml(meta.email)}">${icon('mail')}${ui.writeEmail}</a>
 <a class="button" href="${escapeHtml(meta.linkedin)}"${linkRel(meta.linkedin)}>${icon('linkedin')}LinkedIn</a>
 <a class="button" href="${escapeHtml(meta.github)}"${linkRel(meta.github)}>${icon('github')}GitHub</a>
-<button class="button" type="button" data-print>${icon('download')}${ui.print}</button>
+${printLink('button', context)}
 </div>`;
+}
+
+// "Save as PDF" leads to the one-page CV, which main.js prints in place where it can.
+function printLink(className, { ui, base, cvPath }) {
+  return `<a class="${className}" href="${base}${cvPath}" data-print>${icon('download')}${ui.print}</a>`;
 }
 
 // On screen the link shows the network's name, in print its address.
 function profileLink(url, name, iconName) {
-  const address = decodeURI(url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''));
-  return `<a href="${escapeHtml(url)}"${linkRel(url)}>${icon(iconName)}<span class="screen-only">${name}</span><span class="print-only">${escapeHtml(address)}</span></a>`;
+  return `<a href="${escapeHtml(url)}"${linkRel(url)}>${icon(iconName)}<span class="screen-only">${name}</span><span class="print-only">${escapeHtml(address(url))}</span></a>`;
+}
+
+function addressLink(url, iconName) {
+  return `<a href="${escapeHtml(url)}"${linkRel(url)}>${icon(iconName)}<span>${escapeHtml(address(url))}</span></a>`;
+}
+
+// Shortens a URL to the address people read and type: no protocol, www or trailing slash.
+function address(url) {
+  return decodeURI(url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, ''));
+}
+
+function languageLink(className, href, lang) {
+  return `<a class="${className}" href="${href}" hreflang="${lang}" lang="${lang}"><span aria-hidden="true">${lang.toUpperCase()}</span><span class="visually-hidden">${UI[lang].language}</span></a>`;
 }
 
 function eyebrow(index, title, context) {
   return `<span class="eyebrow__number" aria-hidden="true">${number(index)} //</span> ${inline(title, context)}`;
 }
 
-function inline(text, { base }) {
-  return renderInline(text, { href: (url) => (url.startsWith('site/') ? base + url.slice('site/'.length) : url) });
+function inline(text, { base, linkBase = base }) {
+  return renderInline(text, { href: (url) => (url.startsWith('site/') ? linkBase + url.slice('site/'.length) : url) });
 }
 
 function processedImage(block, context) {

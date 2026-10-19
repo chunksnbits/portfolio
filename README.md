@@ -1,9 +1,11 @@
 # Portfolio · Daniel Eissing
 
-A single page per language, built from two plain Markdown files.
+A single page per language, built from two plain Markdown files, plus a one-page CV per language from two more.
 
 - German: https://chunksnbits.github.io/portfolio/ from `portfolio.de.md`
 - English: https://chunksnbits.github.io/portfolio/en/ from `portfolio.md`
+- German CV: https://chunksnbits.github.io/portfolio/cv/ from `cv.de.md`
+- English CV: https://chunksnbits.github.io/portfolio/en/cv/ from `cv.md`
 
 ## Prerequisites
 
@@ -15,11 +17,14 @@ A single page per language, built from two plain Markdown files.
 ## Updating the content
 
 1. Edit `portfolio.de.md` and `portfolio.md`. Keep both in the same structure, see [Writing portfolio.md](#writing-portfoliomd).
-2. Run `npm start` and open http://127.0.0.1:4173/portfolio/. Edits rebuild the page, reload the browser to see them.
-3. Run `npm run check`. It fails if a screen outgrows 1440×760, the printed CV runs past two A4 pages, or a color falls below the [WCAG 2.2 AA contrast minimum](https://www.w3.org/TR/WCAG22/#contrast-minimum) in either theme.
-4. Commit and push. GitHub Actions runs the same checks and publishes `master`.
+2. If the change touches a career stop, the intro or a skill, carry it over to `cv.de.md` and `cv.md`, see [Writing cv.md](#writing-cvmd).
+3. Run `npm start` and open http://127.0.0.1:4173/portfolio/, or `/portfolio/cv/` for the one-page CV. Edits rebuild the pages, reload the browser to see them.
+4. Run `npm run check`. It fails if a screen outgrows 1440×760, the printed CV runs past two A4 pages, the one-page CV past one, or a color falls below the [WCAG 2.2 AA contrast minimum](https://www.w3.org/TR/WCAG22/#contrast-minimum) in either theme.
+5. Commit and push. GitHub Actions runs the same checks and publishes `master`.
 
-**NOTE:** `npm run build` warns when the two files drift apart, but still builds both pages. The warning names the lines in both files.
+**NOTE:** `npm run build` warns when the two languages drift apart, for the portfolio and for the CV, but still builds every page. The warning names the lines in both files.
+
+**NOTE:** restart `npm start` after changing `scripts/`. Until then it rebuilds with the old code.
 
 ## Adding a screenshot
 
@@ -60,8 +65,8 @@ A single page per language, built from two plain Markdown files.
 | `npm start` | Builds, serves `dist/` at `/portfolio/` like GitHub Pages, rebuilds on content changes |
 | `npm run build` | Writes both pages and the files from `site/` into `dist/` |
 | `npm test` | Runs the parser, model, parity and render tests |
-| `npm run check` | Builds, then measures every screen, the printed CV and the color contrast in headless Chrome |
-| `npm run check -- --shots <dir> [--theme light] [--mobile] [--scale 2]` | Also saves a screenshot per screen and the CVs as PDF |
+| `npm run check` | Builds, then measures every screen, both CVs and the color contrast in headless Chrome |
+| `npm run check -- --shots <dir> [--theme light] [--mobile] [--scale 2]` | Also saves a screenshot per screen, plus the printed CV and the one-page CV as PDF |
 | `npm run images` | Turns the originals in `raw/` into the published WebP and AVIF copies |
 
 ## Writing portfolio.md
@@ -110,13 +115,24 @@ Write a **separator** as a plus between spaces, e.g. `2021 – today + Munich`. 
 - `[show more]` on its own line in a project hides the text after it behind a "Show more" link. It needs text before and after it, once per project. Without it, the project shows its whole text. See [Show more](#how-it-works).
 - `<!-- comments -->` never reach the page.
 
+## Writing cv.md
+
+The one-page CV uses the same Markdown as the portfolio, see [Writing portfolio.md](#writing-portfoliomd).
+
+- **Frontmatter.** Only `lang`. The name, title, subtitle and contact details come from the frontmatter of the portfolio in the same language.
+- **Wording.** Take it from the portfolio files, don't write it from scratch. When a text changes there, change it here too.
+- **Columns.** The sections before `## Skills {#skills}` fill the main column. That section and every section after it go into the sidebar, below the contact details.
+- **Timeline.** In the main column, an entry's meta line becomes its place on the timeline: `2021 – today + Munich` puts the period left of the entry and the place under its title.
+- **Length.** `npm run check` fails when either CV prints on more than one A4 page. Shorten copy before shrinking type.
+
 ## How it works
 
 ```
 portfolio.md, portfolio.de.md   ← the content
+cv.md, cv.de.md                 ← the one-page CV, worded like the content
 scripts/
-  build.mjs                     ← Markdown → dist/index.html and dist/en/index.html
-  check.mjs                     ← screen budget and CV page count in headless Chrome
+  build.mjs                     ← Markdown → dist/index.html, dist/en/index.html and their cv/index.html
+  check.mjs                     ← screen budget and CV page counts in headless Chrome
   images.mjs                    ← raw/ → site/assets/img/
   logos.py                      ← raw/logos/ → site/assets/logos/, in one color
   serve.mjs                     ← local preview
@@ -127,7 +143,8 @@ scripts/
     render.mjs                  ← HTML, plus the interface words in both languages
 site/                           ← copied into dist/ as is
   assets/styles.css             ← screen, both themes and the printed CV
-  assets/main.js                ← theme switch, spotlight, nav, slide-in, keyvisuals
+  assets/cv.css                 ← the one-page CV, on screen and in print
+  assets/main.js                ← theme switch, CV printing, spotlight, nav, slide-in, keyvisuals
   assets/logos/                 ← client logos, inlined into the pages instead
   docs/                         ← papers, at the paths the 2019 site used
 test/                           ← node --test
@@ -143,7 +160,9 @@ test/                           ← node --test
 - **Highlights.** A `==highlight==` lights up like the "Show more" link when the pointer enters its screen, every 5 seconds while it stays. The amber marker glows and the glint sweeps across it, behind the letters. The letters stay dark, so they keep their contrast on the amber.
 - **Spotlight.** A soft glow follows the mouse, modeled on [brittanychiang.com](https://brittanychiang.com/). Touch screens don't show it.
 - **Themes.** The page follows the system theme until the visitor picks one with the switch. Text reaches 4.5:1 against its background, large text and the outlines of buttons 3:1.
-- **Printed CV.** "Save as PDF" prints the page as a white A4 CV of up to two pages, without screenshots. The brands print as their logos only.
+- **Printed CV.** Printing the page itself, e.g. with Cmd+P, gives a white A4 CV of up to two pages, without screenshots. The brands print as their logos only.
+- **One-page CV.** A page of its own per language, below the portfolio page in `cv/`, laid out like the 2019 CV: the career on a timeline in the main column, contact details and skills in a sidebar. On screen it shows as an A4 sheet with its own "Save as PDF" button. The sheet stays white in both themes. Links in its text lead to the published site, so a saved PDF links there wherever it was printed. The page loads `cv.css` only, no `main.js`.
+- **Save as PDF.** On the portfolio, both "Save as PDF" buttons link to the one-page CV. With a mouse, `main.js` loads the CV into a hidden frame and prints it, so the visitor stays on the page. Touch screens and browsers without JavaScript open the CV page instead, since some mobile browsers print the page around a frame.
 - **Links.** Links to other sites carry `rel="noopener noreferrer"`. The page also sets the referrer policy `no-referrer`. No other site learns that a visitor came from here.
 
 ## Background

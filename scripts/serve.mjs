@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { build, DIST, PAGES, ROOT } from './build.mjs';
 import { serve } from './lib/server.mjs';
 
-const WATCHED = [...PAGES.map((page) => page.source), 'site'];
+const WATCHED = [...PAGES.flatMap((page) => [page.source, page.cvSource]), 'site'];
 
 let timer = null;
 const rebuild = async () => {
@@ -19,7 +19,7 @@ const rebuild = async () => {
 
 await rebuild();
 const { url } = await serve(DIST, { port: Number(process.env.PORT ?? 4173) });
-console.log(`Serving ${url} (English: ${url}en/)`);
+console.log(`Serving ${url} (English: ${url}en/, one-page CVs: ${url}cv/ and ${url}en/cv/)`);
 
 for (const path of WATCHED) {
   watch(join(ROOT, path), { recursive: true }, () => {

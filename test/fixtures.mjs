@@ -55,6 +55,39 @@ Customer portal, see [paper](site/docs/paper.pdf).
 Let's talk.
 `;
 
+// Builds a small but complete cv.md for the CV model, parity and render tests.
+export function cvSource({ lang = 'en', body = CV_BODY } = {}) {
+  return ['---', `lang: ${lang}`, '---', '', body].join('\n');
+}
+
+export const CV_BODY = `## About {#about}
+
+I build ==apps==.
+
+Fifteen years of apps.
+
+## Experience {#experience}
+
+### Senior Software Engineer + Satellytes
+2021 – today + Munich, Fulda
+
+Lead engineer for ZEISS, see [paper](site/docs/paper.pdf).
+
+- **AURA** + 2025 – today + companion app
+
+## Skills {#skills}
+
+### Frontend
+\`TypeScript\` \`React\`
+
+## Education {#education}
+
+### Diplom-Informatiker + University of Koblenz-Landau
+2005 – 2013 + Computervisualistik
+
+Computer graphics.
+`;
+
 export const MANIFEST = {
   'assets/img/desktop.webp': { width: 1400, height: 3000, density: 2, avif: 'assets/img/desktop.avif' },
   'assets/img/phone.webp': { width: 400, height: 960, density: 2, avif: 'assets/img/phone.avif' },

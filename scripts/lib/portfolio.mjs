@@ -17,6 +17,8 @@ const FRONTMATTER_KEYS = [
   'description',
 ];
 
+const CV_FRONTMATTER_KEYS = ['lang'];
+
 // A meta line opens with a year.
 // E.g. "2021 – today + Munich".
 const META_LINE = /^\d{4}\b/;
@@ -30,8 +32,22 @@ const META_LINE = /^\d{4}\b/;
  * Throws on a missing id or frontmatter key.
  */
 export function toPortfolio({ frontmatter, blocks }) {
-  checkFrontmatter(frontmatter);
+  checkFrontmatter(frontmatter, FRONTMATTER_KEYS);
+  return { meta: frontmatter, sections: toSections(blocks) };
+}
 
+/**
+ * Builds the one-page CV model from parsed cv.md.
+ *
+ * Sections and entries follow the same rules as in `toPortfolio`.
+ * The frontmatter holds only `lang`, since the header and contact details come from the portfolio in that language.
+ */
+export function toCv({ frontmatter, blocks }) {
+  checkFrontmatter(frontmatter, CV_FRONTMATTER_KEYS);
+  return { meta: frontmatter, sections: toSections(blocks) };
+}
+
+function toSections(blocks) {
   const sections = [];
   const lines = new Map();
   const claim = (block) => {
@@ -71,17 +87,16 @@ export function toPortfolio({ frontmatter, blocks }) {
       entry.blocks.push(block);
     }
   }
-
-  return { meta: frontmatter, sections };
+  return sections;
 }
 
-function checkFrontmatter(frontmatter) {
-  const missing = FRONTMATTER_KEYS.filter((key) => !frontmatter[key]);
+function checkFrontmatter(frontmatter, keys) {
+  const missing = keys.filter((key) => !frontmatter[key]);
   if (missing.length > 0) {
     throw new SyntaxError(`frontmatter: missing ${missing.join(', ')}`);
   }
-  const unknown = Object.keys(frontmatter).filter((key) => !FRONTMATTER_KEYS.includes(key));
+  const unknown = Object.keys(frontmatter).filter((key) => !keys.includes(key));
   if (unknown.length > 0) {
-    throw new SyntaxError(`frontmatter: unknown ${unknown.join(', ')}. Allowed: ${FRONTMATTER_KEYS.join(', ')}`);
+    throw new SyntaxError(`frontmatter: unknown ${unknown.join(', ')}. Allowed: ${keys.join(', ')}`);
   }
 }

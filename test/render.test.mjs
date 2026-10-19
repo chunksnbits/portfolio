@@ -1,14 +1,15 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { parseMarkdown } from '../scripts/lib/markdown.mjs';
-import { toPortfolio } from '../scripts/lib/portfolio.mjs';
-import { renderPage } from '../scripts/lib/render.mjs';
-import { DEFAULT_BODY, MANIFEST, portfolioSource } from './fixtures.mjs';
+import { toCv, toPortfolio } from '../scripts/lib/portfolio.mjs';
+import { renderCv, renderPage } from '../scripts/lib/render.mjs';
+import { cvSource, DEFAULT_BODY, MANIFEST, portfolioSource } from './fixtures.mjs';
 
 const OPTIONS = {
   base: '../',
   homepage: 'https://chunksnbits.github.io/portfolio/',
   path: 'en/',
+  cvPath: 'en/cv/',
   alternate: { lang: 'de', path: '' },
   images: MANIFEST,
 };
@@ -58,6 +59,15 @@ test('sends other sites no referrer, from the page and from every link to them',
   for (const link of offSite) {
     assert.match(link, / rel="noopener noreferrer"/, link);
   }
+});
+
+test('links "Save as PDF" in the rail and the contact section to the one-page CV', () => {
+  const links = render().match(/<a class="button[^"]*" href="[^"]*" data-print>/g);
+
+  assert.deepEqual(links, [
+    '<a class="button button--small" href="../en/cv/" data-print>',
+    '<a class="button" href="../en/cv/" data-print>',
+  ]);
 });
 
 test('glues every separator in a meta line to the word before it', () => {
@@ -252,4 +262,59 @@ test('rejects a badge that has no file', () => {
 
 test('rejects a logo that has no file', () => {
   assert.throws(() => renderLogos({ logos: {} }), /line \d+: site\/assets\/logos\/crest\.svg does not exist/);
+});
+
+const CV_OPTIONS = {
+  meta: toPortfolio(parseMarkdown(portfolioSource())).meta,
+  base: '../../',
+  homepage: 'https://chunksnbits.github.io/portfolio/',
+  path: 'en/cv/',
+  portfolioPath: 'en/',
+  alternate: { lang: 'de', path: 'cv/' },
+};
+const renderCvSource = (source = cvSource()) => renderCv(toCv(parseMarkdown(source)), CV_OPTIONS);
+
+test('heads the CV with the name, title and contact details from the portfolio', () => {
+  const html = renderCvSource();
+
+  assert.match(html, /<h1 class="cv-header__name">Daniel Eissing<\/h1>/);
+  assert.match(html, /<p class="cv-header__title">Senior Software Engineer<\/p>/);
+  assert.match(html, /<a href="mailto:me@example\.com">/);
+  assert.match(html, /<span>linkedin\.com\/in\/someone<\/span>/);
+  assert.match(html, /<span>github\.com\/chunksnbits<\/span>/);
+  assert.match(html, /<a href="https:\/\/chunksnbits\.github\.io\/portfolio\/en\/"/);
+  assert.match(html, /<span>chunksnbits\.github\.io\/portfolio\/en<\/span>/);
+});
+
+test('fills the sidebar from the skills section on, below the contact details', () => {
+  const ids = (html) => [...html.matchAll(/<section class="cv-section cv-section--([\w-]+)"/g)].map((match) => match[1]);
+  const [main, aside] = renderCvSource().split('<aside');
+
+  assert.deepEqual(ids(main), ['about', 'experience']);
+  assert.deepEqual(ids(aside), ['contact', 'skills', 'education']);
+});
+
+test('gives each career stop its title, then its period and details', () => {
+  assert.match(
+    renderCvSource(),
+    /<h3 class="entry__title">Senior Software Engineer&nbsp;\+ Satellytes<\/h3>\s*<p class="meta"><span class="meta__period">2021 – today<\/span>[^\n]*<span class="meta__details">Munich, Fulda<\/span>/,
+  );
+});
+
+test('links site paths to the published site, so a saved PDF links there from anywhere', () => {
+  assert.match(renderCvSource(), /href="https:\/\/chunksnbits\.github\.io\/portfolio\/docs\/paper\.pdf"/);
+});
+
+test('links back to the portfolio and over to the CV in the other language', () => {
+  const html = renderCvSource();
+
+  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/assets\/cv\.css">/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/chunksnbits\.github\.io\/portfolio\/en\/cv\/">/);
+  assert.match(html, /hreflang="de" href="https:\/\/chunksnbits\.github\.io\/portfolio\/cv\/"/);
+  assert.match(html, /<a class="toolbar__link" href="\.\.\/\.\.\/en\/">/);
+  assert.match(html, /<a class="toolbar__link" href="\.\.\/\.\.\/cv\/" hreflang="de" lang="de">/);
+});
+
+test('rejects a CV in another language than its portfolio', () => {
+  assert.throws(() => renderCvSource(cvSource({ lang: 'de' })), /frontmatter: .*"de".*"en"/);
 });
