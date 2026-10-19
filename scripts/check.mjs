@@ -335,10 +335,27 @@ async function launchChrome() {
       client.close();
       process_.kill();
       await new Promise((done) => process_.once('exit', done));
-      // On Linux, Chrome's helper processes can still write to the profile for a moment after Chrome exits.
-      rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
+      await removeProfile(profile);
     },
   };
+}
+
+// Deletes Chrome's temporary profile, trying again for up to 2 s while Chrome's helper processes finish writing to it.
+// On Linux they can still write for a moment after Chrome exits, and rmSync's own retries never delete those late files.
+// A profile left behind in the temp folder doesn't affect the checks, so a last failure only warns.
+async function removeProfile(profile) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      rmSync(profile, { recursive: true, force: true });
+      return;
+    } catch (error) {
+      if (attempt === 10) {
+        console.warn(`\nCouldn't delete Chrome's temporary profile ${profile}: ${error.message}`);
+        return;
+      }
+      await new Promise((done) => setTimeout(done, 200));
+    }
+  }
 }
 
 async function setTheme(tab, theme) {
