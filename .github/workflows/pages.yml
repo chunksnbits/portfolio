@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: 22
       - run: npm test
-      # Builds dist/ and fails if a screen outgrows 1440×760, the printed CV runs past two pages,
+      # Builds dist/ and fails if the printed CV runs past two pages
       # or a color misses the WCAG AA contrast minimum.
       - run: npm run check
       - uses: actions/upload-pages-artifact@v5

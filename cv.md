@@ -36,6 +36,17 @@ Frontend engineer and lead for BMW Group eRetail and Allianz MyInvest, a living 
 
 Development of clinical reporting features in Java and JavaScript, a Selenium test framework in Ruby, development of a C++ conversion tool for DICOM medical image datasets.
 
+## Education {#education}
+
+### Diplom-Informatiker + University of Koblenz-Landau
+2005 – 2013 + Computervisualistik
+
+Computer graphics, interface design and semantic web research. Young Talent Award 2011.
+
+- [strukt: A Pattern System for Integrating Individual and Organizational Knowledge Work](site/docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf) + ISWC 2011
+- [Analysis and Comparison of Models for Individual and Organisational Knowledge Work](site/docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf) + MKWI 2012
+- [A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology](site/docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf) + IJSC 2012
+
 ## Skills {#skills}
 
 ### Frontend
@@ -60,14 +71,3 @@ Development of clinical reporting features in Java and JavaScript, a Selenium te
 ![](site/assets/badges/pspo-1.svg "badge")
 
 [Professional Scrum Product Owner™ I (PSPO I)](https://www.credly.com/badges/9f36896a-7623-46d5-a36e-3800703bcdef) + Scrum.org
-
-## Education {#education}
-
-### Diplom-Informatiker + University of Koblenz-Landau
-2005 – 2013 + Computervisualistik
-
-Computer graphics, interface design and semantic web research. Young Talent Award 2011.
-
-- [strukt: A Pattern System for Integrating Individual and Organizational Knowledge Work](site/docs/paper__scherp_eissing_staab--strukt-a_pattern_system.pdf) + ISWC 2011
-- [Analysis and Comparison of Models for Individual and Organisational Knowledge Work](site/docs/paper__scherp_eissing_staab--analysis_and_comparison.pdf) + MKWI 2012
-- [A Method for Integrating Multimedia Metadata Standards and Metadata Formats with the Multimedia Metadata Ontology](site/docs/paper__scherp_eissing_saathoff--a_method_for_integrating_multimedia_metadata.pdf) + IJSC 2012

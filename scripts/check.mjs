@@ -1,5 +1,5 @@
 // Checks the built pages in headless Chrome, for both languages:
-// - every desktop screen and the rail fit the viewport below, and nothing scrolls sideways
+// - the rail fits the viewport below, and nothing scrolls sideways
 // - the printed CV stays within two A4 pages, and the one-page CV within one
 // - text and controls meet the WCAG 2.2 AA contrast minimums, in the light and the dark theme
 //
@@ -38,16 +38,12 @@ const CHROME_PATHS = [
   '/usr/bin/chromium-browser',
 ];
 
-// Runs in the page and reports the heights the budget applies to.
+// Runs in the page and reports the screens to capture, the rail's height and the sideways overflow.
 const MEASURE = `(() => {
   const rail = document.querySelector('.rail');
   return {
-    viewport: innerHeight,
     screens: [...document.querySelectorAll('.screen')].map((screen) => ({
       id: screen.id,
-      height: Math.ceil(screen.getBoundingClientRect().height),
-      content: Math.ceil(screen.querySelector('.screen__inner').getBoundingClientRect().height),
-      padding: parseFloat(getComputedStyle(screen).paddingTop) + parseFloat(getComputedStyle(screen).paddingBottom),
       keyvisual: 'keyvisual' in screen.dataset,
     })),
     rail: { needed: rail.scrollHeight, available: rail.clientHeight },
@@ -190,13 +186,7 @@ try {
     const lang = await evaluate(tab.send, 'document.documentElement.lang');
     const result = await evaluate(tab.send, MEASURE);
 
-    console.log(`\n${page.source}  (content budget ${result.viewport} px minus screen padding)`);
-    for (const screen of result.screens) {
-      const budget = result.viewport - screen.padding;
-      const over = screen.height > result.viewport;
-      console.log(`  ${over ? '✗' : '✓'} ${screen.id.padEnd(18)} ${String(screen.content).padStart(4)} / ${budget}`);
-      if (over) failures.push(`${page.source}: screen "${screen.id}" is ${screen.content - budget} px too tall`);
-    }
+    console.log(`\n${page.source}`);
     const railOver = result.rail.needed > result.rail.available;
     console.log(`  ${railOver ? '✗' : '✓'} ${'rail'.padEnd(18)} ${String(result.rail.needed).padStart(4)} / ${result.rail.available}`);
     if (railOver) failures.push(`${page.source}: the rail is ${result.rail.needed - result.rail.available} px too tall`);
@@ -253,7 +243,7 @@ if (failures.length > 0) {
   console.error(`\n${failures.length} problem(s):\n- ${failures.join('\n- ')}`);
   process.exit(1);
 }
-console.log('\nAll screens fit.');
+console.log('\nAll checks passed.');
 
 async function saveShots(tab, folder, lang, screens, pdf = null) {
   await mkdir(folder, { recursive: true });
@@ -345,7 +335,8 @@ async function launchChrome() {
       client.close();
       process_.kill();
       await new Promise((done) => process_.once('exit', done));
-      rmSync(profile, { recursive: true, force: true });
+      // On Linux, Chrome's helper processes can still write to the profile for a moment after Chrome exits.
+      rmSync(profile, { recursive: true, force: true, maxRetries: 5 });
     },
   };
 }

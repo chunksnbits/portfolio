@@ -1,4 +1,4 @@
-# Portfolio · Daniel Eissing
+  # Portfolio · Daniel Eissing
 
 Static personal portfolio and one-page CV in English and German, built from Markdown without npm dependencies.
 
@@ -21,7 +21,7 @@ Static personal portfolio and one-page CV in English and German, built from Mark
 | `npm start` | Build and serve at `http://127.0.0.1:4173/portfolio/`, rebuilding on file changes. |
 | `npm run build` | Compile Markdown files and copy `site/` assets into `dist/`. |
 | `npm test` | Run unit tests for parser, model, parity, and renderer. |
-| `npm run check` | Validate screen budget, CV page counts, and WCAG contrast in headless Chrome. |
+| `npm run check` | Validate CV page counts and WCAG contrast in headless Chrome. |
 | `npm run check -- --shots <dir>` | Save screen captures and CV PDFs to directory. |
 | `npm run images` | Generate WebP and AVIF assets from `raw/`. |
 | `npm run logos` | Generate monochrome SVG logos from `raw/logos/`. |
@@ -31,7 +31,7 @@ Static personal portfolio and one-page CV in English and German, built from Mark
 1. Edit `portfolio.de.md` and `portfolio.md`. Keep both files in the same structure.
 2. Carry career, intro, or skill changes over to `cv.de.md` and `cv.md`.
 3. Run `npm start` and open `http://127.0.0.1:4173/portfolio/` (or `/portfolio/cv/` for the CV).
-4. Run `npm run check` to verify screen budgets, CV page limits, and WCAG 2.2 AA contrast.
+4. Check by hand that every desktop screen fits 1440×760, then run `npm run check` to verify CV page limits and WCAG 2.2 AA contrast.
 5. Commit and push. GitHub Actions runs checks and deploys `master`.
 
 **NOTE:** `npm run build` warns when the two languages drift in structure, but still builds every page.
@@ -131,7 +131,7 @@ portfolio.md, portfolio.de.md   ← content files
 cv.md, cv.de.md                 ← one-page CV content
 scripts/
   build.mjs                     ← compiles Markdown to dist/
-  check.mjs                     ← measures screen budgets and CV pages in headless Chrome
+  check.mjs                     ← checks CV pages and contrast in headless Chrome
   images.mjs                    ← raw/ → site/assets/img/
   logos.py                      ← raw/logos/ → site/assets/logos/
   serve.mjs                     ← local development server

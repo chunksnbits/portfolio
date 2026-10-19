@@ -1,6 +1,6 @@
 /* Portfolio styles: one sheet for both languages, both themes and the printed CV.
  * Colors follow the "Kinetic Slate" design system from the Stitch export: dark from its first, light from its second variant.
- * Every desktop screen has to fit 1440×760, which `npm run check` measures. */
+ * Every desktop screen has to fit 1440×760, which is checked by hand. */
 
 @font-face {
   font-family: 'Inter';

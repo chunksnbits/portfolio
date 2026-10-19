@@ -12,17 +12,6 @@ linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
 description: Lead Software Engineer mit Weitblick für Architektur, technischem Urteilsvermögen und klarem Fokus. 15 Jahre Erfahrung in der Entwicklung großer React- und Angular-Fullstack-Anwendungen und Integrationen für Kunden wie ZEISS, ADAC Motorsport, FC Bayern München, BMW und Allianz.
 ---
 
-<!--
-Die deutsche Seite, veröffentlicht unter /portfolio/. Ihr englischer Zwilling ist portfolio.md.
-Wie diese Datei geschrieben wird: README.md, "Writing portfolio.md".
-
-Eigene Markdown-Syntax:
-- `==Text==`: hebt Wörter im ersten Absatz eines Abschnitts hervor
-- `  - Eintrag` unter einem Listenpunkt: Unterpunkte, in einer Zeile mit + verbunden
-- `{#id}`: ID einer Überschrift, z. B. `## Über mich {#about}`
-- `![Alt](site/… "phone")`: der Bildtitel wählt den Rahmen, siehe README.md
--->
-
 ## Über mich {#about}
 
 Ich baue Web- und Mobile-Systeme, die ==Bestand haben==.
@@ -60,7 +49,7 @@ In enger Abstimmung mit PMs und Designern: Vom Anwendungscode über Backend-Serv
 
 Produkte für Marken, ==die man kennt==.
 
-Ich habe den Großteil meiner Laufbahn im Umfeld einiger der größten Unternehmen und bekanntesten Marken Deutschlands verbracht.Daher bringe ich umfassende Erfahrungen im Konzernnumfeld mit.
+Ich habe den Großteil meiner Laufbahn im Umfeld einiger der größten Unternehmen und bekanntesten Marken Deutschlands verbracht. Daher bringe ich umfassende Erfahrungen im Konzernnumfeld mit.
 
 Diese Projekte haben es mir erlaubt reichhaltige Erfahrungen zu sammeln.
 Von der technischen Umsetzung bis hin zur Product Ownership: Meine Aufgaben umfassten all Bereiche des gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- und Mid-Level-Entwicklern.
@@ -144,7 +133,11 @@ Automatische Bereitstellung von Build-Agents, eine an Contentful angebundene Pub
 
 ![Matchcenter, Statistiken und News von fcbayern.com auf Smartphones](site/assets/img/fcbayern-mobile.webp "plain")
 
-Als neues Team bei Satellytes, verantworteten wir den Relaunch von fcbayern.com. Eine besondere Herausforderung war die Einbindung eines bestehenden Content Management System über eine intern entwickelte Headless-Engine. Das Projekt umfasste die Migration von rund 100.000 statisch generierten Seiten mit inkrementellen Updates, Live-News und Liveticker, Echtzeit-Ergebnissen, einem eigens entwickelten Audio-Player, hellem und dunklem Theme, WCAG 2.0 und über 2.000 Unit-Tests.
+Als neues Team bei Satellytes, verantworteten wir den Relaunch von fcbayern.com. Eine besondere Herausforderung war die Einbindung eines bestehenden Content Management System über eine intern entwickelte Headless-Engine.
+
+[show more]
+
+Das Projekt umfasste die Migration von rund 100.000 statisch generierten Seiten mit inkrementellen Updates, Live-News und Liveticker, Echtzeit-Ergebnissen, einem eigens entwickelten Audio-Player, hellem und dunklem Theme, WCAG 2.0 und über 2.000 Unit-Tests.
 
 Zeitkritische Features wie das stark frequentierte Online-Kondolenzbuch für Gerd Müller entstanden ohne Vorlauf in weniger als zwei Tagen.
 
