@@ -5,7 +5,7 @@
 //
 // Options:
 // - --shots <dir>: also save a screenshot per screen and both CVs as PDF, for review
-// - --theme light|dark: color scheme for the screenshots (default: dark)
+// - --theme light|dark: theme for the screenshots (default: dark)
 // - --mobile: add the same screenshots at phone width
 // - --scale <n>: device pixel ratio of the screenshots, e.g. 2 for a Retina display (default: 1)
 // - --og: redraw the link preview images site/og-<lang>.png from the top of each page, then rebuild
@@ -358,8 +358,9 @@ async function removeProfile(profile) {
   }
 }
 
+// Picks the theme the way the theme toggle does, since the page ignores the system's color scheme.
 async function setTheme(tab, theme) {
-  await tab.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: theme }] });
+  await evaluate(tab.send, `document.documentElement.dataset.theme = '${theme}'`);
 }
 
 async function openTab(client, url, { width, height, theme }) {
@@ -374,13 +375,14 @@ async function openTab(client, url, { width, height, theme }) {
     deviceScaleFactor: Number(options.scale),
     mobile: width < 800,
   });
-  await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: theme }] });
   const loaded = client.once('Page.loadEventFired', sessionId);
   await send('Page.navigate', { url });
   await loaded;
   await evaluate(send, 'document.fonts.ready.then(() => true)');
 
-  return { send, close: () => client.send('Target.closeTarget', { targetId }) };
+  const tab = { send, close: () => client.send('Target.closeTarget', { targetId }) };
+  await setTheme(tab, theme);
+  return tab;
 }
 
 async function evaluate(send, expression) {

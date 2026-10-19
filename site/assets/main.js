@@ -1,7 +1,6 @@
 // Behavior for the portfolio page. Everything here is an enhancement: without it the page still reads and prints.
 
 const root = document.documentElement;
-const prefersDark = matchMedia('(prefers-color-scheme: dark)');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 
 setUpThemeToggle();
@@ -13,12 +12,13 @@ setUpPanelSlideIn();
 setUpKeyvisuals();
 setUpLanguageSwitch();
 
-// The page follows the system theme until the visitor picks one, which is then remembered.
+// The page starts dark, whatever the system prefers.
+// The theme the visitor picks is remembered.
 function setUpThemeToggle() {
   const toggle = document.querySelector('[data-theme-toggle]');
   if (!toggle) return;
 
-  const isDark = () => (root.dataset.theme ? root.dataset.theme === 'dark' : prefersDark.matches);
+  const isDark = () => root.dataset.theme !== 'light';
   const sync = () => toggle.setAttribute('aria-pressed', String(isDark()));
 
   toggle.addEventListener('click', () => {
@@ -31,7 +31,6 @@ function setUpThemeToggle() {
     }
     sync();
   });
-  prefersDark.addEventListener('change', sync);
   sync();
 }
 
@@ -485,7 +484,6 @@ function setUpAsciiKeyvisual(layer) {
     }, 150);
   }).observe(canvas);
   new MutationObserver(repaint).observe(root, { attributeFilter: ['data-theme'] });
-  prefersDark.addEventListener('change', repaint);
 
   // A hidden layer stops its bursts, and frees its canvas after its fade-out in styles.css,
   // so only the keyvisual on show holds a full-window bitmap.
