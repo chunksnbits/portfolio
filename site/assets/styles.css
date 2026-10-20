@@ -53,7 +53,7 @@
   /* Outline of buttons and switches, at least 3:1 against the page. */
   --control: #64748b;
   /* Client logos. Their cut-out letters show the page behind, so the grey keeps 4.5:1 against it. */
-  --logo: #64748b;
+  --logo: #475569;
   --text: #0f172a;
   --text-body: #334155;
   --text-muted: #475569;
@@ -102,7 +102,7 @@
     --border: rgba(148, 163, 184, 0.14);
     --border-strong: rgba(148, 163, 184, 0.3);
     --control: #5f6e85;
-    --logo: #7f8ca1;
+    --logo: #334155;
     --text: #f1f5f9;
     --text-body: #cbd5e1;
     --text-muted: #94a3b8;
