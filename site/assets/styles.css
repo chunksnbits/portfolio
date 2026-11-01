@@ -1288,6 +1288,12 @@ code {
   margin-top: 12px;
 }
 
+.screen--skills .tags + .tags {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
 @media (min-width: 720px) {
   .screen--skills .entries {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1638,6 +1644,10 @@ code {
     border: 0;
   }
 
+  .screen--skills .entry > :not(.entry__title) {
+    grid-column: 2;
+  }
+
   .screen--skills .entry__title {
     font-size: 1rem;
   }
@@ -1645,6 +1655,8 @@ code {
   .screen--skills .tags,
   .screen--skills .entry p {
     margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
   }
 
   /* Brands print their logos only. */

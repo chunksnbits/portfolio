@@ -18,7 +18,7 @@ I engineer web and mobile systems that ==are built to last==.
 
 Fifteen years of experience developing and maintaining enterprise-grade applications have me well prepared for the next phase of AI-driven software development.
 
-When AI agents write the code, other skills come into focus: an obsession with detail, demonstrated experience in shaping, judging and steering architectural decisions, and the ability to look beyond the Tellerrand enable me to find creative solutions to complicated problems that will drive your business forward.
+When AI agents write the code, other skills come into focus: an obsession with detail, demonstrated experience in shaping, judging and steering architectural decisions, and the open-mindedness to look beyond my own discipline enable me to find creative, pragmatic solutions to complicated problems that drive your business forward.
 
 - **15 years**
   - in software development
@@ -37,21 +37,25 @@ When AI agents write the code, other skills come into focus: an obsession with d
   - Cloud
 
 ### Architecture that lasts
-Micro-frontends, design systems and cloud services for products that run for years, from BMW, Allianz, FC Bayern to ZEISS.
+Pragmatic, resilient micro-frontends, design systems and cloud services for products that run for years, from BMW, Allianz, FC Bayern to ZEISS.
 
 ### Leading by building
-Hands-on lead with sound technical judgment, continuous mentoring, constructive code reviews, and structured onboarding.
+Hands-on lead and fast learner with sound technical judgment, continuous mentoring, constructive code reviews, and structured onboarding.
 
 ### Pixel to cloud
-In close alignment with PMs and designers. From application code, backend services, to automated deployment to the cloud.
+Being the glue between PMs, designers, and engineering—from interface code and backend services to automated cloud deployment—to make sure the product ships.
 
 ## Brands {#brands}
 
 Products for brands ==you know==.
 
-I have spent most of my career working with some of Germany's largest brands and enterprises.
+I have spent most of my career working with some of Germany's largest brands and enterprises, adapting quickly to new domains, corporate structures, and existing stacks.
 
-I bring extended experience working in corporate structures, taking on product ownership. In supporting and managing the whole product lifecycle, from requirements and planning to execution, stakeholder alignment, technical decision making and supporting junior and mid level engineers to grow.
+Getting up to speed fast in a new domain, be it an existing codebase, new business domain or taking over product ownership has been a common theme throughout my career.
+
+This included supporting and managing the whole product lifecycle from requirements and planning to execution, stakeholder alignment, technical decision making and supporting junior and mid level engineers to grow.
+
+Whatever role the project required, I took on the task with maximum effort and di my best to define and fulfill the role it asked of me.
 
 ![Allianz](site/assets/logos/allianz.svg "logo")
 ![BMW](site/assets/logos/bmw.svg "logo")
@@ -85,7 +89,7 @@ A second mode combines the camera, on-device sensors, and image recognition to g
 This project allowed me to shape all aspects of the product, taking on product ownership, steering UX and UI design, and managing requirements.
 On the technical front, I implemented business features, integrated the app into existing cloud infrastructure, and contributed to the supporting .NET platform.
 
-Overseeing the app store submissions and release processes delivered the app on time.
+Overseeing the QA, app store submissions, and release processes delivered the app on time.
 
 `Expo` `React Native` `TypeScript` `XState` `Skia` `ONNX` `.NET` `GraphQL` `Azure`
 
@@ -119,7 +123,7 @@ For ZEISS Meditec, I led the migration of Media Asset Management (MAM) systems, 
 The home of ADAC's racing series, from the ADAC GT Masters to the local Klassik Cups.
 
 Beyond regular feature delivery and maintenance,
-I planed, architected and [led the migration from Gatsby Cloud / Netlify to a new custom built engine with a simplified stack using Github Actions and Digital Ocean](https://satellytes.com/blog/post/gatsbyjs-cd-pipeline-github-actions-digital-ocean/) reducing monthly hosting costs by thousands of euros.
+I planned, architected and [led the pragmatic migration from Gatsby Cloud / Netlify to a new custom-built engine with a simplified stack using GitHub Actions and DigitalOcean](https://satellytes.com/blog/post/gatsbyjs-cd-pipeline-github-actions-digital-ocean/), reducing monthly hosting costs by thousands of euros.
 
 [show more]
 
@@ -198,6 +202,8 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 
 ### Ways of working
 `Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
+
+`Pragmatic` `Creative` `Fast learner` `Adaptable` `Being glue` `Open-minded`
 
 ### Spoken languages
 `German (native speaker)` `English (full professional proficiency)` `French (limited working proficiency)`

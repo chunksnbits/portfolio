@@ -62,6 +62,8 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 ### Arbeitsweise
 `Tech lead` `Mentoring` `Scrum` `AI coding agents` `Product Owner`
 
+`Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`
+
 ### Sprachkenntnisse
 `Deutsch (Muttersprache)` `Englisch (verhandlungssicher)` `Französisch (gute Kenntnisse)`
 

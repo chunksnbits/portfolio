@@ -64,6 +64,8 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 ### Ways of working
 `Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
 
+`Pragmatic` `Creative` `Fast learner` `Adaptable` `Being glue` `Open-minded`
+
 ### Spoken languages
 `German (native speaker)` `English (full professional proficiency)` `French (limited working proficiency)`
 
