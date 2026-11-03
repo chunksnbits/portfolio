@@ -123,7 +123,7 @@ For ZEISS Meditec, I led the migration of Media Asset Management (MAM) systems, 
 The home of ADAC's racing series, from the ADAC GT Masters to the local Klassik Cups.
 
 Beyond regular feature delivery and maintenance,
-I planned, architected and [led the pragmatic migration from Gatsby Cloud / Netlify to a new custom-built engine with a simplified stack using GitHub Actions and DigitalOcean](https://satellytes.com/blog/post/gatsbyjs-cd-pipeline-github-actions-digital-ocean/), reducing monthly hosting costs by thousands of euros.
+I planned, architected and [led a pragmatic migration from Gatsby Cloud / Netlify to a new custom-built engine with a simplified stack using GitHub Actions and DigitalOcean](https://satellytes.com/blog/post/gatsbyjs-cd-pipeline-github-actions-digital-ocean/), reducing monthly hosting costs by thousands of euros.
 
 [show more]
 

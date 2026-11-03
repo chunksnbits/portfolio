@@ -16,9 +16,9 @@ description: Lead Software Engineer mit Weitblick für Architektur, technischem 
 
 Ich baue Web- und Mobile-Systeme, die ==Bestand haben==.
 
-Fünfzehn Jahre Erfahrung in der Entwicklung und Betreuung unternehmenskritischer Anwendungen bereiten mich ideal auf die nächste Phase der KI-gestützten Softwareentwicklung vor.
+Fünfzehn Jahre Erfahrung in der Entwicklung und Betreuung unternehmenskritischer Anwendungen haben mich optimal auf die nächste Phase der KI-gestützten Softwareentwicklung vorbereitet.
 
-Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrund: Liebe zum Detail, fundierte Erfahrung im Entwurf und in der Bewertung von Softwarearchitekturen sowie die Offenheit, über den eigenen Tellerrand hinauszublicken, erlauben es mir, kreative und pragmatische Lösungen für komplexe Probleme zu finden, die Ihr Unternehmen voranbringen.
+Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrund: Liebe zum Detail, fundierte Erfahrung im Entwurf und in der Bewertung von Softwarearchitekturen und die Fähigkeit über den eigenen Tellerrand hinausblicken zu können, erlauben es mir, kreative und pragmatische Lösungen für komplexe Probleme zu finden, die Ihr Unternehmen voranbringen.
 
 - **15 Jahre**
   - in der Softwareentwicklung

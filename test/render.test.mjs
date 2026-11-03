@@ -24,6 +24,13 @@ test('numbers the sections in the nav', () => {
   assert.match(html, /href="#contact"[^>]*>\s*<span class="nav__number">03<\/span>/);
 });
 
+test('numbers each eyebrow, leaving its separator to the stylesheet', () => {
+  const html = render();
+
+  assert.match(html, /<h2 class="eyebrow" id="about-title"><span class="eyebrow__number" aria-hidden="true">01<\/span> About<\/h2>/);
+  assert.doesNotMatch(html, /\/\/<\/span>/);
+});
+
 test('gives every project its own screen with a counter', () => {
   const html = render();
 
@@ -322,4 +329,51 @@ test('rejects a CV in another language than its portfolio', () => {
 test('declares the dark theme to the browser before the stylesheets load, whatever the system prefers', () => {
   assert.match(render(), /<meta name="color-scheme" content="dark">/);
   assert.match(renderCvSource(), /<meta name="color-scheme" content="dark">/);
+});
+
+// A tailored copy of the site for one company, published below its folder name.
+const VARIANT = { stylesheet: 'acme/theme.css', fonts: ['acme/fonts/brand.woff2'], theme: 'light' };
+const VARIANT_OPTIONS = { ...OPTIONS, base: '../../', path: 'acme/en/', cvPath: 'acme/en/cv/', alternate: { lang: 'de', path: 'acme/' }, variant: VARIANT };
+
+test('loads a variant\'s stylesheet after the base one and preloads its fonts instead', () => {
+  const html = render(VARIANT_OPTIONS);
+
+  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/assets\/styles\.css">\n<link rel="stylesheet" href="\.\.\/\.\.\/acme\/theme\.css">/);
+  assert.match(html, /<link rel="preload" href="\.\.\/\.\.\/acme\/fonts\/brand\.woff2" as="font" type="font\/woff2" crossorigin>/);
+  assert.doesNotMatch(html, /fonts\/inter\.woff2/);
+});
+
+test('keeps the base fonts preloaded for a variant that brings none', () => {
+  assert.match(render({ ...VARIANT_OPTIONS, variant: { ...VARIANT, fonts: [] } }), /href="\.\.\/\.\.\/assets\/fonts\/inter\.woff2"/);
+});
+
+test('keeps a variant out of search results, but not the base pages', () => {
+  assert.match(render(VARIANT_OPTIONS), /<meta name="robots" content="noindex">/);
+  assert.doesNotMatch(render(), /name="robots"/);
+});
+
+test('opens a variant in the theme it picks, until the visitor switches', () => {
+  const light = render(VARIANT_OPTIONS);
+  const dark = render({ ...VARIANT_OPTIONS, variant: { ...VARIANT, theme: 'dark' } });
+
+  assert.match(light, /<html lang="en" data-theme="light">/);
+  assert.match(light, /<meta name="color-scheme" content="light">/);
+  assert.match(dark, /<html lang="en">/);
+  assert.match(dark, /<meta name="color-scheme" content="dark">/);
+});
+
+test('styles the CV of a variant with its stylesheet and theme too', () => {
+  const html = renderCv(toCv(parseMarkdown(cvSource())), {
+    ...CV_OPTIONS,
+    base: '../../../',
+    path: 'acme/en/cv/',
+    portfolioPath: 'acme/en/',
+    alternate: { lang: 'de', path: 'acme/cv/' },
+    variant: VARIANT,
+  });
+
+  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/assets\/cv\.css">\n<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/acme\/theme\.css">/);
+  assert.match(html, /<html lang="en" data-theme="light">/);
+  assert.match(html, /<meta name="robots" content="noindex">/);
+  assert.match(html, /<span>chunksnbits\.github\.io\/portfolio\/acme\/en<\/span>/);
 });

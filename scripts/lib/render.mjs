@@ -96,14 +96,15 @@ const FONTS = ['inter', 'plus-jakarta-sans', 'jetbrains-mono'];
  * `path`, `cvPath` and `alternate.path` place this page, its one-page CV and the other language below `homepage`.
  * `images` is the manifest from scripts/images.mjs, keyed by published path.
  * `logos` and `badges` hold the SVG source of each logo and badge, keyed by published path, since the page inlines them.
+ * `variant` marks the page as a tailored copy for one company, see `variantHead`.
  */
-export function renderPage(portfolio, { base, homepage, path, cvPath, alternate, images, logos = {}, badges = {}, ogImage = null }) {
+export function renderPage(portfolio, { base, homepage, path, cvPath, alternate, images, logos = {}, badges = {}, ogImage = null, variant = null }) {
   const { meta, sections } = portfolio;
   const ui = interfaceWords(meta.lang);
-  const context = { meta, ui, base, homepage, path, cvPath, alternate, images, logos, badges, ogImage };
+  const context = { meta, ui, base, homepage, path, cvPath, alternate, images, logos, badges, ogImage, variant };
 
   return `<!doctype html>
-<html lang="${meta.lang}">
+<html lang="${meta.lang}"${themeAttribute(variant)}>
 <head>
 ${renderHead(context)}
 </head>
@@ -127,19 +128,20 @@ ${sections.map((section, index) => renderSection(section, index, context)).join(
  * `meta` is the frontmatter of the portfolio in the same language, which supplies the header and contact details.
  * `path`, `portfolioPath` and `alternate.path` place this CV, its portfolio and the other language's CV below `homepage`.
  * Links to `site/` paths lead to the published site, so a saved PDF links there wherever it was printed.
+ * `variant` works as in `renderPage`.
  */
-export function renderCv(cv, { meta, base, homepage, path, portfolioPath, alternate, images = {}, logos = {}, badges = {} }) {
+export function renderCv(cv, { meta, base, homepage, path, portfolioPath, alternate, images = {}, logos = {}, badges = {}, variant = null }) {
   if (cv.meta.lang !== meta.lang) {
     throw new Error(`frontmatter: the CV is in "${cv.meta.lang}", its portfolio in "${meta.lang}"`);
   }
   const ui = interfaceWords(meta.lang);
-  const context = { meta, ui, base, linkBase: homepage, homepage, path, portfolioPath, alternate, images, logos, badges };
+  const context = { meta, ui, base, linkBase: homepage, homepage, path, portfolioPath, alternate, images, logos, badges, variant };
   const start = cv.sections.findIndex((section) => section.id === CV_SIDEBAR_START);
   const main = start === -1 ? cv.sections : cv.sections.slice(0, start);
   const sidebar = start === -1 ? [] : cv.sections.slice(start);
 
   return `<!doctype html>
-<html lang="${meta.lang}">
+<html lang="${meta.lang}"${themeAttribute(variant)}>
 <head>
 ${renderCvHead(context)}
 </head>
@@ -177,7 +179,7 @@ function interfaceWords(lang) {
   return ui;
 }
 
-function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
+function renderHead({ meta, ui, base, homepage, path, alternate, ogImage, variant }) {
   const url = homepage + path;
   const alternateUrl = homepage + alternate.path;
   const title = escapeHtml(`${inlineText(meta.name)} · ${inlineText(meta.title)}`);
@@ -205,10 +207,7 @@ function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
     `<meta property="og:locale" content="${ui.locale}">`,
     ogImage ? `<meta property="og:image" content="${ogImage}">` : '',
     `<meta name="twitter:card" content="${ogImage ? 'summary_large_image' : 'summary'}">`,
-    '<meta name="color-scheme" content="dark">',
-    `<link rel="icon" href="${base}favicon.svg" type="image/svg+xml">`,
-    ...fontPreloads(base),
-    `<link rel="stylesheet" href="${base}assets/styles.css">`,
+    ...variantHead(base, 'assets/styles.css', variant),
     `<script>${THEME_BOOT}</script>`,
     `<script src="${base}assets/main.js" defer></script>`,
     `<script type="application/ld+json">${JSON.stringify(person).replaceAll('<', '\\u003c')}</script>`,
@@ -217,7 +216,7 @@ function renderHead({ meta, ui, base, homepage, path, alternate, ogImage }) {
     .join('\n');
 }
 
-function renderCvHead({ meta, ui, base, homepage, path, alternate }) {
+function renderCvHead({ meta, ui, base, homepage, path, alternate, variant }) {
   return [
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
@@ -225,12 +224,31 @@ function renderCvHead({ meta, ui, base, homepage, path, alternate }) {
     `<title>${escapeHtml(`${inlineText(meta.name)} · ${ui.cv}`)}</title>`,
     `<meta name="description" content="${escapeHtml(inlineText(meta.description))}">`,
     ...languageLinks(meta.lang, homepage + path, alternate.lang, homepage + alternate.path),
-    '<meta name="color-scheme" content="dark">',
-    `<link rel="icon" href="${base}favicon.svg" type="image/svg+xml">`,
-    ...fontPreloads(base),
-    `<link rel="stylesheet" href="${base}assets/cv.css">`,
+    ...variantHead(base, 'assets/cv.css', variant),
     `<script>${THEME_BOOT}</script>`,
   ].join('\n');
+}
+
+// Head lines that differ for a variant, a tailored copy of the site for one company.
+// A variant adds its stylesheet after the base one and stays out of search results.
+// - stylesheet: published path of its theme.css
+// - fonts: published paths of the fonts its theme uses, preloaded instead of the base fonts
+// - theme: 'dark' or 'light', the theme the page opens in
+function variantHead(base, stylesheet, variant) {
+  const fonts = variant?.fonts?.length > 0 ? variant.fonts : FONTS.map((font) => `assets/fonts/${font}.woff2`);
+  return [
+    variant ? '<meta name="robots" content="noindex">' : '',
+    `<meta name="color-scheme" content="${variant?.theme ?? 'dark'}">`,
+    `<link rel="icon" href="${base}favicon.svg" type="image/svg+xml">`,
+    ...fonts.map((font) => `<link rel="preload" href="${base}${font}" as="font" type="font/woff2" crossorigin>`),
+    `<link rel="stylesheet" href="${base}${stylesheet}">`,
+    variant ? `<link rel="stylesheet" href="${base}${variant.stylesheet}">` : '',
+  ].filter(Boolean);
+}
+
+// The theme toggle and the stylesheets read data-theme. Without it a page opens dark.
+function themeAttribute(variant) {
+  return variant?.theme === 'light' ? ' data-theme="light"' : '';
 }
 
 function languageLinks(lang, url, alternateLang, alternateUrl) {
@@ -240,10 +258,6 @@ function languageLinks(lang, url, alternateLang, alternateUrl) {
     `<link rel="alternate" hreflang="${alternateLang}" href="${alternateUrl}">`,
     `<link rel="alternate" hreflang="x-default" href="${lang === 'en' ? url : alternateUrl}">`,
   ];
-}
-
-function fontPreloads(base) {
-  return FONTS.map((font) => `<link rel="preload" href="${base}assets/fonts/${font}.woff2" as="font" type="font/woff2" crossorigin>`);
 }
 
 function renderRail(sections, context) {
@@ -629,7 +643,7 @@ function languageLink(className, href, lang) {
 }
 
 function eyebrow(index, title, context) {
-  return `<span class="eyebrow__number" aria-hidden="true">${number(index)} //</span> ${inline(title, context)}`;
+  return `<span class="eyebrow__number" aria-hidden="true">${number(index)}</span> ${inline(title, context)}`;
 }
 
 function inline(text, { base, linkBase = base }) {

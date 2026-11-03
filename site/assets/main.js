@@ -276,6 +276,26 @@ function setUpAsciiKeyvisual(layer) {
     if (!reducedMotion.matches) burstTimer ||= setTimeout(burst, FLASH_SPACING);
   };
 
+  // Reads the colors a theme can tint the dots in, instead of the photo's own colors, as RGB fractions:
+  // - --ascii-dim: the faintest dots
+  // - --ascii-bright: the brightest dots
+  // - --ascii-flash: the color flashes warm the dots toward, optional
+  // Returns null unless the theme sets dim and bright.
+  const readTint = () => {
+    const style = getComputedStyle(layer);
+    const colors = ['--ascii-dim', '--ascii-bright', '--ascii-flash'].map((name) => style.getPropertyValue(name).trim());
+    if (!colors[0] || !colors[1]) return null;
+    // Painting each color on a pixel resolves any CSS color syntax to RGB.
+    const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    return colors.map((color) => {
+      if (!color) return null;
+      probe.clearRect(0, 0, 1, 1);
+      probe.fillStyle = color;
+      probe.fillRect(0, 0, 1, 1);
+      return [...probe.getImageData(0, 0, 1, 1).data.slice(0, 3)].map((value) => value / 255);
+    });
+  };
+
   // Reads the photo at one pixel per cell, placed as object-fit: cover would place it, and clears the canvas.
   const sample = () => {
     const width = canvas.clientWidth;
@@ -327,6 +347,7 @@ function setUpAsciiKeyvisual(layer) {
     // On a light page the dots are ink, so the dark parts of the photo get the large dots.
     const paper = ground[0] + ground[1] + ground[2] > 1.5;
     return {
+      tint: readTint(),
       width,
       height,
       scale,
@@ -368,6 +389,17 @@ function setUpAsciiKeyvisual(layer) {
     // The darkest cells stay dark.
     const strength = Math.min(0.14 + 0.86 * Math.min(1, (level + 0.04) / COVER[step]), 0.45 + 0.8 * level) / peak;
     let dot = step;
+    if (art.tint) {
+      // A tinted dot moves from the page toward the tint as far as the cell stands out, through dim to bright.
+      const away = Math.min(1, peak * strength);
+      const [dim, bright, flash] = art.tint;
+      for (let i = 0; i < 3; i++) {
+        let tint = dim[i] + away * (bright[i] - dim[i]);
+        if (flash && light > 0) tint += Math.min(1, light) * (flash[i] - tint);
+        dot = (dot << 8) | Math.round(255 * (ground[i] + away * (tint - ground[i])));
+      }
+      return dot;
+    }
     for (let i = 0; i < 3; i++) {
       const away = Math.min(1, channels[i] * strength);
       dot = (dot << 8) | Math.round(255 * (paper ? ground[i] * (1 - away) : ground[i] + away * (1 - ground[i])));

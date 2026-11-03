@@ -36,8 +36,11 @@ export function serve(folder, { port = 0, prefix = '/portfolio/' } = {}) {
     }
     const target = await resolve(file);
     if (!target) {
+      // The site's own 404 page where the folder has one, like dist/, and an empty answer elsewhere.
+      const notFound = await resolve(join(folder, '404.html'));
       response.writeHead(404, { 'content-type': TYPES['.html'] });
-      createReadStream(join(folder, '404.html')).pipe(response);
+      if (notFound) createReadStream(notFound).pipe(response);
+      else response.end();
       return;
     }
     response.writeHead(200, {
