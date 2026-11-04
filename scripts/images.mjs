@@ -20,6 +20,8 @@ const IMAGES = [
   { source: 'screencapture-adac-motorsport-de-drm-2026-10-03-07_26_54.png', name: 'adac-drm', width: 800, density: 2 },
   { source: 'screencapture-myzeissvision-zeiss-2026-10-04-10_45_39.png', name: 'myzeiss-vision-desktop', width: 800, density: 2 },
   { source: 'myzeissvision.zeiss.com_(iPhone SE).png', name: 'myzeiss-vision-phone', width: 320, density: 2 },
+  { source: 'aura-google-play-2-setup.png', name: 'aura-setup', width: 360, density: 2 },
+  { source: 'aura-google-play-7-graph.png', name: 'aura-graph', width: 360, density: 2 },
   // The FC Bayern and MediaMarkt originals are small thumbnails, so they keep their size.
   { source: 'image 7.png', name: 'fcbayern-mobile', density: 1 },
   { source: 'image 14.png', name: 'mms-campaign', density: 1 },

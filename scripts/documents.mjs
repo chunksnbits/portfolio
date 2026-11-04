@@ -11,7 +11,7 @@ import { access, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
-import { loadVariants, PAGES, ROOT } from './build.mjs';
+import { loadVariants, PAGES, readMarkdown, ROOT } from './build.mjs';
 import { countPages, evaluate, launchChrome, openTab, printPdf } from './lib/chrome.mjs';
 import { auditContrast } from './lib/contrast.mjs';
 import { renderLetter, toLetter, wrapDocument } from './lib/documents.mjs';
@@ -43,7 +43,7 @@ const folder = join(ROOT, VARIANTS, slug, 'private');
 const portfolios = Object.fromEntries(
   await Promise.all(
     variantPages(variant, PAGES).map(async (page) => {
-      const { meta } = toPortfolio(parseMarkdown(await readFile(join(ROOT, page.source), 'utf8')));
+      const { meta } = toPortfolio(await readMarkdown(page.source, page.extends));
       return [meta.lang, { meta, path: page.path }];
     }),
   ),

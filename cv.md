@@ -4,9 +4,9 @@ lang: en
 
 ## About {#about}
 
-I engineer web and mobile systems that ==are built to last==.
+I am a lead software engineer with expertise in web and mobile systems. More than fifteen years of experience in developing and maintaining enterprise-grade applications for some of the biggest brands and enterprises in Germany have me well prepared for the next phase of agentic software engineering.
 
-Fifteen years of experience developing and maintaining enterprise-grade applications have me well prepared for the next phase of AI-driven software development. Hands-on lead with sound technical judgment, continuous mentoring, constructive code reviews, and structured onboarding.
+Hands-on lead with sound technical judgment, an eye for detail, continuous mentoring, and constructive code reviews.
 
 ## Experience {#experience}
 
@@ -49,7 +49,7 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 
 ## Skills {#skills}
 
-### Frontend
+### Frontend {#frontend}
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright` `d3.js`
 
 ### Mobile
@@ -61,7 +61,7 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 ### Architecture and delivery
 `Monorepos` `Module Federation` `Design systems` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
 
-### Ways of working
+### Ways of working {#ways-of-working}
 `Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
 
 `Pragmatic` `Creative` `Fast learner` `Adaptable` `Being glue` `Open-minded`

@@ -7,6 +7,7 @@ import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
 import { parseMarkdown } from './lib/markdown.mjs';
+import { applyOverlay } from './lib/overlay.mjs';
 import { compareStructure } from './lib/parity.mjs';
 import { toCv, toPortfolio } from './lib/portfolio.mjs';
 import { renderCv, renderPage } from './lib/render.mjs';
@@ -98,8 +99,8 @@ export async function loadVariants() {
 
 async function loadSite(site) {
   const [first, second] = site.pages;
-  const portfolios = await Promise.all(site.pages.map((page) => load(page.source, toPortfolio)));
-  const cvs = await Promise.all(site.pages.map((page) => load(page.cvSource, toCv)));
+  const portfolios = await Promise.all(site.pages.map((page) => load(page.source, page.extends, toPortfolio)));
+  const cvs = await Promise.all(site.pages.map((page) => load(page.cvSource, page.cvExtends, toCv)));
   warnOnDrift(first.source, second.source, compareStructure(...portfolios));
   warnOnDrift(first.cvSource, second.cvSource, compareStructure(...cvs));
   return { ...site, portfolios, cvs };
@@ -181,9 +182,25 @@ async function publishVariant(variant) {
   }
 }
 
-async function load(source, toModel) {
-  const markdown = await readFile(join(ROOT, source), 'utf8');
-  return prefixErrors(source, () => toModel(parseMarkdown(markdown)));
+/**
+ * Reads and parses a Markdown file of the repository.
+ * With `baseSource`, the file is a variant's overlay, and it resolves to the base file with the overlay's changes applied.
+ * Errors name the file they come from.
+ */
+export async function readMarkdown(source, baseSource = null) {
+  const parse = async (file) => {
+    const markdown = await readFile(join(ROOT, file), 'utf8');
+    return prefixErrors(file, () => parseMarkdown(markdown));
+  };
+  const document = await parse(source);
+  if (!baseSource) return document;
+  const base = await parse(baseSource);
+  return prefixErrors(source, () => applyOverlay(base, document));
+}
+
+async function load(source, baseSource, toModel) {
+  const document = await readMarkdown(source, baseSource);
+  return prefixErrors(source, () => toModel(document));
 }
 
 function prefixErrors(source, work) {

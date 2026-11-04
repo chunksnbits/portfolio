@@ -19,9 +19,11 @@ const FRONTMATTER_KEYS = [
 
 const CV_FRONTMATTER_KEYS = ['lang'];
 
-// A meta line opens with a year.
-// E.g. "2021 – today + Munich".
-const META_LINE = /^\d{4}\b/;
+/**
+ * Matches a meta line, which opens with a year.
+ * E.g. "2021 – today + Munich".
+ */
+export const META_LINE = /^\d{4}\b/;
 
 /**
  * Builds the page model from parsed portfolio Markdown.
@@ -60,6 +62,9 @@ function toSections(blocks) {
   let entry = null;
   for (const block of blocks) {
     const section = sections.at(-1);
+    if (block.type === 'heading' && block.flags.length > 0) {
+      throw lineError(block.line, `{.${block.flags[0]}} only works in a variant's Markdown files`);
+    }
 
     if (block.type === 'heading' && block.level === 2) {
       if (!block.id) {

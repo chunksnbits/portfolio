@@ -15,9 +15,9 @@ import { access, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { loadVariants, PAGES, ROOT } from './build.mjs';
+import { loadVariants, PAGES, readMarkdown, ROOT } from './build.mjs';
 import { toLetter } from './lib/documents.mjs';
-import { parseMarkdown } from './lib/markdown.mjs';
+import { parseMarkdown, printMarkdown } from './lib/markdown.mjs';
 import { VARIANTS, variantPages } from './lib/variants.mjs';
 
 // Gemini at its highest effort in agy.
@@ -75,7 +75,8 @@ async function draft(name) {
   }
 
   const read = (file, fallback = null) => readFile(file, 'utf8').catch((error) => (fallback !== null && error.code === 'ENOENT' ? fallback : Promise.reject(error)));
-  const portfolio = await Promise.all(variantPages(variant, PAGES).map((page) => read(join(ROOT, page.source))));
+  // Gemini reads the tailored portfolio as a whole, not just the variant's changes to the base.
+  const portfolio = await Promise.all(variantPages(variant, PAGES).map(async (page) => printMarkdown(await readMarkdown(page.source, page.extends))));
   const prompt = [
     await read(join(ROOT, 'scripts/letter.prompt.md')),
     `## Frame\n\n- Company: ${variant.company}\n- Role: ${variant.role}\n- Posting: ${variant.job}\n- Language of the posting: ${variant.language}`,

@@ -1137,6 +1137,47 @@ code {
   padding-bottom: 40px;
 }
 
+/* App screens stand side by side. */
+.panel__visual:has(> .frame--app) {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+}
+
+/* A current phone: a thin bezel, a metal rim and round corners. */
+.frame--app {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: var(--natural-width);
+  overflow: hidden;
+  border: 5px solid #0b1120;
+  /* Both radii are 15% of the width, so the corners stay round at any size. */
+  border-radius: 15% / calc(15% / var(--frame-ratio));
+  background: #0b1120;
+  box-shadow:
+    0 0 0 1px #475569,
+    var(--shadow);
+}
+
+.frame--app .frame__viewport {
+  position: relative;
+}
+
+/* The camera island of an iPhone 16 Pro, sized and placed in shares of the screen width.
+ * The status bar of an iPhone screenshot leaves room for it. */
+.frame--app .frame__viewport::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 31%;
+  aspect-ratio: 126 / 37;
+  margin-top: 2.7%;
+  translate: -50% 0;
+  border-radius: 999px;
+  background: #000;
+}
+
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .frame--scrolls img {
     transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);

@@ -17,6 +17,18 @@
     "density": 2,
     "avif": "assets/img/myzeiss-vision-phone.avif"
   },
+  "assets/img/aura-setup.webp": {
+    "width": 360,
+    "height": 782,
+    "density": 2,
+    "avif": "assets/img/aura-setup.avif"
+  },
+  "assets/img/aura-graph.webp": {
+    "width": 360,
+    "height": 782,
+    "density": 2,
+    "avif": "assets/img/aura-graph.avif"
+  },
   "assets/img/fcbayern-mobile.webp": {
     "width": 654,
     "height": 405,

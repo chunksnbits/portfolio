@@ -5,7 +5,7 @@ import { PROJECTS } from './portfolio.mjs';
 const CONTACT = 'contact';
 
 // Image titles that pick a frame. Any other title is a caption under a browser frame.
-const FRAMES = ['phone', 'plain'];
+const FRAMES = ['phone', 'app', 'plain'];
 
 // Image title that turns a project's image into the backdrop of its screen.
 const KEYVISUAL = 'keyvisual';
@@ -24,7 +24,8 @@ const LOGO_BOX = { width: 168, height: 76 };
 const BADGE = 'badge';
 
 // Tallest frame, as height over width. A taller capture scrolls inside the frame on hover.
-const MAX_FRAME_RATIO = { browser: 1.15, phone: 1.78 };
+// An app frame shows the whole screen of a current phone, up to about 9:20.
+const MAX_FRAME_RATIO = { browser: 1.15, phone: 1.78, app: 2.25 };
 
 // Hover-scroll speed: seconds per frame width the capture travels.
 const SCROLL_SECONDS_PER_WIDTH = 2.4;

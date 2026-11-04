@@ -55,10 +55,10 @@ test('rejects a missing, unknown or invalid setting, naming the variant and the 
   }
 });
 
-test('places the pages of a variant below its folder, one level deeper than the base pages', () => {
+test('places the pages of a variant below its folder, one level deeper than the base pages, and names the base files they change', () => {
   assert.deepEqual(variantPages(toVariant('acme', SETTINGS), PAGES), [
-    { source: 'variants/acme/portfolio.de.md', cvSource: 'variants/acme/cv.de.md', path: 'acme/', base: '../' },
-    { source: 'variants/acme/portfolio.md', cvSource: 'variants/acme/cv.md', path: 'acme/en/', base: '../../' },
+    { source: 'variants/acme/portfolio.de.md', cvSource: 'variants/acme/cv.de.md', path: 'acme/', base: '../', extends: 'portfolio.de.md', cvExtends: 'cv.de.md' },
+    { source: 'variants/acme/portfolio.md', cvSource: 'variants/acme/cv.md', path: 'acme/en/', base: '../../', extends: 'portfolio.md', cvExtends: 'cv.md' },
   ]);
 });
 

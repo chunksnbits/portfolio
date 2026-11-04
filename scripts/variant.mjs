@@ -1,19 +1,21 @@
-// Creates, lists, publishes and takes down variants: tailored copies of the portfolio for one job application.
+// Creates, lists, shows, publishes and takes down variants: tailored copies of the portfolio for one job application.
 // see: README.md, "Variants"
 //
 // Usage:
 // - npm run variant -- new <slug> --job <url> [--company <name>] [--role <title>] [--language de|en]
 // - npm run variant -- list
+// - npm run variant -- show <slug>
 // - npm run variant -- publish <slug>
 // - npm run variant -- unpublish <slug>
 //
 // NOTE: publishing only flips "published" in variant.json. The variant goes online, or comes down, with the next push to master.
-import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
-import { loadVariants, PAGES, ROOT } from './build.mjs';
+import { loadVariants, PAGES, readMarkdown, ROOT } from './build.mjs';
 import { dismissCookieBanner, evaluate, launchChrome, openTab } from './lib/chrome.mjs';
-import { checkSlug, toVariant, VARIANTS } from './lib/variants.mjs';
+import { printMarkdown } from './lib/markdown.mjs';
+import { checkSlug, toVariant, VARIANTS, variantPages } from './lib/variants.mjs';
 
 // Time a posting that renders in the browser, like most career sites, takes to show its text.
 const POSTING_SETTLE_MS = 2500;
@@ -34,10 +36,10 @@ const { values: options, positionals } = parseArgs({
   allowPositionals: true,
 });
 const [command, slug] = positionals;
-const COMMANDS = { new: create, list, publish: (name) => setPublished(name, true), unpublish: (name) => setPublished(name, false) };
+const COMMANDS = { new: create, list, show, publish: (name) => setPublished(name, true), unpublish: (name) => setPublished(name, false) };
 
 if (!COMMANDS[command]) {
-  console.error('Usage: npm run variant -- new <slug> --job <url> | list | publish <slug> | unpublish <slug>');
+  console.error('Usage: npm run variant -- new <slug> --job <url> | list | show <slug> | publish <slug> | unpublish <slug>');
   process.exit(1);
 }
 try {
@@ -47,8 +49,8 @@ try {
   process.exit(1);
 }
 
-// Copies the base Markdown files into variants/<slug>/, with a variant.json, an empty theme.css,
-// and the posting's text in private/job.md.
+// Creates variants/<slug>/ with a variant.json, an empty theme.css, one Markdown file per base file
+// that changes nothing yet, and the posting's text in private/job.md.
 async function create(name) {
   if (!name || !options.job) throw new Error('Usage: npm run variant -- new <slug> --job <url>');
   checkSlug(name);
@@ -69,7 +71,9 @@ async function create(name) {
   const folder = join(ROOT, VARIANTS, name);
   await mkdir(join(folder, 'private'), { recursive: true });
   for (const page of PAGES) {
-    for (const source of [page.source, page.cvSource]) await cp(join(ROOT, source), join(folder, source));
+    for (const source of [page.source, page.cvSource]) {
+      await writeFile(join(folder, source), `<!-- Changes to ${source} for ${variant.company}. Format: README.md, "Variant files". -->\n`);
+    }
   }
   await writeFile(join(folder, 'variant.json'), `${JSON.stringify(settings, null, 2)}\n`);
   await writeFile(join(folder, 'theme.css'), THEME_TEMPLATE(variant.company));
@@ -96,9 +100,21 @@ async function list() {
   }
 }
 
+// Prints each of a variant's Markdown files with its changes applied to the base file, the way the build reads it.
+async function show(name) {
+  const variant = await findVariant(name);
+  for (const page of variantPages(variant, PAGES)) {
+    for (const [source, base] of [
+      [page.source, page.extends],
+      [page.cvSource, page.cvExtends],
+    ]) {
+      console.log(`<!-- ${source}, applied to ${base} -->\n\n${printMarkdown(await readMarkdown(source, base))}`);
+    }
+  }
+}
+
 async function setPublished(name, published) {
-  const variant = (await loadVariants()).find((candidate) => candidate.slug === name);
-  if (!variant) throw new Error(`There is no variant "${name}" in ${VARIANTS}/.`);
+  await findVariant(name);
   const file = join(ROOT, VARIANTS, name, 'variant.json');
   const settings = JSON.parse(await readFile(file, 'utf8'));
   await writeFile(file, `${JSON.stringify({ ...settings, published }, null, 2)}\n`);
@@ -108,6 +124,12 @@ async function setPublished(name, published) {
       ? `${name} is published. Commit and push to master to put it online at ${homepage}${name}/`
       : `${name} is unpublished. Commit and push to master to take it down. Its files stay in ${VARIANTS}/${name}/.`,
   );
+}
+
+async function findVariant(name) {
+  const variant = (await loadVariants()).find((candidate) => candidate.slug === name);
+  if (!variant) throw new Error(`There is no variant "${name}" in ${VARIANTS}/.`);
+  return variant;
 }
 
 // Reads a posting's text and guesses the company, the role and the language from the page.

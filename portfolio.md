@@ -36,13 +36,13 @@ When AI agents write the code, other skills come into focus: an obsession with d
   - CI/CD
   - Cloud
 
-### Architecture that lasts
+### Architecture that lasts {#architecture}
 Pragmatic, resilient micro-frontends, design systems and cloud services for products that run for years, from BMW, Allianz, FC Bayern to ZEISS.
 
 ### Leading by building
 Hands-on lead and fast learner with sound technical judgment, continuous mentoring, constructive code reviews, and structured onboarding.
 
-### Pixel to cloud
+### Pixel to cloud {#pixel-to-cloud}
 Being the glue between PMs, designers, and engineering—from interface code and backend services to automated cloud deployment—to make sure the product ships.
 
 ## Brands {#brands}
@@ -74,9 +74,8 @@ Whatever role the project required, I took on the task with maximum effort and d
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
-1. **AURA NIR**: measures the sample
-2. **Expo app**: Bluetooth link, predictions on device, UI. Works on- and offline
-3. **Cloud platform**: calibrations, authentication, firmware and app over-the-air updates
+![Setup guide for the analyzer in the AURA app](site/assets/img/aura-setup.webp "app")
+![Dry matter results as a chart in the AURA app](site/assets/img/aura-graph.webp "app")
 
 ZEISS Aura® is the companion app for a new ZEISS near-infrared spectrometer that gives customers insights into their crops and feeds.
 
@@ -188,7 +187,7 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 
 ## Skills {#skills}
 
-### Frontend
+### Frontend {#frontend}
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright` `d3.js`
 
 ### Mobile
@@ -200,7 +199,7 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 ### Architecture and delivery
 `Monorepos` `Module Federation` `Design systems` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
 
-### Ways of working
+### Ways of working {#ways-of-working}
 `Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
 
 `Pragmatic` `Creative` `Fast learner` `Adaptable` `Being glue` `Open-minded`

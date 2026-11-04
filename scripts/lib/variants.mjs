@@ -1,7 +1,8 @@
 // Variants: tailored copies of the portfolio, one per job application, each published below its own folder name.
 // see: README.md, "Variants"
 //
-// A variant lives in variants/<slug>/ with the four Markdown files of the base site, a variant.json and a theme.css.
+// A variant lives in variants/<slug>/ with a variant.json, a theme.css and one Markdown file per base file.
+// Each Markdown file holds only its changes to the base file of the same name, see scripts/lib/overlay.mjs.
 // The base site and every published variant build into one dist/, so they go online and come down independently.
 import { join } from 'node:path';
 
@@ -63,6 +64,7 @@ export function checkSlug(slug) {
 /**
  * Lists the pages of a variant, shaped like the base `pages` they mirror.
  * Sources move into the variant's folder, and each page moves one folder deeper, below the variant's slug.
+ * `extends` and `cvExtends` name the base files that `source` and `cvSource` change.
  */
 export function variantPages(variant, pages) {
   return pages.map((page) => ({
@@ -70,6 +72,8 @@ export function variantPages(variant, pages) {
     cvSource: join(VARIANTS, variant.slug, page.cvSource),
     path: `${variant.slug}/${page.path}`,
     base: `../${page.base}`,
+    extends: page.source,
+    cvExtends: page.cvSource,
   }));
 }
 

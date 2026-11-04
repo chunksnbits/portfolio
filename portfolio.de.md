@@ -36,13 +36,13 @@ Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrun
   - CI/CD
   - Cloud
 
-### Architektur, die hält
+### Architektur, die hält {#architecture}
 Pragmatische, langlebige Micro-Frontends, Designsysteme und Cloud-Services für Produkte, die über Jahre laufen – von BMW, Allianz und dem FC Bayern bis zu ZEISS.
 
 ### Mit gutem Beispiel vorangehen
 Hands-on-Lead mit schneller Auffassungsgabe, klarem technischem Urteilsvermögen, kontinuierlichem Mentoring und konstruktiven Code-Reviews.
 
-### Vom Pixel bis zur Cloud
+### Vom Pixel bis zur Cloud {#pixel-to-cloud}
 Als Bindeglied zwischen PMs, Designern und Entwicklung: Vom Anwendungscode über Backend-Services bis zum automatisierten Deployment in die Cloud sorge ich dafür, dass das Wichtigste verlässlich ans Ziel kommt.
 
 ## Brands {#brands}
@@ -74,9 +74,8 @@ Egal welche Rolle das jeweilige Projekt verlangt hat, habe ich es als meine Aufg
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
-1. **AURA NIR**: misst die Probe
-2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Gerät, UI – online und offline
-3. **Cloud-Plattform**: Kalibrierungen, Authentifizierung, Over-the-Air App und Firmware-Updates
+![Einrichtungsanleitung für das Analysegerät in der AURA-App](site/assets/img/aura-setup.webp "app")
+![Trockenmasse-Ergebnisse als Diagramm in der AURA-App](site/assets/img/aura-graph.webp "app")
 
 ZEISS Aura® ist die Companion App für ein neues Nahinfrarot-Spektrometer von ZEISS, das Kunden präzise Einblicke in ihre Ernte und Futtermittel liefert.
 
@@ -190,7 +189,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Skills {#skills}
 
-### Frontend
+### Frontend {#frontend}
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright` `d3.js`
 
 ### Mobile
@@ -202,7 +201,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
 
-### Arbeitsweise
+### Arbeitsweise {#ways-of-working}
 `Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
 
 `Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`

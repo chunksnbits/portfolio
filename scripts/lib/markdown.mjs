@@ -7,7 +7,8 @@ const IMAGE = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g;
 const IMAGES_ONLY = /^(?:\s*!\[[^\]]*\]\([^)\s]+(?:\s+"[^"]*")?\))+\s*$/;
 const TAGS_ONLY = /^(?:\s*`[^`]+`)+\s*$/;
 const HEADING = /^(#{1,6})\s+(.+?)\s*$/;
-const HEADING_ID = /^(.*?)\s*\{#([a-z0-9-]+)\}$/;
+// The braces after a heading's text, Pandoc-style: an id like #about and flags like .remove.
+const HEADING_ATTRIBUTES = /^(.*?)\s*\{((?:\s*[#.][a-z0-9-]+)+)\s*\}$/;
 const LIST_ITEM = /^(?:(-)|\d+\.)\s+(.*)$/;
 const SUBITEM = /^\s{2,}-\s+(.*)$/;
 const INLINE = /`([^`]+)`|\[([^\]]+)\]\(([^)\s]+)\)/g;
@@ -40,7 +41,8 @@ const UNSUPPORTED_ANYWHERE = [
 /**
  * Parses portfolio Markdown into its frontmatter and a flat list of blocks.
  *
- * Blocks are `heading` (level 2 or 3, with an optional `{#id}`), `paragraph`, `list`
+ * Blocks are `heading` (level 2 or 3, with an optional `{#id}` and the `flags` a variant
+ * marks it with, like `remove` for `{.remove}`), `paragraph`, `list`
  * (each item a `{ text, items }` with its sub-items in `items`), `image` (one per image
  * on an images-only line), `tags` (a line of code spans) and `more` (a `[show more]`
  * marker on its own line).
@@ -66,6 +68,22 @@ export function parseMarkdown(source) {
     frontmatter: parseFrontmatter(lines, 1, end),
     blocks: parseBlocks(lines, end + 1),
   };
+}
+
+/**
+ * Prints a document from `parseMarkdown` back to Markdown that parses to the same frontmatter and blocks.
+ * Comments and the original line breaks inside a paragraph are lost.
+ */
+export function printMarkdown({ frontmatter, blocks }) {
+  const keys = Object.entries(frontmatter);
+  const parts = keys.length > 0 ? [['---', ...keys.map(([key, value]) => `${key}: ${value}`), '---'].join('\n')] : [];
+  for (const [index, block] of blocks.entries()) {
+    const text = printBlock(block);
+    // Images of one group stay on consecutive lines, like a browser frame and the phone that overlaps it.
+    if (block.type === 'image' && blocks[index - 1]?.type === 'image') parts[parts.length - 1] += `\n${text}`;
+    else parts.push(text);
+  }
+  return parts.length > 0 ? `${parts.join('\n\n')}\n` : '';
 }
 
 /**
@@ -120,6 +138,27 @@ export function escapeHtml(text) {
 /** Creates a parse error whose message starts with the source line. */
 export function lineError(line, message) {
   return new SyntaxError(`line ${line}: ${message}`);
+}
+
+function printBlock(block) {
+  switch (block.type) {
+    case 'heading': {
+      const names = [...(block.id ? [`#${block.id}`] : []), ...block.flags.map((flag) => `.${flag}`)];
+      return `${'#'.repeat(block.level)} ${block.text}${names.length > 0 ? ` {${names.join(' ')}}` : ''}`;
+    }
+    case 'list':
+      return block.items
+        .map((item, index) => [`${block.ordered ? `${index + 1}.` : '-'} ${item.text}`, ...item.items.map((subitem) => `  - ${subitem}`)].join('\n'))
+        .join('\n');
+    case 'image':
+      return `![${block.alt}](${block.src}${block.title === null ? '' : ` "${block.title}"`})`;
+    case 'tags':
+      return block.tags.map((tag) => `\`${tag}\``).join(' ');
+    case 'more':
+      return '[show more]';
+    default:
+      return block.text;
+  }
 }
 
 // Blanks out comments but keeps their newlines, so later line numbers stay true.
@@ -182,12 +221,18 @@ function parseBlocks(lines, start) {
       if (level !== 2 && level !== 3) {
         throw lineError(line, 'only ## sections and ### entries are supported');
       }
-      const withId = heading[2].match(HEADING_ID);
+      const attributes = heading[2].match(HEADING_ATTRIBUTES);
+      const names = attributes ? attributes[2].trim().split(/\s+/) : [];
+      const ids = names.filter((name) => name.startsWith('#'));
+      if (ids.length > 1) {
+        throw lineError(line, 'a heading takes one id, e.g. {#about .new}');
+      }
       blocks.push({
         type: 'heading',
         level,
-        text: withId ? withId[1] : heading[2],
-        id: withId ? withId[2] : null,
+        text: attributes ? attributes[1] : heading[2],
+        id: ids.length > 0 ? ids[0].slice(1) : null,
+        flags: names.filter((name) => name.startsWith('.')).map((name) => name.slice(1)),
         line,
       });
       continue;

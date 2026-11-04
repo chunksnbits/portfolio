@@ -95,6 +95,15 @@ test('rejects an image that has no processed copy', () => {
   assert.throws(() => render({ ...OPTIONS, images: {} }), /desktop\.webp/);
 });
 
+test('shows an app screen whole, in a phone frame without a caption', () => {
+  const body = DEFAULT_BODY.replace('1. **Device**: measures\n2. **App**: predicts', '![Results](site/assets/img/screen.webp "app")');
+  const images = { ...MANIFEST, 'assets/img/screen.webp': { width: 360, height: 782, density: 2, avif: 'assets/img/screen.avif' } };
+  const html = renderPage(toPortfolio(parseMarkdown(portfolioSource({ body }))), { ...OPTIONS, images });
+
+  assert.match(html, /<figure class="frame frame--app" style="--natural-width: 180px; --frame-ratio: 2\.17">/);
+  assert.doesNotMatch(html, /<figcaption/);
+});
+
 const KEYVISUAL = '![](site/assets/img/lens.webp "keyvisual")';
 const KEYVISUAL_IMAGES = {
   ...MANIFEST,
