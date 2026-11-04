@@ -47,7 +47,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Skills {#skills}
 
-### Frontend
+### Frontend {#frontend}
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright`
 
 ### Mobile
@@ -59,8 +59,10 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`
 
-### Arbeitsweise
+### Arbeitsweise {#ways-of-working}
 `Tech lead` `Mentoring` `Scrum` `AI coding agents` `Product Owner`
+
+`Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`
 
 ### Sprachkenntnisse
 `Deutsch (Muttersprache)` `Englisch (verhandlungssicher)` `Französisch (gute Kenntnisse)`

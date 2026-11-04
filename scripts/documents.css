@@ -1,0 +1,615 @@
+/* Cover letter and interview brief in Daniel's house style: serif headings, sans text, mono labels,
+ * and numbered sections that open with their core findings. Printed by scripts/documents.mjs on white A4.
+ * see: the design-doc-html skill, which this adapts for print and for a variant's colors
+ *
+ * The tokens below hold the house palette. A variant replaces them in variants/<slug>/documents.css.
+ * Contrast comes from the primary's own range, a lighter, darker or neighboring shade, never its opposite.
+ * E.g. a blue primary pairs with navy and cyan, not with orange or red.
+ *
+ * NOTE: every text color keeps 4.5:1 on white and on --wash. `npm run docs` audits it. */
+
+:root {
+  --serif: ui-serif, Georgia, 'Times New Roman', Times, serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+
+  /* Around the sheet on screen. */
+  --desk: #faf9f5;
+  --paper: #ffffff;
+  /* Headings, body text and labels. */
+  --ink: #141413;
+  --text: #3d3d3a;
+  --muted: #6b6a63;
+  --line: #e6e3da;
+  --line-strong: #d1cfc5;
+  /* Quiet fill of table heads and chips. */
+  --wash: #f0eee6;
+  /* The accent: section numbers, links, the emphasis in a headline. */
+  --primary: #b85c3e;
+  --primary-strong: #8f4128;
+  /* Rules and borders in the accent, which need no text contrast. */
+  --primary-line: #d97757;
+  /* The second accent: core findings and good verdicts. */
+  --contrast: #5c6e47;
+  --contrast-line: #788c5d;
+  --tint: #f6e7e0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--desk);
+  color: var(--text);
+  font: 400 9pt/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+}
+
+/* The sheet: A4 on a desk on screen, the page itself in print. */
+.doc {
+  width: 210mm;
+  margin: 10mm auto 16mm;
+  background: var(--paper);
+  box-shadow: 0 18px 48px -28px rgba(20, 20, 19, 0.35);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Element defaults stay below every component through :where(), which counts for nothing in the cascade. */
+:where(.doc) :is(h1, h2, h3, h4, p, ul, ol) {
+  margin: 0;
+}
+
+:where(.doc) p + p {
+  margin-top: 1.6mm;
+}
+
+:where(.doc) strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.doc a {
+  color: var(--primary);
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 2px;
+}
+
+.doc code {
+  padding: 0 1mm;
+  border-radius: 3px;
+  background: var(--wash);
+  color: var(--text);
+  font: 0.9em var(--mono);
+}
+
+.doc mark {
+  padding: 0 0.15em;
+  border-radius: 2px;
+  background: var(--tint);
+  color: inherit;
+}
+
+/* ── Brief: masthead ─────────────────────────────── */
+
+.brief {
+  page: brief;
+  padding: 12mm 13mm 13mm;
+}
+
+.masthead {
+  padding-bottom: 4mm;
+  border-bottom: 1.5px solid var(--line-strong);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 2.6mm;
+  margin-bottom: 2.6mm;
+  color: var(--muted);
+  font: 7pt/1.4 var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 6mm;
+  height: 1.5px;
+  flex: none;
+  background: var(--primary-line);
+}
+
+.masthead h1 {
+  color: var(--ink);
+  font: 500 21pt/1.12 var(--serif);
+  letter-spacing: -0.015em;
+}
+
+.doc h1 em {
+  color: var(--primary);
+  font-style: italic;
+}
+
+.intro {
+  max-width: 150mm;
+  margin-top: 2.4mm;
+  color: var(--text);
+  font-size: 9.5pt;
+}
+
+/* The contents are for the screen. A two-page print needs none. */
+nav.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6mm;
+  margin-top: 3.4mm;
+}
+
+nav.toc a {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.4mm;
+  padding: 1mm 2.6mm;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 7.5pt;
+  text-decoration: none;
+}
+
+nav.toc a .n {
+  color: var(--primary);
+  font: 6.5pt var(--mono);
+}
+
+/* ── Brief: sections ─────────────────────────────── */
+
+.brief section {
+  margin-top: 4.6mm;
+}
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 2.6mm;
+  margin-bottom: 1.8mm;
+  break-after: avoid;
+}
+
+.sec-head .idx {
+  width: 6.4mm;
+  flex: none;
+  color: var(--primary);
+  font: 600 8pt var(--mono);
+}
+
+.sec-head h2 {
+  color: var(--ink);
+  font: 500 13pt/1.2 var(--serif);
+  letter-spacing: -0.01em;
+}
+
+.sec-body {
+  margin-left: 9mm;
+}
+
+.brief h3 {
+  margin: 2.6mm 0 1.2mm;
+  color: var(--ink);
+  font: 500 10.5pt/1.25 var(--serif);
+  break-after: avoid;
+}
+
+.brief h4 {
+  margin: 2.4mm 0 1mm;
+  color: var(--muted);
+  font: 600 7pt/1.3 var(--sans);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  break-after: avoid;
+}
+
+:where(.doc) :is(ul, ol) {
+  padding-left: 4.4mm;
+}
+
+:where(.doc) li + li {
+  margin-top: 0.8mm;
+}
+
+:where(.doc) li::marker {
+  color: var(--muted);
+}
+
+/* Core findings: every section opens with them. */
+.sec-summary {
+  margin-bottom: 2.2mm;
+  padding: 2.2mm 3.2mm;
+  border: 1px solid var(--line-strong);
+  border-left: 2.5px solid var(--contrast-line);
+  border-radius: 5px;
+  background: var(--paper);
+  break-inside: avoid;
+}
+
+.sec-summary .label,
+.callout .label {
+  margin-bottom: 1mm;
+  color: var(--contrast);
+  font: 6.5pt/1.3 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sec-summary ul {
+  padding-left: 3.6mm;
+}
+
+.sec-summary li {
+  font-size: 8.6pt;
+}
+
+/* ── Brief: tables, verdicts, callouts, numbered items ── */
+
+.doc table {
+  width: 100%;
+  margin: 1.6mm 0 0.6mm;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  font-size: 8.2pt;
+}
+
+.doc th,
+.doc td {
+  padding: 1.2mm 2mm;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.4;
+}
+
+.doc th {
+  background: var(--wash);
+  color: var(--text);
+  font: 600 6.8pt/1.3 var(--sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.doc tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.doc td:first-child {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.doc tr {
+  break-inside: avoid;
+}
+
+/* Verdicts differ by weight, not by hue: filled, tinted and outlined. */
+.ok,
+.meh,
+.bad {
+  display: inline-block;
+  padding: 0.2mm 1.8mm;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font: 600 7pt/1.5 var(--sans);
+  white-space: nowrap;
+}
+
+.ok {
+  background: var(--primary);
+  color: var(--paper);
+}
+
+.meh {
+  background: var(--tint);
+  color: var(--primary-strong);
+}
+
+.bad {
+  border-color: var(--primary-strong);
+  color: var(--primary-strong);
+}
+
+/* In a table cell, a verdict takes its own line below the label, whatever the label's length. */
+td > :is(.ok, .meh, .bad) {
+  display: block;
+  width: fit-content;
+  margin-top: 0.8mm;
+}
+
+.callout {
+  margin: 2mm 0;
+  padding: 2mm 3.2mm;
+  border: 1px solid var(--line-strong);
+  border-left: 2.5px solid var(--contrast-line);
+  border-radius: 5px;
+  break-inside: avoid;
+}
+
+.callout.warn {
+  border-left-color: var(--primary-line);
+}
+
+.callout.warn .label {
+  color: var(--primary);
+}
+
+.callout.kill {
+  border-left-color: var(--primary-strong);
+}
+
+.callout.kill .label {
+  color: var(--primary-strong);
+}
+
+ol.fixes {
+  padding-left: 0;
+  list-style: none;
+  counter-reset: fix;
+}
+
+ol.fixes > li {
+  position: relative;
+  padding: 1.6mm 2.6mm 1.6mm 8.6mm;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  counter-increment: fix;
+  break-inside: avoid;
+}
+
+ol.fixes > li + li {
+  margin-top: 1.4mm;
+}
+
+ol.fixes > li::before {
+  content: counter(fix);
+  position: absolute;
+  top: 1.7mm;
+  left: 2.4mm;
+  display: grid;
+  place-items: center;
+  width: 4.2mm;
+  height: 4.2mm;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--paper);
+  font: 700 6.5pt var(--mono);
+}
+
+ol.fixes > li.must::before {
+  background: var(--primary-strong);
+}
+
+ol.fixes > li.opt::before {
+  background: var(--muted);
+}
+
+ol.fixes .t {
+  display: block;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+ol.fixes p {
+  margin-top: 0.4mm;
+}
+
+.tag {
+  margin-left: 1.6mm;
+  padding: 0 1.6mm;
+  border-radius: 999px;
+  font: 6.3pt/1.6 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+
+.tag.must {
+  background: var(--primary-strong);
+  color: var(--paper);
+}
+
+.tag.should {
+  background: var(--tint);
+  color: var(--primary-strong);
+}
+
+.tag.nice {
+  background: var(--wash);
+  color: var(--muted);
+}
+
+.brief footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 4mm;
+  margin-top: 5mm;
+  padding-top: 2.4mm;
+  border-top: 1.5px solid var(--line-strong);
+  color: var(--muted);
+  font-size: 7.5pt;
+}
+
+.brief footer .k {
+  color: var(--text);
+  font: italic 9pt var(--serif);
+}
+
+/* ── Cover letter: one sheet ─────────────────────── */
+
+.letter {
+  page: letter;
+  min-height: 297mm;
+  padding: 18mm 20mm 16mm 24mm;
+  font-size: 10pt;
+  line-height: 1.5;
+}
+
+.letter__head {
+  padding-bottom: 3.4mm;
+  border-bottom: 1.5px solid var(--line-strong);
+}
+
+.letter__head::before {
+  content: '';
+  display: block;
+  width: 6mm;
+  height: 1.5px;
+  margin-bottom: 3mm;
+  background: var(--primary-line);
+}
+
+.sender__name {
+  color: var(--ink);
+  font: 500 20pt/1.1 var(--serif);
+  letter-spacing: -0.015em;
+}
+
+.sender__title {
+  margin-top: 1mm;
+  color: var(--primary);
+  font-size: 10.5pt;
+}
+
+.sender__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2mm;
+  margin-top: 1.6mm;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font: 7.6pt/1.6 var(--mono);
+}
+
+.sender__contact li + li {
+  margin-top: 0;
+}
+
+/* The separator ends the item before it, so a wrapped line never starts with one. */
+.sender__contact li:not(:last-child)::after {
+  content: '·';
+  margin-left: 2mm;
+}
+
+.sender__contact a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.letter__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8mm;
+  margin-top: 11mm;
+}
+
+.letter__to {
+  font-style: normal;
+}
+
+.letter__date {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.letter__subject {
+  margin-top: 9mm;
+  color: var(--ink);
+  font: 500 15pt/1.25 var(--serif);
+  letter-spacing: -0.01em;
+}
+
+.letter__body {
+  margin-top: 6mm;
+}
+
+.letter__body p + p {
+  margin-top: 3mm;
+}
+
+.letter__body .letter__closing {
+  margin-top: 6mm;
+}
+
+.letter__body .letter__signature {
+  margin-top: 5mm;
+  color: var(--ink);
+  font: italic 14pt var(--serif);
+}
+
+/* ── Print: white A4, the sheet's padding becomes the page margin ── */
+
+@page brief {
+  size: A4;
+  margin: 12mm 13mm 13mm;
+}
+
+@page letter {
+  size: A4;
+  margin: 18mm 20mm 16mm 24mm;
+}
+
+@media print {
+  html {
+    background: var(--paper);
+  }
+
+  .doc {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  nav.toc {
+    display: none;
+  }
+
+  /* Two columns of about 65 characters read better on A4 than one of 130, and fit the brief on two pages. */
+  .brief {
+    columns: 2;
+    column-gap: 7mm;
+  }
+
+  /* The footer ends the last column instead of spanning both, since a spanner waits below the longer column. */
+  .brief .masthead {
+    column-span: all;
+  }
+
+  .brief footer {
+    flex-direction: column;
+    gap: 0.6mm;
+    break-inside: avoid;
+  }
+
+  .brief .masthead {
+    margin-bottom: 1mm;
+  }
+
+  .brief .sec-body {
+    margin-left: 0;
+  }
+
+  .brief section:first-of-type {
+    margin-top: 3mm;
+  }
+}

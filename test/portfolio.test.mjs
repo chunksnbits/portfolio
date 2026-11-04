@@ -57,6 +57,7 @@ test('rejects broken structure, naming the line', () => {
     ['## About', /line 15.*id/],
     ['## About {#about}\n\n## Again {#about}', /line 17.*about/],
     ['## Projects {#projects}\n\n### Without id\n2024 + Client', /line 17.*id/],
+    ['## About {#about}\n\n### Card {.remove}', /line 17: \{\.remove\} only works in a variant's Markdown files/],
   ];
   for (const [body, message] of cases) {
     assert.throws(() => toPortfolio(parseMarkdown(portfolioSource({ body }))), message, body);

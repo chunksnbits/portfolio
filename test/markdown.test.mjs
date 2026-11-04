@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseMarkdown, renderInline } from '../scripts/lib/markdown.mjs';
+import { parseMarkdown, printMarkdown, renderInline } from '../scripts/lib/markdown.mjs';
+import { portfolioSource } from './fixtures.mjs';
 
 test('reads flat frontmatter and keeps colons inside values', () => {
   const { frontmatter } = parseMarkdown('---\nname: Daniel Eissing\nlocation: Fulda: remote\n---\n');
@@ -32,9 +33,9 @@ test('splits headings with ids, paragraphs and lists into blocks', () => {
   assert.deepEqual(
     blocks.map(({ line, ...block }) => block),
     [
-      { type: 'heading', level: 2, text: 'About', id: 'about' },
+      { type: 'heading', level: 2, text: 'About', id: 'about', flags: [] },
       { type: 'paragraph', text: 'First line second line.' },
-      { type: 'heading', level: 3, text: 'Card', id: null },
+      { type: 'heading', level: 3, text: 'Card', id: null, flags: [] },
       {
         type: 'list',
         ordered: false,
@@ -57,6 +58,54 @@ test('splits headings with ids, paragraphs and lists into blocks', () => {
     blocks.map((block) => block.line),
     [1, 3, 6, 7, 11],
   );
+});
+
+test('reads flags like {.remove} next to the id in the braces after a heading', () => {
+  const { blocks } = parseMarkdown('## Projects {#projects .reorder}\n\n### Mobile {.remove}\n\n### Card {draft}\n');
+
+  assert.deepEqual(
+    blocks.map(({ line, ...block }) => block),
+    [
+      { type: 'heading', level: 2, text: 'Projects', id: 'projects', flags: ['reorder'] },
+      { type: 'heading', level: 3, text: 'Mobile', id: null, flags: ['remove'] },
+      { type: 'heading', level: 3, text: 'Card {draft}', id: null, flags: [] },
+    ],
+  );
+});
+
+test('rejects a heading with two ids', () => {
+  assert.throws(() => parseMarkdown('## About {#about #me}'), /line 1: .*one id/);
+});
+
+test('prints a document as Markdown that reads back to the same frontmatter and blocks', () => {
+  const extra = [
+    '### Extra {#extra .new}',
+    '',
+    '- **Fullstack**',
+    '  - React',
+    '  - Node.js',
+    '',
+    '![Shop](site/assets/img/shop.webp "Campaign pages")',
+    '![](site/assets/img/a.webp "keyvisual ascii")',
+    '',
+    'Short.',
+    '',
+    '[show more]',
+    '',
+    'Long, with a [link](site/docs/a.pdf) and `code`.',
+  ].join('\n');
+  const document = parseMarkdown(portfolioSource({ body: `## About {#about}\n\nText.\n\n${extra}\n` }));
+  const printed = parseMarkdown(printMarkdown(document));
+  const withoutLines = (blocks) => blocks.map(({ line, ...block }) => block);
+
+  assert.deepEqual(printed.frontmatter, document.frontmatter);
+  assert.deepEqual(withoutLines(printed.blocks), withoutLines(document.blocks));
+});
+
+test('prints blocks apart by a blank line and the images of one group line by line', () => {
+  const source = '---\nlang: en\n---\n\n## About {#about}\n\nText.\n\n![A](a.webp)\n![B](b.webp "phone")\n\n`React` `Expo`\n';
+  assert.equal(printMarkdown(parseMarkdown(source)), source);
+  assert.equal(printMarkdown(parseMarkdown('## About {#about}\n')), '## About {#about}\n');
 });
 
 test('turns a paragraph of images into one image block per image', () => {

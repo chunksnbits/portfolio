@@ -13,18 +13,26 @@ Static personal portfolio and one-page CV in English and German, built from Mark
 - [Google Chrome](https://www.google.com/chrome/) for `npm run check`. Set `CHROME_PATH` if Chrome is installed in a custom location.
 - Optional (new screenshots): macOS with `brew install webp libavif`.
 - Optional (new client logos): [Python](https://www.python.org/) 3 with `pip install picosvg skia-pathops`.
+- Optional (tailored variants): [Claude Code](https://claude.com/claude-code) for `npm run tailor`, and Antigravity's CLI `agy`, signed in, for `npm run letter`.
 
 ## Commands
 
 | Command | Action |
 | --- | --- |
-| `npm start` | Build and serve at `http://127.0.0.1:4173/portfolio/`, rebuilding on file changes. |
-| `npm run build` | Compile Markdown files and copy `site/` assets into `dist/`. |
+| `npm start` | Build and serve at `http://127.0.0.1:4173/portfolio/`, rebuilding on file changes. Includes draft variants. |
+| `npm run build` | Compile Markdown files and copy `site/` assets into `dist/`, with the published variants. |
 | `npm test` | Run unit tests for parser, model, parity, and renderer. |
-| `npm run check` | Validate CV page counts and WCAG contrast in headless Chrome. |
+| `npm run check` | Validate CV page counts and WCAG contrast in headless Chrome. `-- --variant <slug>` checks only that variant, `-- --drafts` adds all. |
 | `npm run check -- --shots <dir>` | Save screen captures and CV PDFs to directory. |
 | `npm run images` | Generate WebP and AVIF assets from `raw/`. |
 | `npm run logos` | Generate monochrome SVG logos from `raw/logos/`. |
+| `npm run tailor -- <job-url>` | Start Claude Code on `/tailor`: a new variant for one job posting. |
+| `npm run variant -- list` | List the variants, published or draft, with their URLs. |
+| `npm run variant -- show <slug>` | Print a variant's Markdown files with their changes applied to the base files. |
+| `npm run variant -- publish <slug>` | Mark a variant for the next deploy. `unpublish` takes it down. |
+| `npm run docs -- <slug>` | Print a variant's brief and cover letters to PDF and check their length and contrast. |
+| `npm run letter -- <slug>` | Draft a variant's cover letters with Gemini through `agy`. |
+| `npm run brand -- <url>... --out <dir>` | Capture a company's fonts, colors and components from its pages. |
 
 ## Updating content
 
@@ -66,6 +74,188 @@ Static personal portfolio and one-page CV in English and German, built from Mark
 4. Reference in Markdown.
    E.g. `![ZEISS](site/assets/logos/zeiss.svg "logo")`.
 
+## Variants
+
+A **variant** is a tailored copy of the portfolio for one job application: a page of its own, built from the company's page patterns in its visual language, with copy aimed at the posting.
+Each variant goes online below its own folder name, next to the base site, e.g. `chunksnbits.github.io/portfolio/acme/` and `…/acme/en/`.
+Variants stay out of search results.
+
+### Tailoring the portfolio to a job posting
+
+1. Run `npm run tailor -- <job-url>`, or `/tailor <job-url>` in Claude Code.
+   The skill in `.claude/skills/tailor/SKILL.md` researches the company, captures its page patterns and visual language, proposes a page built from them, has it reviewed by Claude and Gemini, implements it as the variant's template, tailors the copy, writes the interview brief and has Gemini draft the cover letters.
+2. Restart `npm start` and open `http://127.0.0.1:4173/portfolio/<slug>/`. Drafts show in the preview, never online.
+3. Edit the copy in `variants/<slug>/portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md`, and the letters in `variants/<slug>/private/cover-letter.de.md` and `.en.md`.
+   The four Markdown files hold only what changes in the base files, see "Variant files".
+4. Run `npm run docs -- <slug>` after editing a letter or the brief, and `npm run check -- --variant <slug>` after editing the copy.
+
+### Publishing and taking down
+
+1. Run `npm run variant -- publish <slug>`.
+2. Commit the variant's folder and push to `master`. The next deploy puts it online.
+3. To take it down, run `npm run variant -- unpublish <slug>`, commit and push. Its URL then answers with the 404 page, and its files stay in `variants/<slug>/`.
+
+**NOTE:** the repository is public. A committed variant shows which company it was made for, even before it is published.
+
+**NOTE:** CI checks every published variant like the base site. A variant that fails `npm run check` stops the deploy of the whole site, so run `npm run check -- --variant <slug>` before publishing.
+
+### Layout of a variant
+
+```
+variants/
+  VOICE.md                ← how Daniel writes, for copy and letters
+  <slug>/
+    variant.json          ← company, role, posting URL, language, published, theme it opens in
+    portfolio.de.md, portfolio.md, cv.de.md, cv.md   ← changes to the base files of the same name
+    template.mjs          ← renders the body of the variant's portfolio pages, see "Templates"
+    page.css              ← stylesheet of the variant's portfolio pages, in place of styles.css
+    page.js               ← optional: behavior of the variant's own patterns, loaded after main.js
+    cv.css                ← optional: loaded after cv.css on the variant's one-page CVs
+    fonts/                ← self-hosted fonts of the page, with their licence
+    img/                  ← images of the page, like its hero photo, as WebP and AVIF
+    documents.css         ← colors of the cover letter and the brief
+    private/              ← ignored by git, never published
+      job.md              ← the posting's text
+      brand/              ← captures and tokens from npm run brand
+      research.md         ← company research with sources
+      design.md           ← design proposal, review findings and decisions
+      review/             ← reviews and screenshots of each round
+      brief.body.html     ← two-page interview brief, the body of a house-style page
+      cover-letter.de.md, cover-letter.en.md          ← cover letters
+      *.html, *.pdf       ← generated by npm run docs
+```
+
+Only the pages, `page.css`, `page.js`, `cv.css`, `fonts/` and `img/` go online. `template.mjs` runs at build time, and everything else in a variant's folder stays local.
+
+`variant.json` keys:
+
+| Key | Description |
+| --- | --- |
+| `company`, `role` | Company and job title, as the posting names them. |
+| `job` | URL of the posting. |
+| `language` | Language of the posting: `de` or `en`. The cover letter and the first link to send lead with it. |
+| `published` | `true` puts the variant online with the next deploy. |
+| `theme` | `dark` (default) or `light`: the theme its pages open in. |
+
+### Variant files
+
+A variant's `portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` hold only what changes in the base file of the same name.
+Everything they leave out comes from the base file, so a fix there reaches every variant.
+Run `npm run variant -- show <slug>` to read a variant's files the way the build reads them, with the changes applied.
+
+```md
+---
+title: Senior Software Engineer
+---
+
+## About {#about}
+
+I engineer web and cloud systems that ==are built to last==.
+
+### Pixel to cloud {#pixel-to-cloud}
+The glue between clients, PMs, design and engineering.
+
+## Skills {#skills}
+
+### Frontend and mobile {#frontend}
+`TypeScript` `React` `React Native` `Expo`
+
+### Mobile {.remove}
+```
+
+- **Frontmatter**: a key the variant sets replaces the base's. `lang` stays as in the base file.
+- **Headings**: a `##` heading finds the base section with the same id. A `###` heading finds the entry in that section with the same id, or else with the same title. A heading that finds nothing fails the build.
+- **Content**: the content under a heading replaces the base content of the same kind and keeps the other kinds. The kinds are the meta line, the text with its `[show more]` marker, a bullet list, a numbered list, images and tags.
+  E.g. new paragraphs under `## About {#about}` keep its list and its cards.
+- **Empty heading**: changes nothing. Use it to reach the entries below it, or to place one in a `{.reorder}` section.
+- **Renaming**: write the entry's id with the new title, e.g. `### Frontend and mobile {#frontend}`. Give the base entry the id first, in both languages.
+- **Flags** in the heading's braces add, drop and sort:
+
+| Flag | Effect |
+| --- | --- |
+| `{.remove}` | Drops the section or entry. Takes no content. |
+| `{.new}` | Adds a section or entry after the heading above it in the variant file, or first. A new section keeps its entries as written. |
+| `{.reorder}` | On a `##` section only. Its entries follow the order of the variant file, then the ones it leaves out, in base order. |
+
+**NOTE:** a variant can't drop one kind of content and keep the rest, e.g. a project's screenshots.
+
+### Templates
+
+A variant's page is its own: `template.mjs` renders the body of both portfolio pages from the Markdown content, and `page.css` styles them in place of `styles.css`.
+`npm run variant -- new` starts a variant with the plain page in `scripts/variant-starter/`. `/tailor` replaces it with one built from the company's patterns.
+
+`template.mjs` exports a default function that takes the portfolio and a kit, and returns the HTML of the page's `<body>`:
+
+```js
+export default function render({ meta, sections }, kit) {
+  return `<main id="main">${sections.map((section) => kit.blocks(section.blocks, { lead: true })).join('\n')}</main>`;
+}
+```
+
+- **Portfolio**: `meta` is the frontmatter, `sections` the `##` sections with their `blocks` and `entries`, after the variant's changes.
+- **Head**: the build writes it. It loads `page.css`, the fonts in `fonts/`, `main.js`, then `page.js`, keeps the page out of search results and opens it in the variant's theme.
+- **Kit**: the base page's renderers, bound to the page. They render content the way the base page does and fail the build on invalid content with the same errors.
+
+| Kit member | Renders |
+| --- | --- |
+| `blocks(blocks, { lead })` | paragraphs, lists, tags, images, logos and badges; `lead` makes the first paragraph the lead |
+| `entry(entry)`, `metaLine(meta)` | an entry as on the base page, a meta line with its period and details |
+| `project(entry)` | splits a project into `keyvisual`, `visuals`, `text`, `rest` after the `[show more]` marker, and `tags` |
+| `visual(block)` | a screenshot in its frame, or a numbered list as a flow |
+| `picture(block, { className })` | an image without a frame, e.g. a keyvisual as a photo |
+| `ascii(image, { avif })`, `path(image)` | the layer of an ASCII drawing, and the path a screen's `data-keyvisual` names. The image is a keyvisual block, or a file of the variant's folder, e.g. `'img/hero.webp'` |
+| `inline(text)`, `text(text)` | inline Markdown as HTML, and as plain text for attributes |
+| `print(className)`, `language()`, `themeToggle()` | "Save as PDF", the other language, the theme switch |
+| `contactActions()`, `profile(url, name, icon)`, `icon(name)` | the contact buttons, a profile link, a Lucide icon |
+| `ui` | the interface words of the page's language, from `UI` in `scripts/lib/render.mjs` |
+
+`main.js` runs on a variant's page too. It finds its parts by these names:
+
+- `.screen` with an `id`: a section that fills the window or less. The language switch returns to it, and `npm run check` saves a screenshot of each.
+- `.nav__link` and `[data-nav]`: the link of the section in view gets `aria-current`.
+- `[data-theme-toggle]`, `[data-print]`, `.language`: the theme switch, "Save as PDF" and the other language, as the kit renders them.
+- `.keyvisual--ascii`: drawn as ASCII art. Inside a `.screen`, a layer is drawn while it is within half a window of the view and gets `is-shown`, so it can show without a fade. The screen's `data-keyvisual` makes `npm run check` wait for the drawing.
+- `.more`, `.panel`, `.spotlight`: the base page's show-more button, sliding panels and cursor glow. Use other names for a variant's own parts.
+
+`page.css` sets light tokens on `:root`, dark ones under `@media screen { :root:not([data-theme='light']) { … } }`, and white print under `@media print`.
+`npm run check` audits text and the outlines of `.button`, `.language` and `.theme-toggle`, in both themes. Give every screen a `scroll-margin-top` as tall as a sticky header, so links and screenshots start below it.
+
+**NOTE:** printing the page must fit two A4 pages. `details::details-content { content-visibility: visible; }` prints closed expandables open.
+
+`cv.css` restyles the one-page CV through `cv.css`'s tokens (`--ink`, `--body`, `--muted`, `--accent`, `--rule`). The cover letter and the brief take their colors from the variant's `documents.css` instead.
+
+### Cover letters and brief
+
+Both are pages in Daniel's house style, the look of the `design-doc-html` skill: serif headings, sans text, mono labels, and numbered sections that open with their core findings.
+`scripts/documents.css` holds the style, and the variant's `documents.css` sets its colors through the tokens named there.
+`npm run docs -- <slug>` writes each document as a self-contained HTML page and a PDF beside its source, and fails when a text misses the WCAG 2.2 AA contrast minimum as printed.
+
+**NOTE:** printed documents take their contrast from the primary color's own range. A blue primary pairs with navy and cyan, never with orange or red.
+
+`private/cover-letter.<lang>.md` uses the Markdown subset with this frontmatter, and only paragraphs below it:
+
+```md
+---
+lang: de
+to: Acme GmbH + Recruiting + Hauptstraße 1 + 10115 Berlin
+date: 2026-11-01
+subject: Bewerbung als *Senior Software Engineer (w/m/d)*
+greeting: Guten Tag,
+closing: Viele Grüße
+---
+```
+
+The part of the subject in `*asterisks*` gets the headline's emphasis.
+The sender comes from the variant's `portfolio.<lang>.md`. `npm run docs` fails when a letter's text, from greeting to signature, takes more than half an A4 page.
+
+`private/brief.body.html` is the body of a house-style page in the posting's language, and must print on at most two A4 pages, in two columns.
+It uses the house components:
+
+- `header.masthead` with a `p.eyebrow`, an `h1` with exactly one `em`, and a `p.intro`
+- numbered `section`s with `.sec-head` and `.sec-body`, each opening with a `.sec-summary` of core findings
+- `table` with `.ok`, `.meh` and `.bad` verdicts, `.callout` with `.warn` or `.kill`, and `ol.fixes`
+- a last section that sums up what matters most
+
 ## Markdown format
 
 ### portfolio.md
@@ -92,6 +282,7 @@ Write a **separator** as a plus between spaces: `2021 – today + Munich`. Never
 
 - `## Title {#id}` creates a section: one viewport screen and one nav item.
 - `### Title` creates an entry inside a section. Project entries require an ID: `### MyZEISS {#myzeiss}`.
+- `{.new}`, `{.remove}` and `{.reorder}` only work in a variant's files, see "Variant files".
 - Section `#projects` converts child entries into sliding project screens.
 - Section `#contact` renders contact links and PDF buttons.
 
@@ -104,6 +295,7 @@ Write a **separator** as a plus between spaces: `2021 – today + Munich`. Never
 - Images stand on their own lines. The title attribute selects the display frame:
   - `none`: browser frame
   - `"phone"`: phone frame overlapping preceding browser frame
+  - `"app"`: whole app screen in a current iPhone frame, side by side with the next one
   - `"plain"`: unbordered image
   - `"keyvisual"`: full-screen project background photo
   - `"keyvisual ascii"`: project background photo rendered as colored ASCII art
@@ -129,17 +321,30 @@ One-page CVs share the Markdown parser with the portfolio.
 ```
 portfolio.md, portfolio.de.md   ← content files
 cv.md, cv.de.md                 ← one-page CV content
+variants/                       ← tailored changes per job application, see "Variants"
+.claude/skills/tailor/          ← the /tailor procedure for Claude Code
 scripts/
-  build.mjs                     ← compiles Markdown to dist/
+  build.mjs                     ← compiles Markdown to dist/, base site and variants
   check.mjs                     ← checks CV pages and contrast in headless Chrome
   images.mjs                    ← raw/ → site/assets/img/
   logos.py                      ← raw/logos/ → site/assets/logos/
   serve.mjs                     ← local development server
+  variant.mjs                   ← creates, lists, shows, publishes and unpublishes variants
+  brand.mjs                     ← captures a company's visual language
+  documents.mjs, documents.css  ← prints a variant's brief and cover letters
+  letter.mjs, letter.prompt.md  ← drafts cover letters with Gemini through agy
+  tailor.mjs                    ← starts Claude Code on /tailor
+  variant-starter/              ← the plain page a new variant starts with
   lib/
     markdown.mjs                ← Markdown parser
     portfolio.mjs               ← AST transforms for sections and meta lines
     parity.mjs                  ← German/English structural comparison
     render.mjs                  ← HTML generator
+    variants.mjs                ← variant settings and paths
+    overlay.mjs                 ← applies a variant's Markdown files to the base files
+    documents.mjs               ← cover letter model and house-style document pages
+    contrast.mjs                ← WCAG contrast audit, run in the page
+    chrome.mjs                  ← headless Chrome over the DevTools protocol
 site/                           ← static assets copied to dist/
   assets/styles.css             ← screen, themes, and printed CV styles
   assets/cv.css                 ← one-page CV stylesheet

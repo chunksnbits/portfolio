@@ -16,9 +16,9 @@ description: Lead Software Engineer mit Weitblick für Architektur, technischem 
 
 Ich baue Web- und Mobile-Systeme, die ==Bestand haben==.
 
-Fünfzehn Jahre Erfahrung in der Entwicklung und Betreuung unternehmenskritischer Anwendungen bereiten mich ideal auf die nächste Phase der KI-gestützten Softwareentwicklung vor.
+Fünfzehn Jahre Erfahrung in der Entwicklung und Betreuung unternehmenskritischer Anwendungen haben mich optimal auf die nächste Phase der KI-gestützten Softwareentwicklung vorbereitet.
 
-Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrund: Liebe zum Detail, fundierte Erfahrung im Einsatz und in der Entwicklung von Softwarearchitekturen und die Möglichkeit über den Tellerrand hinaus zu blicken, erlauben es mir kreative Lösungen für komplexe Probleme zu finden, die Ihr Unternehmen voranbringen.
+Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrund: Liebe zum Detail, fundierte Erfahrung im Entwurf und in der Bewertung von Softwarearchitekturen und die Fähigkeit über den eigenen Tellerrand hinausblicken zu können, erlauben es mir, kreative und pragmatische Lösungen für komplexe Probleme zu finden, die Ihr Unternehmen voranbringen.
 
 - **15 Jahre**
   - in der Softwareentwicklung
@@ -36,23 +36,26 @@ Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrun
   - CI/CD
   - Cloud
 
-### Architektur, die hält
-Micro-Frontends, Designsysteme und Cloud-Services für Produkte, die über Jahre laufen – von BMW, Allianz und dem FC Bayern bis zu ZEISS.
+### Architektur, die hält {#architecture}
+Pragmatische, langlebige Anwendung und Cloud-Services für Produkte, die mit großem Impact – von BMW, Allianz und dem FC Bayern bis zu ZEISS.
 
 ### Mit gutem Beispiel vorangehen
 Hands-on-Lead mit klarem technischem Urteilsvermögen, kontinuierlichem Mentoring und konstruktiven Code-Reviews.
 
-### Vom Pixel bis zur Cloud
-In enger Abstimmung mit PMs und Designern: Vom Anwendungscode über Backend-Services bis zum automatisierten Deployment in die Cloud.
+### Vom Pixel bis zur Cloud {#pixel-to-cloud}
+Vom Anwendungscode über Backend-Services bis zum automatisierten Deployment in die Cloud – in enger Abstimmung mit den PMs, POs, Designern und dem Entwicklungsteam.
 
 ## Brands {#brands}
 
 Produkte für Marken, ==die man kennt==.
 
-Ich habe den Großteil meiner Laufbahn im Umfeld einiger der größten Unternehmen und bekanntesten Marken Deutschlands verbracht. Daher bringe ich umfassende Erfahrungen im Konzernnumfeld mit.
+Ich habe den Großteil meiner Laufbahn im Umfeld einiger der größten Unternehmen und bekanntesten Marken Deutschlands verbracht.
 
-Diese Projekte haben es mir erlaubt reichhaltige Erfahrungen zu sammeln.
-Von der technischen Umsetzung bis hin zur Product Ownership: Meine Aufgaben umfassten all Bereiche des gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- und Mid-Level-Entwicklern.
+Das schnelle Einarbeiten in neue Themenfelder und Projektstrukturen, Codebases oder die Übernahme von Produktverantwortung war dabei stets Teil meiner Leistungen.
+
+Von der technischen Umsetzung bis hin zur Product Ownership: Meine Aufgaben umfassten alle Bereiche des gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- und Mid-Level-Entwicklern.
+
+Egal welche Rolle das jeweilige Projekt verlangt hat, habe ich es als meine Aufgabe angesehen, diese bestmöglich zu erfüllen.
 
 ![Allianz](site/assets/logos/allianz.svg "logo")
 ![BMW](site/assets/logos/bmw.svg "logo")
@@ -71,9 +74,8 @@ Von der technischen Umsetzung bis hin zur Product Ownership: Meine Aufgaben umfa
 
 ![](site/assets/img/zeiss-keyvisual.webp "keyvisual ascii")
 
-1. **AURA NIR**: misst die Probe
-2. **Expo-App**: Bluetooth-Verbindung, Vorhersagen auf dem Gerät, UI – online und offline
-3. **Cloud-Plattform**: Kalibrierungen, Authentifizierung, Over-the-Air App und Firmware-Updates
+![Einrichtungsanleitung für das Analysegerät in der AURA-App](site/assets/img/aura-setup.webp "app")
+![Trockenmasse-Ergebnisse als Diagramm in der AURA-App](site/assets/img/aura-graph.webp "app")
 
 ZEISS Aura® ist die Companion App für ein neues Nahinfrarot-Spektrometer von ZEISS, das Kunden präzise Einblicke in ihre Ernte und Futtermittel liefert.
 
@@ -187,7 +189,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Skills {#skills}
 
-### Frontend
+### Frontend {#frontend}
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright` `d3.js`
 
 ### Mobile
@@ -199,8 +201,10 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
 
-### Arbeitsweise
+### Arbeitsweise {#ways-of-working}
 `Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
+
+`Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`
 
 ### Sprachkenntnisse
 `Deutsch (Muttersprache)` `Englisch (verhandlungssicher)` `Französisch (gute Kenntnisse)`
@@ -212,7 +216,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Kontakt {#contact}
 
-Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Dann sprechen wir.==
+Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Sprechen wir.==
 
 Ich bin offen für Senior- und Lead-Rollen in der Web-, Mobile- und Full-Stack-Entwicklung.
 

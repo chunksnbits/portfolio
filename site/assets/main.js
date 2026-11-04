@@ -158,6 +158,7 @@ function setUpPanelSlideIn() {
 function setUpShowMore() {
   for (const button of document.querySelectorAll('.more')) {
     const column = button.closest('.panel__text');
+    if (!column) continue;
     const rest = column.querySelector('.panel__rest');
     column.toggleAttribute('data-collapsed', true);
     button.addEventListener('click', () => {
@@ -172,49 +173,79 @@ function setUpShowMore() {
   }
 }
 
-// Shows the keyvisual of the project screen that crosses the middle of the window and hides the others.
-// Projects of the same customer share a keyvisual, which then stays shown between their screens.
+// Shows the keyvisuals, the photos behind the screens, once their image has decoded.
+// - The base page spreads its layers behind all screens, see showSharedKeyvisuals().
+// - A variant's page puts each layer inside its screen, see showScreenKeyvisuals().
 function setUpKeyvisuals() {
-  const layers = new Map([...document.querySelectorAll('.keyvisual')].map((layer) => [layer.dataset.keyvisual, layer]));
-  if (layers.size === 0) return;
-  const screens = [...document.querySelectorAll('.screen')];
+  const layers = [...document.querySelectorAll('.keyvisual')];
+  if (layers.length === 0) return;
   const asciiDrawings = new Map(
-    [...layers]
-      .filter(([, layer]) => layer.classList.contains('keyvisual--ascii'))
-      .map(([key, layer]) => [key, setUpAsciiKeyvisual(layer)]),
+    layers.filter((layer) => layer.classList.contains('keyvisual--ascii')).map((layer) => [layer, setUpAsciiKeyvisual(layer)]),
   );
-
-  let current = null;
-  let timer = 0;
-  const show = (key) => {
-    current = key;
-    for (const [name, layer] of layers) {
-      if (name !== key) layer.classList.remove('is-shown');
-    }
-    const layer = layers.get(key);
-    // Waits for the image, so it doesn't pop in after its fade.
+  // Waits for the image, so a layer never shows empty.
+  // `wanted` reports whether the layer should still show by then.
+  const show = (layer, wanted) =>
     layer
-      ?.querySelector('img')
+      .querySelector('img')
       .decode()
       .catch(() => {})
       .then(() => {
-        if (current !== key) return;
-        asciiDrawings.get(key)?.();
+        if (!wanted()) return;
+        asciiDrawings.get(layer)?.();
         layer.classList.add('is-shown');
       });
-  };
 
+  showSharedKeyvisuals(layers.filter((layer) => !layer.closest('.screen')), show);
+  showScreenKeyvisuals(layers.filter((layer) => layer.closest('.screen')), show);
+}
+
+// Shows the layer of the screen that crosses the middle of the window, found by the screen's data-keyvisual, and hides the others.
+// Projects of the same customer share a layer, which then stays shown between their screens.
+function showSharedKeyvisuals(layers, show) {
+  if (layers.length === 0) return;
+  const byImage = new Map(layers.map((layer) => [layer.dataset.keyvisual, layer]));
+  let current = null;
+  let timer = 0;
   const observer = new IntersectionObserver(
     (entries) => {
       const entry = entries.findLast((candidate) => candidate.isIntersecting);
       if (!entry) return;
       // Waits for the page to settle, so screens it only passes, like after a nav click, don't flash their keyvisual.
       clearTimeout(timer);
-      timer = setTimeout(() => show(entry.target.dataset.keyvisual ?? null), 150);
+      timer = setTimeout(() => {
+        const layer = byImage.get(entry.target.dataset.keyvisual) ?? null;
+        current = layer;
+        for (const other of layers) {
+          if (other !== layer) other.classList.remove('is-shown');
+        }
+        if (layer) show(layer, () => current === layer);
+      }, 150);
     },
     { rootMargin: '-50% 0px -50% 0px' },
   );
-  for (const screen of screens) observer.observe(screen);
+  for (const screen of document.querySelectorAll('.screen')) observer.observe(screen);
+}
+
+// Shows each layer while it is within half a window of the view, so it is drawn before it scrolls in.
+// A layer further away is hidden, which frees its canvas, see setUpAsciiKeyvisual().
+function showScreenKeyvisuals(layers, show) {
+  if (layers.length === 0) return;
+  const near = new Set();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const { target: layer, isIntersecting } of entries) {
+        if (isIntersecting) {
+          near.add(layer);
+          show(layer, () => near.has(layer));
+        } else {
+          near.delete(layer);
+          layer.classList.remove('is-shown');
+        }
+      }
+    },
+    { rootMargin: '50% 0px' },
+  );
+  for (const layer of layers) observer.observe(layer);
 }
 
 // Draws an ASCII keyvisual: its photo as colored dots on a canvas, after https://ascii.rest/storm-plains/.
@@ -276,6 +307,26 @@ function setUpAsciiKeyvisual(layer) {
     if (!reducedMotion.matches) burstTimer ||= setTimeout(burst, FLASH_SPACING);
   };
 
+  // Reads the colors a theme can tint the dots in, instead of the photo's own colors, as RGB fractions:
+  // - --ascii-dim: the faintest dots
+  // - --ascii-bright: the brightest dots
+  // - --ascii-flash: the color flashes warm the dots toward, optional
+  // Returns null unless the theme sets dim and bright.
+  const readTint = () => {
+    const style = getComputedStyle(layer);
+    const colors = ['--ascii-dim', '--ascii-bright', '--ascii-flash'].map((name) => style.getPropertyValue(name).trim());
+    if (!colors[0] || !colors[1]) return null;
+    // Painting each color on a pixel resolves any CSS color syntax to RGB.
+    const probe = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+    return colors.map((color) => {
+      if (!color) return null;
+      probe.clearRect(0, 0, 1, 1);
+      probe.fillStyle = color;
+      probe.fillRect(0, 0, 1, 1);
+      return [...probe.getImageData(0, 0, 1, 1).data.slice(0, 3)].map((value) => value / 255);
+    });
+  };
+
   // Reads the photo at one pixel per cell, placed as object-fit: cover would place it, and clears the canvas.
   const sample = () => {
     const width = canvas.clientWidth;
@@ -323,10 +374,14 @@ function setUpAsciiKeyvisual(layer) {
       }
     }
 
-    const ground = getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g).slice(0, 3).map((value) => value / 255);
+    // The dots stand out from the page, or from the layer's own background where a variant's page gives it one.
+    const own = getComputedStyle(layer).backgroundColor;
+    const behind = own === 'rgba(0, 0, 0, 0)' ? getComputedStyle(document.body).backgroundColor : own;
+    const ground = behind.match(/[\d.]+/g).slice(0, 3).map((value) => value / 255);
     // On a light page the dots are ink, so the dark parts of the photo get the large dots.
     const paper = ground[0] + ground[1] + ground[2] > 1.5;
     return {
+      tint: readTint(),
       width,
       height,
       scale,
@@ -368,6 +423,17 @@ function setUpAsciiKeyvisual(layer) {
     // The darkest cells stay dark.
     const strength = Math.min(0.14 + 0.86 * Math.min(1, (level + 0.04) / COVER[step]), 0.45 + 0.8 * level) / peak;
     let dot = step;
+    if (art.tint) {
+      // A tinted dot moves from the page toward the tint as far as the cell stands out, through dim to bright.
+      const away = Math.min(1, peak * strength);
+      const [dim, bright, flash] = art.tint;
+      for (let i = 0; i < 3; i++) {
+        let tint = dim[i] + away * (bright[i] - dim[i]);
+        if (flash && light > 0) tint += Math.min(1, light) * (flash[i] - tint);
+        dot = (dot << 8) | Math.round(255 * (ground[i] + away * (tint - ground[i])));
+      }
+      return dot;
+    }
     for (let i = 0; i < 3; i++) {
       const away = Math.min(1, channels[i] * strength);
       dot = (dot << 8) | Math.round(255 * (paper ? ground[i] * (1 - away) : ground[i] + away * (1 - ground[i])));
