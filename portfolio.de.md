@@ -37,13 +37,13 @@ Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrun
   - Cloud
 
 ### Architektur, die hält {#architecture}
-Pragmatische, langlebige Micro-Frontends, Designsysteme und Cloud-Services für Produkte, die über Jahre laufen – von BMW, Allianz und dem FC Bayern bis zu ZEISS.
+Pragmatische, langlebige Anwendung und Cloud-Services für Produkte, die mit großem Impact – von BMW, Allianz und dem FC Bayern bis zu ZEISS.
 
 ### Mit gutem Beispiel vorangehen
-Hands-on-Lead mit schneller Auffassungsgabe, klarem technischem Urteilsvermögen, kontinuierlichem Mentoring und konstruktiven Code-Reviews.
+Hands-on-Lead mit klarem technischem Urteilsvermögen, kontinuierlichem Mentoring und konstruktiven Code-Reviews.
 
 ### Vom Pixel bis zur Cloud {#pixel-to-cloud}
-Als Bindeglied zwischen PMs, Designern und Entwicklung: Vom Anwendungscode über Backend-Services bis zum automatisierten Deployment in die Cloud sorge ich dafür, dass das Wichtigste verlässlich ans Ziel kommt.
+Vom Anwendungscode über Backend-Services bis zum automatisierten Deployment in die Cloud – in enger Abstimmung mit den PMs, POs, Designern und dem Entwicklungsteam.
 
 ## Brands {#brands}
 
@@ -216,7 +216,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Kontakt {#contact}
 
-Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Lassen Sie uns sprechen.==
+Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Sprechen wir.==
 
 Ich bin offen für Senior- und Lead-Rollen in der Web-, Mobile- und Full-Stack-Entwicklung.
 

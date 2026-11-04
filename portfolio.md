@@ -36,14 +36,14 @@ When AI agents write the code, other skills come into focus: an obsession with d
   - CI/CD
   - Cloud
 
-### Architecture that lasts {#architecture}
-Pragmatic, resilient micro-frontends, design systems and cloud services for products that run for years, from BMW, Allianz, FC Bayern to ZEISS.
+### Products that last {#architecture}
+Author of pragmatic, resilient applications and cloud services for products with high business impact, from BMW, Allianz, FC Bayern to ZEISS.
 
-### Leading by building
-Hands-on lead and fast learner with sound technical judgment, continuous mentoring, constructive code reviews, and structured onboarding.
+### Leading by building {#leadership}
+Hands-on lead with sound technical judgment, continuous mentoring, constructive code reviews, and structured onboarding.
 
 ### Pixel to cloud {#pixel-to-cloud}
-Being the glue between PMs, designers, and engineering—from interface code and backend services to automated cloud deployment—to make sure the product ships.
+Taking ownership of products from pixel to cloud, in close alignment with PMs, POs, designers, and engineering to ship the best products to the customers.
 
 ## Brands {#brands}
 
