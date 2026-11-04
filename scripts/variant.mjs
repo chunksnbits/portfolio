@@ -8,7 +8,9 @@
 // - npm run variant -- publish <slug>
 // - npm run variant -- unpublish <slug>
 //
-// NOTE: publishing only flips "published" in variant.json. The variant goes online, or comes down, with the next push to master.
+// NOTE: publishing only flips "published" in variant.json. variants/ is a clone of the private repository
+// chunksnbits/portfolio-variants, so the change is committed there, and the variant goes online, or comes down,
+// with the next run of the portfolio's Pages workflow.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -16,6 +18,9 @@ import { loadVariants, PAGES, readMarkdown, ROOT } from './build.mjs';
 import { dismissCookieBanner, evaluate, launchChrome, openTab } from './lib/chrome.mjs';
 import { printMarkdown } from './lib/markdown.mjs';
 import { checkSlug, toVariant, VARIANTS, variantPages } from './lib/variants.mjs';
+
+// Steps that put a change to variant.json online.
+const DEPLOY = `commit and push it in ${VARIANTS}/, then run: gh workflow run Pages --ref master`;
 
 // Time a posting that renders in the browser, like most career sites, takes to show its text.
 const POSTING_SETTLE_MS = 2500;
@@ -123,8 +128,8 @@ async function setPublished(name, published) {
   const { homepage } = JSON.parse(await readFile(join(ROOT, 'package.json'), 'utf8'));
   console.log(
     published
-      ? `${name} is published. Commit and push to master to put it online at ${homepage}${name}/`
-      : `${name} is unpublished. Commit and push to master to take it down. Its files stay in ${VARIANTS}/${name}/.`,
+      ? `${name} is published. To put it online at ${homepage}${name}/, ${DEPLOY}.`
+      : `${name} is unpublished. To take it down, ${DEPLOY}. Its files stay in ${VARIANTS}/${name}/.`,
   );
 }
 
