@@ -25,12 +25,14 @@ const IMAGES = [
   // The FC Bayern and MediaMarkt originals are small thumbnails, so they keep their size.
   { source: 'image 7.png', name: 'fcbayern-mobile', density: 1 },
   { source: 'image 14.png', name: 'mms-campaign', density: 1 },
-  // Keyvisuals cover the whole window behind a project, so they show larger than their size.
-  // Bigger originals would look sharper.
-  { source: 'zeiss_keyvisual.jpg', name: 'zeiss-keyvisual', density: 1 },
-  { source: 'adac_keyvisual.webp', name: 'adac-keyvisual', density: 1 },
+  // Keyvisuals only feed the ASCII drawing, which takes one pixel per 6 px cell.
+  // 960 px covers a window 5760 px wide, and keeps the full-size photos, one of them a model's face, offline.
+  //
+  // NOTE: a keyvisual shown as a photo, with the title "keyvisual", needs its original size back.
+  { source: 'zeiss_keyvisual.jpg', name: 'zeiss-keyvisual', width: 960, density: 1 },
+  { source: 'adac_keyvisual.webp', name: 'adac-keyvisual', width: 960, density: 1 },
   { source: 'fcb_keyvisual.png', name: 'fcbayern-keyvisual', density: 1 },
-  { source: 'mms_keyvisual.jpg', name: 'mms-keyvisual', density: 1 },
+  { source: 'mms_keyvisual.jpg', name: 'mms-keyvisual', width: 960, density: 1 },
 ];
 
 const WEBP_QUALITY = '82';
@@ -51,7 +53,8 @@ try {
     const webp = `assets/img/${image.name}.webp`;
     const avif = `assets/img/${image.name}.avif`;
     execFileSync('cwebp', ['-quiet', '-q', WEBP_QUALITY, scaled, '-o', join(ROOT, 'site', webp)]);
-    execFileSync('avifenc', ['-q', AVIF_QUALITY, '-s', '4', scaled, join(ROOT, 'site', avif)], { stdio: 'ignore' });
+    // sips writes Exif and XMP into its PNG, which avifenc would copy into the published file.
+    execFileSync('avifenc', ['-q', AVIF_QUALITY, '-s', '4', '--ignore-exif', '--ignore-xmp', scaled, join(ROOT, 'site', avif)], { stdio: 'ignore' });
 
     const { width, height } = dimensions(scaled);
     manifest[webp] = { width, height, density: image.density, avif };

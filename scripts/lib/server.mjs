@@ -23,13 +23,30 @@ const TYPES = {
  */
 export function serve(folder, { port = 0, prefix = '/portfolio/' } = {}) {
   const server = createServer(async (request, response) => {
-    const { pathname } = new URL(request.url, 'http://localhost');
-    if (!pathname.startsWith(prefix)) {
+    // A web page can point a domain of its own at this machine and read the drafts through it.
+    // Its requests name that domain, so only this machine's own names get an answer.
+    const { port: listening } = server.address();
+    if (request.headers.host !== `127.0.0.1:${listening}` && request.headers.host !== `localhost:${listening}`) {
+      response.writeHead(403).end();
+      return;
+    }
+
+    let pathname;
+    let path;
+    try {
+      ({ pathname } = new URL(request.url, 'http://localhost'));
+      path = pathname.startsWith(prefix) ? decodeURIComponent(pathname.slice(prefix.length)) : null;
+    } catch {
+      // A broken escape like %E0%A4%A would otherwise stop the whole server.
+      response.writeHead(400).end();
+      return;
+    }
+    if (path === null) {
       response.writeHead(302, { location: prefix }).end();
       return;
     }
 
-    const file = normalize(join(folder, decodeURIComponent(pathname.slice(prefix.length))));
+    const file = normalize(join(folder, path));
     if (!file.startsWith(normalize(folder + sep)) && file !== normalize(folder)) {
       response.writeHead(403).end();
       return;

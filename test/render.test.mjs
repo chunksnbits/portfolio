@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { parseMarkdown } from '../scripts/lib/markdown.mjs';
 import { toCv, toPortfolio } from '../scripts/lib/portfolio.mjs';
 import { renderCv, renderPage } from '../scripts/lib/render.mjs';
@@ -441,6 +442,22 @@ test('rejects invalid content in a template the way the base page does', () => {
 
 test('keeps the base fonts preloaded for a variant that brings none', () => {
   assert.match(render({ ...VARIANT_OPTIONS, variant: { ...VARIANT, fonts: [] } }), /href="\.\.\/\.\.\/assets\/fonts\/inter\.woff2"/);
+});
+
+test('lets every page load only files of the site, and run only its own inline scripts', () => {
+  for (const html of [render(), render(VARIANT_OPTIONS), renderCvSource()]) {
+    const policy = html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/)?.[1];
+
+    assert.ok(policy, 'the page has no policy');
+    assert.ok(html.indexOf('Content-Security-Policy') < html.indexOf('<script'), 'the policy comes after a script');
+    assert.match(policy, /default-src 'self'; script-src 'self' 'sha256-/);
+    assert.match(policy, /object-src 'none'; base-uri 'none'; form-action 'none'/);
+    assert.doesNotMatch(policy, /script-src[^;]*'unsafe-inline'/);
+    for (const [, script] of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) {
+      const hash = createHash('sha256').update(script).digest('base64');
+      assert.ok(policy.includes(`'sha256-${hash}'`), `no hash for the inline script ${script.slice(0, 40)}`);
+    }
+  }
 });
 
 test('keeps a variant out of search results, but not the base pages', () => {

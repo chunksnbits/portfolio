@@ -2,7 +2,8 @@
 // see: DEVELOPMENT.md, "Variants"
 //
 // Usage:
-// - npm run variant -- new <slug> --job <url> [--company <name>] [--role <title>] [--language de|en]
+// - npm run variant -- new <name> --job <url> [--company <name>] [--role <title>] [--language de|en]
+//   creates variants/<name>-<6 random characters>/, whose folder name is the variant's slug
 // - npm run variant -- list
 // - npm run variant -- show <slug>
 // - npm run variant -- publish <slug>
@@ -11,6 +12,7 @@
 // NOTE: publishing only flips "published" in variant.json. variants/ is a clone of the private repository
 // chunksnbits/portfolio-variants, so the change is committed there, and the variant goes online, or comes down,
 // with the next run of the portfolio's Pages workflow.
+import { randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { parseArgs } from 'node:util';
@@ -21,6 +23,10 @@ import { checkSlug, toVariant, VARIANTS, variantPages } from './lib/variants.mjs
 
 // Steps that put a change to variant.json online.
 const DEPLOY = `commit and push it in ${VARIANTS}/, then run: gh workflow run Pages --ref master`;
+
+// Random characters that end a new variant's folder name, so its address can't be guessed from the company's name.
+// 36^6, about 2 billion endings, are too many to try.
+const SUFFIX_LENGTH = 6;
 
 // Time a posting that renders in the browser, like most career sites, takes to show its text.
 const POSTING_SETTLE_MS = 2500;
@@ -53,12 +59,13 @@ try {
   process.exit(1);
 }
 
-// Creates variants/<slug>/ with a variant.json, the starter page, one Markdown file per base file
+// Creates variants/<name>-<random>/ with a variant.json, the starter page, one Markdown file per base file
 // that changes nothing yet, and the posting's text in private/job.md.
 async function create(name) {
-  if (!name || !options.job) throw new Error('Usage: npm run variant -- new <slug> --job <url>');
-  checkSlug(name);
-  if ((await loadVariants()).some((variant) => variant.slug === name)) throw new Error(`${VARIANTS}/${name}/ already exists.`);
+  if (!name || !options.job) throw new Error('Usage: npm run variant -- new <name> --job <url>');
+  const slug = `${name}-${[...randomBytes(SUFFIX_LENGTH)].map((byte) => (byte % 36).toString(36)).join('')}`;
+  checkSlug(slug);
+  if ((await loadVariants()).some((variant) => variant.slug === slug)) throw new Error(`${VARIANTS}/${slug}/ already exists.`);
 
   console.log(`Reading the posting at ${options.job} …`);
   const posting = await readPosting(options.job);
@@ -70,9 +77,9 @@ async function create(name) {
     published: false,
     theme: 'dark',
   };
-  const variant = toVariant(name, settings);
+  const variant = toVariant(slug, settings);
 
-  const folder = join(ROOT, VARIANTS, name);
+  const folder = join(ROOT, VARIANTS, slug);
   await mkdir(join(folder, 'private'), { recursive: true });
   for (const page of PAGES) {
     for (const source of [page.source, page.cvSource]) {
@@ -89,9 +96,9 @@ async function create(name) {
     `# ${posting.role}\n\n- Posting: ${options.job}\n- Saved: ${new Date().toISOString().slice(0, 10)}\n- Page title: ${posting.title}\n\n${posting.text}\n`,
   );
 
-  console.log(`Created ${VARIANTS}/${name}/ for ${variant.company}, "${variant.role}" (${variant.language}).`);
+  console.log(`Created ${VARIANTS}/${slug}/ for ${variant.company}, "${variant.role}" (${variant.language}).`);
   console.log('Check company, role and language in variant.json, the guesses come from the posting page.');
-  console.log(`Preview it with npm start at http://127.0.0.1:4173/portfolio/${name}/`);
+  console.log(`Preview it with npm start at http://127.0.0.1:4173/portfolio/${slug}/`);
 }
 
 async function list() {

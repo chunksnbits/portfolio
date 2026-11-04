@@ -7,5 +7,6 @@ raw
 
 # Per-company research, brief and cover letters. Only the tailored portfolio and its theme are published.
 .claude
+CLAUDE.md
 variants/
 **/*private/

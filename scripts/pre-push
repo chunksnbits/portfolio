@@ -1,0 +1,18 @@
+#!/bin/sh
+# Refuses a push whose new commits touch variants/, which belongs to the private repository chunksnbits/portfolio-variants.
+# see: DEVELOPMENT.md, "Variants"
+#
+# Install it once per clone, into the git folder that every worktree shares:
+#   cp scripts/pre-push "$(git rev-parse --git-common-dir)/hooks/pre-push"
+#
+# NOTE: don't point core.hooksPath at scripts/ instead. A branch from before this file has no scripts/pre-push.
+zero=0000000000000000000000000000000000000000
+while read -r local_ref local_sha remote_ref remote_sha; do
+  # A deleted branch pushes no commits.
+  [ "$local_sha" = "$zero" ] && continue
+  if [ "$remote_sha" = "$zero" ]; then range="$local_sha --not --remotes=origin"; else range="$remote_sha..$local_sha"; fi
+  if [ -n "$(git rev-list $range -- variants)" ]; then
+    echo "pre-push: $local_ref has commits that touch variants/, which this public repository must never hold. Push refused." >&2
+    exit 1
+  fi
+done

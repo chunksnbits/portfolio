@@ -11,6 +11,7 @@ import { applyOverlay } from './lib/overlay.mjs';
 import { compareStructure } from './lib/parity.mjs';
 import { toCv, toPortfolio } from './lib/portfolio.mjs';
 import { renderCv, renderPage } from './lib/render.mjs';
+import { checkTemplate, publishedSource } from './lib/variant-files.mjs';
 import { selectVariants, toVariant, VARIANTS, variantPages } from './lib/variants.mjs';
 
 export const ROOT = new URL('..', import.meta.url).pathname;
@@ -34,9 +35,13 @@ export const CV_PATH = 'cv/';
 
 // Files a variant's page can't be built without: template.mjs renders it, page.css styles it.
 const REQUIRED_FILES = ['template.mjs', 'page.css'];
-// Files and folders of a variant that go online when they exist: its stylesheets, its script, its fonts and its images.
+// Files of a variant that go online when they exist, without their comments: its stylesheets and its script.
 const PUBLISHED_FILES = ['page.css', 'cv.css', 'page.js'];
-const PUBLISHED_FOLDERS = ['fonts', 'img'];
+// Folders of a variant that go online, and the only files each may hold.
+const PUBLISHED_FOLDERS = {
+  fonts: { files: /^(?:[\w.-]+\.woff2|LICENSE[\w.-]*\.txt)$/, holds: 'woff2 fonts and their LICENSE*.txt' },
+  img: { files: /^[\w.-]+\.(?:webp|avif)$/, holds: 'WebP and AVIF images' },
+};
 
 /**
  * Builds the base pages and the selected variants into dist/ and throws if a file is invalid.
@@ -174,8 +179,14 @@ async function checkVariant(variant) {
       throw new Error(`${folder}/${file} is missing. A variant brings its own page, see DEVELOPMENT.md, "Templates".`);
     }
   }
+  checkTemplate(`${folder}/template.mjs`, await readFile(join(source, 'template.mjs'), 'utf8'));
+  for (const file of PUBLISHED_FILES) {
+    if (await exists(join(source, file))) publishedSource(`${folder}/${file}`, await readFile(join(source, file), 'utf8'));
+  }
+  for (const name of Object.keys(PUBLISHED_FOLDERS)) await publishedFolder(variant, name);
+
   const optional = async (file) => ((await exists(join(source, file))) ? `${variant.slug}/${file}` : null);
-  const fonts = (await exists(join(source, 'fonts'))) ? (await readdir(join(source, 'fonts'))).filter((file) => file.endsWith('.woff2')) : [];
+  const fonts = (await publishedFolder(variant, 'fonts')).filter((file) => file.endsWith('.woff2'));
   return {
     template: await loadTemplate(join(source, 'template.mjs'), folder),
     folder: variant.slug,
@@ -199,19 +210,35 @@ async function loadTemplate(file, folder) {
   return template;
 }
 
-// Copies the only files of a variant that go online to dist/<slug>/.
+// Copies the only files of a variant that go online to dist/<slug>/, its stylesheets and script without their comments.
 // Anything else in its folder, like its template, notes or captures outside private/, stays behind.
 async function publishVariant(variant) {
   const source = join(ROOT, VARIANTS, variant.slug);
   const target = join(DIST, variant.slug);
   await mkdir(target, { recursive: true });
   for (const file of PUBLISHED_FILES) {
-    if (await exists(join(source, file))) await cp(join(source, file), join(target, file));
+    if (!(await exists(join(source, file)))) continue;
+    const code = await readFile(join(source, file), 'utf8');
+    await writeFile(join(target, file), publishedSource(`${VARIANTS}/${variant.slug}/${file}`, code));
   }
-  for (const folder of PUBLISHED_FOLDERS) {
-    if (!(await exists(join(source, folder)))) continue;
-    await cp(join(source, folder), join(target, folder), { recursive: true, filter: (file) => !file.endsWith('.DS_Store') });
+  for (const name of Object.keys(PUBLISHED_FOLDERS)) {
+    const files = await publishedFolder(variant, name);
+    if (files.length > 0) await mkdir(join(target, name), { recursive: true });
+    for (const file of files) await cp(join(source, name, file), join(target, name, file));
   }
+}
+
+// Lists the files of a variant's fonts/ or img/ that go online, and throws on any other file in it.
+async function publishedFolder(variant, name) {
+  const folder = join(ROOT, VARIANTS, variant.slug, name);
+  if (!(await exists(folder))) return [];
+  const { files, holds } = PUBLISHED_FOLDERS[name];
+  const entries = (await readdir(folder)).filter((entry) => entry !== '.DS_Store');
+  const stray = entries.find((entry) => !files.test(entry));
+  if (stray) {
+    throw new Error(`${VARIANTS}/${variant.slug}/${name}/${stray} can't go online: ${name}/ holds only ${holds}. Keep other files, like an image's source, in private/.`);
+  }
+  return entries.sort();
 }
 
 /**
