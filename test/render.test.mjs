@@ -341,15 +341,102 @@ test('declares the dark theme to the browser before the stylesheets load, whatev
 });
 
 // A tailored copy of the site for one company, published below its folder name.
-const VARIANT = { stylesheet: 'acme/theme.css', fonts: ['acme/fonts/brand.woff2'], theme: 'light' };
+// Its template renders the page's body, as a variant's template.mjs does: here the about section, each project and the switches.
+const template = (portfolio, kit) => {
+  const [about, projects] = portfolio.sections;
+  const screens = projects.entries.map(
+    (entry) => `<section class="screen" id="${entry.id}">${kit.metaLine(entry.meta)}${kit.project(entry).visuals.map(kit.visual).join('')}</section>`,
+  );
+  return [`<main id="main">${kit.blocks(about.blocks, { lead: true })}`, ...screens, `${kit.print('button')}${kit.language()}${kit.themeToggle()}</main>`].join('\n');
+};
+const VARIANT = {
+  template,
+  folder: 'acme',
+  stylesheet: 'acme/page.css',
+  cvStylesheet: 'acme/cv.css',
+  script: 'acme/page.js',
+  fonts: ['acme/fonts/brand.woff2'],
+  theme: 'light',
+};
 const VARIANT_OPTIONS = { ...OPTIONS, base: '../../', path: 'acme/en/', cvPath: 'acme/en/cv/', alternate: { lang: 'de', path: 'acme/' }, variant: VARIANT };
 
-test('loads a variant\'s stylesheet after the base one and preloads its fonts instead', () => {
+// Renders the variant page of `body` with a template that returns what `use` makes of the portfolio and the kit.
+const renderTemplate = (body, use) =>
+  renderPage(toPortfolio(parseMarkdown(portfolioSource({ body }))), {
+    ...VARIANT_OPTIONS,
+    images: KEYVISUAL_IMAGES,
+    variant: { ...VARIANT, template: use },
+  });
+
+test('renders a variant\'s page from its own template instead of the rail and screens', () => {
   const html = render(VARIANT_OPTIONS);
 
-  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/assets\/styles\.css">\n<link rel="stylesheet" href="\.\.\/\.\.\/acme\/theme\.css">/);
+  assert.match(html, /<body>\n<main id="main"><p class="lead">I build <mark>apps<\/mark>\.<\/p>/);
+  assert.doesNotMatch(html, /class="rail"|class="layout"|class="spotlight"/);
+});
+
+test('binds the renderers a template gets to its page', () => {
+  const html = render(VARIANT_OPTIONS);
+
+  assert.match(html, /<section class="screen" id="aura"><p class="meta"><span class="meta__period">2025 – today<\/span>/);
+  assert.match(html, /<ol class="flow">/);
+  assert.match(html, /<img src="\.\.\/\.\.\/assets\/img\/desktop\.webp" width="700" height="1500"/);
+  assert.match(html, /<a class="button" href="\.\.\/\.\.\/acme\/en\/cv\/" data-print>/);
+  assert.match(html, /<a class="language" href="\.\.\/\.\.\/acme\/" hreflang="de" lang="de">/);
+  assert.match(html, /<button class="theme-toggle" type="button" aria-pressed="false" aria-label="Dark theme" data-theme-toggle>/);
+});
+
+test('loads a variant\'s own stylesheet instead of the base one, its script after main.js, and its fonts', () => {
+  const html = render(VARIANT_OPTIONS);
+
+  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/acme\/page\.css">/);
+  assert.doesNotMatch(html, /assets\/styles\.css/);
+  assert.match(html, /<script src="\.\.\/\.\.\/assets\/main\.js" defer><\/script>\n<script src="\.\.\/\.\.\/acme\/page\.js" defer><\/script>/);
   assert.match(html, /<link rel="preload" href="\.\.\/\.\.\/acme\/fonts\/brand\.woff2" as="font" type="font\/woff2" crossorigin>/);
   assert.doesNotMatch(html, /fonts\/inter\.woff2/);
+  assert.doesNotMatch(render({ ...VARIANT_OPTIONS, variant: { ...VARIANT, script: null } }), /acme\/page\.js/);
+});
+
+test('splits a project for a template at its [show more] marker, with its tags apart', () => {
+  const html = renderTemplate(MARKED, (portfolio, kit) => {
+    const { text, rest, tags } = kit.project(portfolio.sections[1].entries[0]);
+    return [text, rest, tags].map((blocks) => kit.blocks(blocks)).join('|');
+  });
+
+  assert.match(html, /<p>Companion app\.<\/p>\|<p>In depth\.<\/p>\|<ul class="tags"/);
+});
+
+test('shows a project\'s keyvisual in a template as a photo or as an ascii drawing', () => {
+  const html = renderTemplate(DEFAULT_BODY.replace('Lead developer\n', `Lead developer\n\n${ASCII_KEYVISUAL}\n`), (portfolio, kit) => {
+    const { keyvisual } = kit.project(portfolio.sections[1].entries[0]);
+    return [kit.picture(keyvisual, { className: 'photo' }), kit.ascii(keyvisual), `<p>${kit.path(keyvisual)}</p>`].join('\n');
+  });
+
+  assert.match(html, /<picture class="photo"><source type="image\/avif" srcset="\.\.\/\.\.\/assets\/img\/lens\.avif"><img src="\.\.\/\.\.\/assets\/img\/lens\.webp" width="720" height="405" alt=""/);
+  assert.match(html, /<div class="keyvisual keyvisual--ascii" data-keyvisual="assets\/img\/lens\.webp"><picture>/);
+  assert.match(html, /<p>assets\/img\/lens\.webp<\/p>/);
+});
+
+test('draws an image of the variant\'s own folder as an ascii layer, like a hero photo in img/', () => {
+  const html = renderTemplate(DEFAULT_BODY, (portfolio, kit) =>
+    [kit.ascii('img/hero.webp', { avif: 'img/hero.avif' }), `<p>${kit.path('img/hero.webp')}</p>`].join('\n'),
+  );
+
+  assert.match(
+    html,
+    /<div class="keyvisual keyvisual--ascii" data-keyvisual="acme\/img\/hero\.webp"><picture><source type="image\/avif" srcset="\.\.\/\.\.\/acme\/img\/hero\.avif"><img src="\.\.\/\.\.\/acme\/img\/hero\.webp" alt=""/,
+  );
+  assert.match(html, /<p>acme\/img\/hero\.webp<\/p>/);
+});
+
+test('rejects invalid content in a template the way the base page does', () => {
+  const project = (portfolio, kit) => kit.project(portfolio.sections[1].entries[0]) && '';
+
+  assert.throws(() => renderTemplate(DEFAULT_BODY.replace('Companion app.\n', 'Companion app.\n\n[show more]\n'), project), /line \d+: .*\[show more\]/);
+  assert.throws(
+    () => renderTemplate(DEFAULT_BODY.replace('Lead developer\n', `Lead developer\n\n${KEYVISUAL}\n${KEYVISUAL}\n`), project),
+    /line \d+.*keyvisual/,
+  );
 });
 
 test('keeps the base fonts preloaded for a variant that brings none', () => {
@@ -371,18 +458,29 @@ test('opens a variant in the theme it picks, until the visitor switches', () => 
   assert.match(dark, /<meta name="color-scheme" content="dark">/);
 });
 
-test('styles the CV of a variant with its stylesheet and theme too', () => {
-  const html = renderCv(toCv(parseMarkdown(cvSource())), {
+const renderVariantCv = (variant) =>
+  renderCv(toCv(parseMarkdown(cvSource())), {
     ...CV_OPTIONS,
     base: '../../../',
     path: 'acme/en/cv/',
     portfolioPath: 'acme/en/',
     alternate: { lang: 'de', path: 'acme/cv/' },
-    variant: VARIANT,
+    variant,
   });
 
-  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/assets\/cv\.css">\n<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/acme\/theme\.css">/);
+test('styles the CV of a variant with its CV stylesheet after the base one, in its theme', () => {
+  const html = renderVariantCv(VARIANT);
+
+  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/assets\/cv\.css">\n<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/acme\/cv\.css">/);
+  assert.doesNotMatch(html, /acme\/page\.css/);
   assert.match(html, /<html lang="en" data-theme="light">/);
   assert.match(html, /<meta name="robots" content="noindex">/);
   assert.match(html, /<span>chunksnbits\.github\.io\/portfolio\/acme\/en<\/span>/);
+});
+
+test('keeps the base look for the CV of a variant without a CV stylesheet', () => {
+  const html = renderVariantCv({ ...VARIANT, cvStylesheet: null });
+
+  assert.match(html, /<link rel="stylesheet" href="\.\.\/\.\.\/\.\.\/assets\/cv\.css">/);
+  assert.doesNotMatch(html, /acme\/[a-z]+\.css/);
 });

@@ -23,3 +23,24 @@ test('reports text below the WCAG AA minimum and lets text above it pass', async
     await chrome.close();
   }
 });
+
+test('audits the text inside a closed expandable, and leaves it closed', async (t) => {
+  let chrome;
+  try {
+    chrome = await launchChrome();
+  } catch (error) {
+    t.skip(error.message);
+    return;
+  }
+  try {
+    const page = `data:text/html,${encodeURIComponent('<body style="background: #fff"><details><summary>More</summary><p class="faint" style="color: #999">hidden</p></details></body>')}`;
+    const tab = await openTab(chrome.client, page, { width: 800, height: 600 });
+    const failures = await evaluate(tab.send, `(${auditContrast})()`);
+
+    assert.equal(failures.length, 1, failures.join('\n'));
+    assert.match(failures[0], /<p\.faint> "hidden" text/);
+    assert.equal(await evaluate(tab.send, `document.querySelector('details').open`), false);
+  } finally {
+    await chrome.close();
+  }
+});

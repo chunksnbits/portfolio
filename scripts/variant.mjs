@@ -20,11 +20,10 @@ import { checkSlug, toVariant, VARIANTS, variantPages } from './lib/variants.mjs
 // Time a posting that renders in the browser, like most career sites, takes to show its text.
 const POSTING_SETTLE_MS = 2500;
 
-const THEME_TEMPLATE = (company) => `/* Theme of the ${company} variant, loaded after styles.css on its pages and after cv.css on its one-page CVs.
- * The design proposal and its reviews are in private/design.md.
- *
- * NOTE: tokens set on :root also reach print, which must stay white. Set print colors under @media print. */
-`;
+// Files of a new variant's page: a plain page that builds, until /tailor replaces it with one in the company's patterns.
+// The starter writes "COMPANY" where the variant's company goes.
+const STARTER = new URL('variant-starter/', import.meta.url);
+const STARTER_FILES = ['template.mjs', 'page.css', 'cv.css'];
 
 const { values: options, positionals } = parseArgs({
   options: {
@@ -49,7 +48,7 @@ try {
   process.exit(1);
 }
 
-// Creates variants/<slug>/ with a variant.json, an empty theme.css, one Markdown file per base file
+// Creates variants/<slug>/ with a variant.json, the starter page, one Markdown file per base file
 // that changes nothing yet, and the posting's text in private/job.md.
 async function create(name) {
   if (!name || !options.job) throw new Error('Usage: npm run variant -- new <slug> --job <url>');
@@ -76,7 +75,10 @@ async function create(name) {
     }
   }
   await writeFile(join(folder, 'variant.json'), `${JSON.stringify(settings, null, 2)}\n`);
-  await writeFile(join(folder, 'theme.css'), THEME_TEMPLATE(variant.company));
+  for (const file of STARTER_FILES) {
+    const starter = await readFile(new URL(file, STARTER), 'utf8');
+    await writeFile(join(folder, file), starter.replaceAll('COMPANY', variant.company));
+  }
   await writeFile(
     join(folder, 'private', 'job.md'),
     `# ${posting.role}\n\n- Posting: ${options.job}\n- Saved: ${new Date().toISOString().slice(0, 10)}\n- Page title: ${posting.title}\n\n${posting.text}\n`,

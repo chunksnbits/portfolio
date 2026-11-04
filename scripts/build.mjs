@@ -2,7 +2,7 @@
 // Each variant in variants/ adds the same pages below its folder name, see scripts/lib/variants.mjs.
 //
 // Usage: npm run build [-- --drafts] [-- --variant <slug>]
-import { access, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -32,6 +32,12 @@ export const PAGES = [
 // Where a page's one-page CV is published, below the page.
 export const CV_PATH = 'cv/';
 
+// Files a variant's page can't be built without: template.mjs renders it, page.css styles it.
+const REQUIRED_FILES = ['template.mjs', 'page.css'];
+// Files and folders of a variant that go online when they exist: its stylesheets, its script, its fonts and its images.
+const PUBLISHED_FILES = ['page.css', 'cv.css', 'page.js'];
+const PUBLISHED_FOLDERS = ['fonts', 'img'];
+
 /**
  * Builds the base pages and the selected variants into dist/ and throws if a file is invalid.
  * By default it builds the published variants, which is what a deploy puts online.
@@ -52,8 +58,8 @@ export async function build({ drafts = false, only = null } = {}) {
   // Every page renders before dist/ is cleared, so an invalid file leaves the last build in place.
   const pages = [];
   for (const site of sites) {
-    const theme = site.variant ? await checkVariant(site.variant) : null;
-    pages.push(...(await renderSite(site, { homepage, theme, ...assets })));
+    const design = site.variant ? await checkVariant(site.variant) : null;
+    pages.push(...(await renderSite(site, { homepage, design, ...assets })));
   }
 
   await rm(DIST, { recursive: true, force: true });
@@ -107,9 +113,9 @@ async function loadSite(site) {
 }
 
 // Renders the portfolio and the one-page CV of each language of a site, the base site or a variant.
-// `theme` is the variant's stylesheet, fonts and theme from checkVariant(), or null for the base site.
+// `design` is the variant's template, stylesheets, script, fonts and theme from checkVariant(), or null for the base site.
 // Resolves with each page's file in dist/ and its HTML.
-async function renderSite({ pages, variant, portfolios, cvs }, { homepage, theme, images, logos, badges }) {
+async function renderSite({ pages, variant, portfolios, cvs }, { homepage, design, images, logos, badges }) {
   const rendered = [];
   for (const [index, page] of pages.entries()) {
     const alternateIndex = (index + 1) % pages.length;
@@ -129,7 +135,7 @@ async function renderSite({ pages, variant, portfolios, cvs }, { homepage, theme
         logos,
         badges,
         ogImage,
-        variant: theme,
+        variant: design,
       }),
     );
     rendered.push({ file: join(DIST, page.path, 'index.html'), html });
@@ -145,7 +151,7 @@ async function renderSite({ pages, variant, portfolios, cvs }, { homepage, theme
         images,
         logos,
         badges,
-        variant: theme,
+        variant: design,
       }),
     );
     rendered.push({ file: join(DIST, page.path, CV_PATH, 'index.html'), html: cv });
@@ -153,32 +159,56 @@ async function renderSite({ pages, variant, portfolios, cvs }, { homepage, theme
   return rendered;
 }
 
-// Checks that a variant can be published and returns what its pages load: its stylesheet, fonts and theme.
+// Checks that a variant can be published and returns its design, what its pages are built and styled with.
+// The fields are listed above pageHead() in scripts/lib/render.mjs.
 async function checkVariant(variant) {
-  const source = join(ROOT, VARIANTS, variant.slug);
+  const folder = `${VARIANTS}/${variant.slug}`;
+  const source = join(ROOT, folder);
   if (await exists(join(ROOT, 'site', variant.slug))) {
-    throw new Error(`${VARIANTS}/${variant.slug}/: site/${variant.slug} already exists, rename the variant's folder`);
+    throw new Error(`${folder}/: site/${variant.slug} already exists, rename the variant's folder`);
   }
-  if (!(await exists(join(source, 'theme.css')))) {
-    throw new Error(`${VARIANTS}/${variant.slug}/theme.css is missing`);
+  for (const file of REQUIRED_FILES) {
+    if (!(await exists(join(source, file)))) {
+      throw new Error(`${folder}/${file} is missing. A variant brings its own page, see README.md, "Templates".`);
+    }
   }
+  const optional = async (file) => ((await exists(join(source, file))) ? `${variant.slug}/${file}` : null);
   const fonts = (await exists(join(source, 'fonts'))) ? (await readdir(join(source, 'fonts'))).filter((file) => file.endsWith('.woff2')) : [];
   return {
-    stylesheet: `${variant.slug}/theme.css`,
+    template: await loadTemplate(join(source, 'template.mjs'), folder),
+    folder: variant.slug,
+    stylesheet: `${variant.slug}/page.css`,
+    cvStylesheet: await optional('cv.css'),
+    script: await optional('page.js'),
     fonts: fonts.sort().map((file) => `${variant.slug}/fonts/${file}`),
     theme: variant.theme,
   };
 }
 
-// Copies the only files of a variant that go online, its theme.css and fonts/, to dist/<slug>/.
-// Anything else in its folder, like notes or captures outside private/, stays behind.
+// Imports a variant's template.mjs and returns its default export, the function that renders the body of its pages.
+async function loadTemplate(file, folder) {
+  // npm start rebuilds in one process, and Node keeps an imported module for good.
+  // A new address per version of the file imports its latest state.
+  const { mtimeMs } = await stat(file);
+  const { default: template } = await import(`${pathToFileURL(file).href}?version=${mtimeMs}`);
+  if (typeof template !== 'function') {
+    throw new Error(`${folder}/template.mjs must export a default function that renders the page's body, see README.md, "Templates".`);
+  }
+  return template;
+}
+
+// Copies the only files of a variant that go online to dist/<slug>/.
+// Anything else in its folder, like its template, notes or captures outside private/, stays behind.
 async function publishVariant(variant) {
   const source = join(ROOT, VARIANTS, variant.slug);
   const target = join(DIST, variant.slug);
   await mkdir(target, { recursive: true });
-  await cp(join(source, 'theme.css'), join(target, 'theme.css'));
-  if (await exists(join(source, 'fonts'))) {
-    await cp(join(source, 'fonts'), join(target, 'fonts'), { recursive: true, filter: (file) => !file.endsWith('.DS_Store') });
+  for (const file of PUBLISHED_FILES) {
+    if (await exists(join(source, file))) await cp(join(source, file), join(target, file));
+  }
+  for (const folder of PUBLISHED_FOLDERS) {
+    if (!(await exists(join(source, folder)))) continue;
+    await cp(join(source, folder), join(target, folder), { recursive: true, filter: (file) => !file.endsWith('.DS_Store') });
   }
 }
 

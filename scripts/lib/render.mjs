@@ -97,12 +97,22 @@ const FONTS = ['inter', 'plus-jakarta-sans', 'jetbrains-mono'];
  * `path`, `cvPath` and `alternate.path` place this page, its one-page CV and the other language below `homepage`.
  * `images` is the manifest from scripts/images.mjs, keyed by published path.
  * `logos` and `badges` hold the SVG source of each logo and badge, keyed by published path, since the page inlines them.
- * `variant` marks the page as a tailored copy for one company, see `variantHead`.
+ * `variant` marks the page as a tailored copy for one company, whose template renders the page's body, see `pageHead`.
  */
 export function renderPage(portfolio, { base, homepage, path, cvPath, alternate, images, logos = {}, badges = {}, ogImage = null, variant = null }) {
   const { meta, sections } = portfolio;
   const ui = interfaceWords(meta.lang);
   const context = { meta, ui, base, homepage, path, cvPath, alternate, images, logos, badges, ogImage, variant };
+  const body = variant
+    ? variant.template(portfolio, templateKit(context))
+    : `<a class="skip-link" href="#main">${ui.skip}</a>
+<div class="spotlight" aria-hidden="true"></div>
+<div class="layout">
+${renderRail(sections, context)}
+<main class="content" id="main">
+${sections.map((section, index) => renderSection(section, index, context)).join('\n')}
+</main>
+</div>`;
 
   return `<!doctype html>
 <html lang="${meta.lang}"${themeAttribute(variant)}>
@@ -110,17 +120,42 @@ export function renderPage(portfolio, { base, homepage, path, cvPath, alternate,
 ${renderHead(context)}
 </head>
 <body>
-<a class="skip-link" href="#main">${ui.skip}</a>
-<div class="spotlight" aria-hidden="true"></div>
-<div class="layout">
-${renderRail(sections, context)}
-<main class="content" id="main">
-${sections.map((section, index) => renderSection(section, index, context)).join('\n')}
-</main>
-</div>
+${body}
 </body>
 </html>
 `;
+}
+
+// Builds the kit a variant's template renders its page with: the base page's renderers, bound to the page.
+// They render content the way the base page does and reject invalid content with the same errors.
+// see: README.md, "Templates"
+function templateKit(context) {
+  return {
+    ui: context.ui,
+    inline: (text) => inline(text, context),
+    // Inline Markdown as plain text, for attributes like a title or an aria-label.
+    text: (text) => escapeHtml(inlineText(text)),
+    // Paragraphs, lists, tags, images, logos and badges. `lead` makes the first paragraph the lead.
+    blocks: (blocks, options) => renderBlocks(blocks, context, options),
+    entry: (entry) => renderEntry(entry, context),
+    metaLine: (meta) => renderMeta(meta, context),
+    project: projectParts,
+    // An image in its frame, or a numbered list as a flow.
+    visual: (block) => renderVisual(block, context),
+    picture: (block, options) => renderPicture(block, context, options),
+    // An image block, or a file of the variant's own folder with its AVIF copy, e.g. ('img/hero.webp', { avif: 'img/hero.avif' }).
+    ascii: (image, { avif = null } = {}) =>
+      asciiLayer(typeof image === 'string' ? variantImage(image, avif, context) : processedImage(image, context), context),
+    // Published path of an image, which main.js matches a screen's data-keyvisual against.
+    path: (image) => (typeof image === 'string' ? variantImage(image, null, context).file : publishedPath(image.src, image.line)),
+    icon,
+    number,
+    print: (className) => printLink(className, context),
+    language: () => languageLink('language', `${context.base}${context.alternate.path}`, context.alternate.lang),
+    themeToggle: () => themeToggle(context),
+    profile: profileLink,
+    contactActions: () => renderActions(context),
+  };
 }
 
 /**
@@ -208,9 +243,10 @@ function renderHead({ meta, ui, base, homepage, path, alternate, ogImage, varian
     `<meta property="og:locale" content="${ui.locale}">`,
     ogImage ? `<meta property="og:image" content="${ogImage}">` : '',
     `<meta name="twitter:card" content="${ogImage ? 'summary_large_image' : 'summary'}">`,
-    ...variantHead(base, 'assets/styles.css', variant),
+    ...pageHead(base, [variant ? variant.stylesheet : 'assets/styles.css'], variant),
     `<script>${THEME_BOOT}</script>`,
     `<script src="${base}assets/main.js" defer></script>`,
+    variant?.script ? `<script src="${base}${variant.script}" defer></script>` : '',
     `<script type="application/ld+json">${JSON.stringify(person).replaceAll('<', '\\u003c')}</script>`,
   ]
     .filter(Boolean)
@@ -225,25 +261,31 @@ function renderCvHead({ meta, ui, base, homepage, path, alternate, variant }) {
     `<title>${escapeHtml(`${inlineText(meta.name)} · ${ui.cv}`)}</title>`,
     `<meta name="description" content="${escapeHtml(inlineText(meta.description))}">`,
     ...languageLinks(meta.lang, homepage + path, alternate.lang, homepage + alternate.path),
-    ...variantHead(base, 'assets/cv.css', variant),
+    ...pageHead(base, ['assets/cv.css', variant?.cvStylesheet], variant),
     `<script>${THEME_BOOT}</script>`,
   ].join('\n');
 }
 
 // Head lines that differ for a variant, a tailored copy of the site for one company.
-// A variant adds its stylesheet after the base one and stays out of search results.
-// - stylesheet: published path of its theme.css
-// - fonts: published paths of the fonts its theme uses, preloaded instead of the base fonts
+// A variant stays out of search results, opens in its own theme and preloads its own fonts.
+// `stylesheets` lists the published paths of the page's stylesheets in load order, and skips empty ones.
+//
+// A variant comes from checkVariant() in scripts/build.mjs:
+// - template: renders the body of its portfolio pages, see templateKit()
+// - folder: published path of its own files, like img/, below the site root
+// - stylesheet: published path of its page.css, which replaces assets/styles.css
+// - cvStylesheet: published path of its cv.css, loaded after assets/cv.css, or null
+// - script: published path of its page.js, loaded after main.js, or null
+// - fonts: published paths of its fonts, preloaded instead of the base fonts
 // - theme: 'dark' or 'light', the theme the page opens in
-function variantHead(base, stylesheet, variant) {
+function pageHead(base, stylesheets, variant) {
   const fonts = variant?.fonts?.length > 0 ? variant.fonts : FONTS.map((font) => `assets/fonts/${font}.woff2`);
   return [
     variant ? '<meta name="robots" content="noindex">' : '',
     `<meta name="color-scheme" content="${variant?.theme ?? 'dark'}">`,
     `<link rel="icon" href="${base}favicon.svg" type="image/svg+xml">`,
     ...fonts.map((font) => `<link rel="preload" href="${base}${font}" as="font" type="font/woff2" crossorigin>`),
-    `<link rel="stylesheet" href="${base}${stylesheet}">`,
-    variant ? `<link rel="stylesheet" href="${base}${variant.stylesheet}">` : '',
+    ...stylesheets.filter(Boolean).map((stylesheet) => `<link rel="stylesheet" href="${base}${stylesheet}">`),
   ].filter(Boolean);
 }
 
@@ -293,10 +335,15 @@ ${nav}
 <div class="switches">
 ${printLink('button button--small', context)}
 ${languageLink('language', `${base}${alternate.path}`, alternate.lang)}
-<button class="theme-toggle" type="button" aria-pressed="false" aria-label="${ui.darkTheme}" data-theme-toggle>${icon('sun')}${icon('moon')}</button>
+${themeToggle(context)}
 </div>
 </div>
 </header>`;
+}
+
+// main.js switches the theme and sets aria-pressed. The stylesheet shows the sun or the moon.
+function themeToggle({ ui }) {
+  return `<button class="theme-toggle" type="button" aria-pressed="false" aria-label="${ui.darkTheme}" data-theme-toggle>${icon('sun')}${icon('moon')}</button>`;
 }
 
 function renderSection(section, index, context) {
@@ -349,10 +396,9 @@ function renderProjects(section, index, context) {
   const titleId = `${section.id}-title`;
   const total = section.entries.length;
   const projects = section.entries.map((entry, position) => {
-    const visuals = entry.blocks.filter(isVisual);
+    const parts = projectParts(entry);
+    const { visuals, keyvisual } = parts;
     const text = entry.blocks.filter((block) => !isVisual(block) && !isKeyvisual(block));
-    const marked = text.some((block) => block.type === 'more');
-    const keyvisual = keyvisualOf(entry);
     const keyvisualAttribute = keyvisual ? ` data-keyvisual="${publishedPath(keyvisual.src, keyvisual.line)}"` : '';
     const projectTitleId = `${entry.id}-title`;
 
@@ -367,7 +413,7 @@ ${renderMeta(entry.meta, context)}
 <div class="panel__body">
 ${visuals.length > 0 ? `<div class="panel__visual">\n${visuals.map((block) => renderVisual(block, context)).join('\n')}\n</div>` : ''}
 <div class="panel__text">
-${marked ? renderShowMore(entry, text, context) : renderBlocks(text, context)}
+${parts.rest.length > 0 ? renderShowMore(entry, parts, context) : renderBlocks(text, context)}
 </div>
 </div>
 </article>
@@ -382,26 +428,42 @@ ${projects.join('\n')}
 </section>`;
 }
 
-// Splits a project's text at its [show more] marker, so main.js can hide the rest behind a button.
-// The tags stay below the button, always in view.
-function renderShowMore(entry, blocks, context) {
-  const copy = blocks.filter((block) => block.type !== 'tags');
+// Splits a project into the parts a page lays out apart, and throws on a misplaced [show more] marker or a second keyvisual.
+// - keyvisual: the image block shown behind the project, or null
+// - visuals: screenshots and flows, in Markdown order
+// - text: the text up to the [show more] marker, or all of it without one
+// - rest: the text after the marker, empty without one
+// - tags: the lines of tags
+function projectParts(entry) {
+  const copy = entry.blocks.filter((block) => !isVisual(block) && !isKeyvisual(block) && block.type !== 'tags');
   const [marker, second] = copy.filter((block) => block.type === 'more');
   if (second) {
     throw lineError(second.line, `"${entry.title}" already has a [show more] marker on line ${marker.line}`);
   }
-  const at = copy.indexOf(marker);
-  if (at === 0 || at === copy.length - 1) {
+  const at = marker ? copy.indexOf(marker) : copy.length;
+  if (marker && (at === 0 || at === copy.length - 1)) {
     throw lineError(marker.line, 'a [show more] marker needs text before and after it');
   }
+  return {
+    keyvisual: keyvisualOf(entry),
+    visuals: entry.blocks.filter(isVisual),
+    text: copy.slice(0, at),
+    rest: copy.slice(at + 1),
+    tags: entry.blocks.filter((block) => block.type === 'tags'),
+  };
+}
+
+// Puts a project's text after its [show more] marker apart, so main.js can hide it behind a button.
+// The tags stay below the button, always in view.
+function renderShowMore(entry, { text, rest, tags }, context) {
   const id = `${entry.id}-rest`;
 
-  return `${renderBlocks(copy.slice(0, at), context)}
+  return `${renderBlocks(text, context)}
 <div class="panel__rest" id="${id}">
-${renderBlocks(copy.slice(at + 1), context)}
+${renderBlocks(rest, context)}
 </div>
 <button class="more" type="button" aria-expanded="false" aria-controls="${id}">${context.ui.showMore}</button>
-${renderBlocks(blocks.filter((block) => block.type === 'tags'), context)}`;
+${renderBlocks(tags, context)}`;
 }
 
 function renderEntry(entry, context) {
@@ -508,15 +570,39 @@ function renderKeyvisuals(entries, context) {
   if (files.size === 0) return '';
 
   const layers = [...files.values()].map((keyvisual) => {
-    const { file, image } = processedImage(keyvisual, context);
-    const avif = image.avif ? `<source type="image/avif" srcset="${context.base}${image.avif}">` : '';
-    const img = `<img src="${context.base}${file}" alt="" loading="lazy" decoding="async" fetchpriority="low">`;
-    // The image stays in the page as the canvas's source, so it loads as lazily as a photo would.
+    const processed = processedImage(keyvisual, context);
     return keyvisual.title === ASCII_KEYVISUAL
-      ? `<div class="keyvisual keyvisual--ascii" data-keyvisual="${file}"><picture>${avif}${img}</picture><canvas></canvas></div>`
-      : `<picture class="keyvisual" data-keyvisual="${file}">${avif}${img}</picture>`;
+      ? asciiLayer(processed, context)
+      : `<picture class="keyvisual" data-keyvisual="${processed.file}">${keyvisualSources(processed, context)}</picture>`;
   });
   return `<div class="keyvisuals" aria-hidden="true">\n${layers.join('\n')}\n</div>`;
+}
+
+// The layer main.js draws a keyvisual onto as ASCII art, see setUpAsciiKeyvisual() there.
+// The image stays in the page as the canvas's source, so it loads as lazily as a photo would.
+function asciiLayer(processed, context) {
+  return `<div class="keyvisual keyvisual--ascii" data-keyvisual="${processed.file}"><picture>${keyvisualSources(processed, context)}</picture><canvas></canvas></div>`;
+}
+
+// A file of a variant's own folder, in the shape processedImage() returns.
+function variantImage(file, avif, { variant }) {
+  return { file: `${variant.folder}/${file}`, image: { avif: avif && `${variant.folder}/${avif}` } };
+}
+
+function keyvisualSources({ file, image }, { base }) {
+  const avif = image.avif ? `<source type="image/avif" srcset="${base}${image.avif}">` : '';
+  return `${avif}<img src="${base}${file}" alt="" loading="lazy" decoding="async" fetchpriority="low">`;
+}
+
+// An image without a frame, for a variant's page.
+// E.g. a project's keyvisual as the photo behind a section.
+// It keeps the alt text of its Markdown, which a keyvisual leaves empty, since it only decorates.
+function renderPicture(block, context, { className = '' } = {}) {
+  const { file, image } = processedImage(block, context);
+  const width = Math.round(image.width / image.density);
+  const height = Math.round(image.height / image.density);
+  const avif = image.avif ? `<source type="image/avif" srcset="${context.base}${image.avif}">` : '';
+  return `<picture${className ? ` class="${className}"` : ''}>${avif}<img src="${context.base}${file}" width="${width}" height="${height}" alt="${escapeHtml(inlineText(block.alt))}" loading="lazy" decoding="async"></picture>`;
 }
 
 function renderVisual(block, context) {

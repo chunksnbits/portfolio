@@ -1,5 +1,5 @@
 // Checks the built pages in headless Chrome, for both languages of the base site and of the variants it builds:
-// - the rail fits the viewport below, and nothing scrolls sideways
+// - the rail fits the viewport below, on pages that have one, and nothing scrolls sideways
 // - the printed CV stays within two A4 pages, and the one-page CV within one
 // - text and controls meet the WCAG 2.2 AA contrast minimums, in the light and the dark theme
 //
@@ -32,6 +32,7 @@ const MAX_CV_PAGES = 2;
 const KEYVISUAL_FOCUS_MS = 2000;
 
 // Runs in the page and reports the screens to capture, the rail's height and the sideways overflow.
+// A variant's own page has no rail, and its template marks each screen with the class "screen" too.
 const MEASURE = `(() => {
   const rail = document.querySelector('.rail');
   return {
@@ -39,7 +40,7 @@ const MEASURE = `(() => {
       id: screen.id,
       keyvisual: 'keyvisual' in screen.dataset,
     })),
-    rail: { needed: rail.scrollHeight, available: rail.clientHeight },
+    rail: rail && { needed: rail.scrollHeight, available: rail.clientHeight },
     sideways: layoutOverflow(),
   };
 
@@ -87,9 +88,11 @@ try {
     const result = await evaluate(tab.send, MEASURE);
 
     console.log(`\n${page.source}`);
-    const railOver = result.rail.needed > result.rail.available;
-    console.log(`  ${railOver ? '✗' : '✓'} ${'rail'.padEnd(18)} ${String(result.rail.needed).padStart(4)} / ${result.rail.available}`);
-    if (railOver) failures.push(`${page.source}: the rail is ${result.rail.needed - result.rail.available} px too tall`);
+    if (result.rail) {
+      const railOver = result.rail.needed > result.rail.available;
+      console.log(`  ${railOver ? '✗' : '✓'} ${'rail'.padEnd(18)} ${String(result.rail.needed).padStart(4)} / ${result.rail.available}`);
+      if (railOver) failures.push(`${page.source}: the rail is ${result.rail.needed - result.rail.available} px too tall`);
+    }
     if (result.sideways > 0) failures.push(`${page.source}: the page scrolls sideways by ${result.sideways} px`);
 
     failures.push(...(await auditThemes(tab, page.source, 'contrast', theme)));
@@ -152,12 +155,18 @@ async function saveShots(tab, folder, prefix, screens, cv = null) {
   if (cv) await writeFile(join(folder, cv.file), cv.pdf);
   await scrollTo(tab, 0);
   await screenshot(tab, join(folder, `${prefix}-00-top.png`));
-  // The first project halfway through its slide-in.
+  // The first project halfway through its slide-in, on pages whose panels slide.
   // It comes before the screens, because a panel that has slid all the way in stays in place.
-  await scrollTo(tab, `document.querySelector('.screen--project').offsetTop - innerHeight * 0.55`);
-  await screenshot(tab, join(folder, `${prefix}-sliding.png`));
+  if (await evaluate(tab.send, `document.querySelector('.screen--project') !== null`)) {
+    await scrollTo(tab, `document.querySelector('.screen--project').offsetTop - innerHeight * 0.55`);
+    await screenshot(tab, join(folder, `${prefix}-sliding.png`));
+  }
   for (const [index, screen] of screens.entries()) {
-    await scrollTo(tab, `document.getElementById('${screen.id}').offsetTop`);
+    // A sticky header covers the top of the window. A screen's scroll-margin-top keeps it clear, as on a nav click.
+    await scrollTo(
+      tab,
+      `(() => { const screen = document.getElementById('${screen.id}'); return screen.getBoundingClientRect().top + scrollY - parseFloat(getComputedStyle(screen).scrollMarginTop); })()`,
+    );
     if (screen.keyvisual) await new Promise((done) => setTimeout(done, KEYVISUAL_FOCUS_MS));
     await screenshot(tab, join(folder, `${prefix}-${String(index + 1).padStart(2, '0')}-${screen.id}.png`));
   }

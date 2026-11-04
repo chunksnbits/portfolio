@@ -158,6 +158,7 @@ function setUpPanelSlideIn() {
 function setUpShowMore() {
   for (const button of document.querySelectorAll('.more')) {
     const column = button.closest('.panel__text');
+    if (!column) continue;
     const rest = column.querySelector('.panel__rest');
     column.toggleAttribute('data-collapsed', true);
     button.addEventListener('click', () => {
@@ -172,34 +173,35 @@ function setUpShowMore() {
   }
 }
 
-// Shows the keyvisual of the project screen that crosses the middle of the window and hides the others.
-// Projects of the same customer share a keyvisual, which then stays shown between their screens.
+// Shows the keyvisual of the screen that crosses the middle of the window and hides the others.
+// The base page spreads its layers behind all screens and finds a screen's layer by its data-keyvisual.
+// Projects of the same customer share that layer, which then stays shown between their screens.
+// A variant's page may put a layer inside a screen instead, which then belongs to that screen alone.
 function setUpKeyvisuals() {
-  const layers = new Map([...document.querySelectorAll('.keyvisual')].map((layer) => [layer.dataset.keyvisual, layer]));
-  if (layers.size === 0) return;
+  const all = [...document.querySelectorAll('.keyvisual')];
+  if (all.length === 0) return;
+  const shared = new Map(all.filter((layer) => !layer.closest('.screen')).map((layer) => [layer.dataset.keyvisual, layer]));
+  const layerOf = (screen) => screen.querySelector('.keyvisual') ?? shared.get(screen.dataset.keyvisual) ?? null;
   const screens = [...document.querySelectorAll('.screen')];
   const asciiDrawings = new Map(
-    [...layers]
-      .filter(([, layer]) => layer.classList.contains('keyvisual--ascii'))
-      .map(([key, layer]) => [key, setUpAsciiKeyvisual(layer)]),
+    all.filter((layer) => layer.classList.contains('keyvisual--ascii')).map((layer) => [layer, setUpAsciiKeyvisual(layer)]),
   );
 
   let current = null;
   let timer = 0;
-  const show = (key) => {
-    current = key;
-    for (const [name, layer] of layers) {
-      if (name !== key) layer.classList.remove('is-shown');
+  const show = (layer) => {
+    current = layer;
+    for (const other of all) {
+      if (other !== layer) other.classList.remove('is-shown');
     }
-    const layer = layers.get(key);
     // Waits for the image, so it doesn't pop in after its fade.
     layer
       ?.querySelector('img')
       .decode()
       .catch(() => {})
       .then(() => {
-        if (current !== key) return;
-        asciiDrawings.get(key)?.();
+        if (current !== layer) return;
+        asciiDrawings.get(layer)?.();
         layer.classList.add('is-shown');
       });
   };
@@ -210,7 +212,7 @@ function setUpKeyvisuals() {
       if (!entry) return;
       // Waits for the page to settle, so screens it only passes, like after a nav click, don't flash their keyvisual.
       clearTimeout(timer);
-      timer = setTimeout(() => show(entry.target.dataset.keyvisual ?? null), 150);
+      timer = setTimeout(() => show(layerOf(entry.target)), 150);
     },
     { rootMargin: '-50% 0px -50% 0px' },
   );
@@ -343,7 +345,10 @@ function setUpAsciiKeyvisual(layer) {
       }
     }
 
-    const ground = getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g).slice(0, 3).map((value) => value / 255);
+    // The dots stand out from the page, or from the layer's own background where a variant's page gives it one.
+    const own = getComputedStyle(layer).backgroundColor;
+    const behind = own === 'rgba(0, 0, 0, 0)' ? getComputedStyle(document.body).backgroundColor : own;
+    const ground = behind.match(/[\d.]+/g).slice(0, 3).map((value) => value / 255);
     // On a light page the dots are ink, so the dark parts of the photo get the large dots.
     const paper = ground[0] + ground[1] + ground[2] > 1.5;
     return {

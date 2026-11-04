@@ -1,0 +1,4 @@
+/* One-page CV of the COMPANY variant, loaded after cv.css.
+ * It restyles the base sheet through cv.css's tokens: --ink, --body, --muted, --accent and --rule.
+ *
+ * NOTE: the sheet prints white on one A4 page. Its contrast colors come from the primary's own range. */
