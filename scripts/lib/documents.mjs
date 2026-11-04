@@ -1,5 +1,5 @@
 // The private documents of an application, which never go online: the cover letter and the interview brief.
-// see: README.md, "Variants"
+// see: DEVELOPMENT.md, "Cover letters and brief"
 //
 // Both are pages in Daniel's house style, styled by scripts/documents.css and the variant's own documents.css.
 // The styles go inline, so each HTML file opens on its own, like a house-style design doc.

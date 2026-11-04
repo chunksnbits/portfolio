@@ -1,5 +1,5 @@
 // The Markdown subset portfolio.md is written in, and nothing more.
-// see: README.md, "Writing portfolio.md"
+// see: DEVELOPMENT.md, "Markdown format"
 //
 // Anything outside it throws with a line number instead of rendering half right.
 

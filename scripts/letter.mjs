@@ -1,5 +1,5 @@
 // Drafts a variant's cover letters in German and English with Antigravity (agy), on Gemini.
-// see: README.md, "Variants"
+// see: DEVELOPMENT.md, "Cover letters and brief"
 //
 // Usage: npm run letter -- <slug> [--model <id>] [--force]
 //

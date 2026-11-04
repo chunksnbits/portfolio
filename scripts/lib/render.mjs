@@ -128,7 +128,7 @@ ${body}
 
 // Builds the kit a variant's template renders its page with: the base page's renderers, bound to the page.
 // They render content the way the base page does and reject invalid content with the same errors.
-// see: README.md, "Templates"
+// see: DEVELOPMENT.md, "Templates"
 function templateKit(context) {
   return {
     ui: context.ui,

@@ -171,7 +171,7 @@ async function checkVariant(variant) {
   }
   for (const file of REQUIRED_FILES) {
     if (!(await exists(join(source, file)))) {
-      throw new Error(`${folder}/${file} is missing. A variant brings its own page, see README.md, "Templates".`);
+      throw new Error(`${folder}/${file} is missing. A variant brings its own page, see DEVELOPMENT.md, "Templates".`);
     }
   }
   const optional = async (file) => ((await exists(join(source, file))) ? `${variant.slug}/${file}` : null);
@@ -194,7 +194,7 @@ async function loadTemplate(file, folder) {
   const { mtimeMs } = await stat(file);
   const { default: template } = await import(`${pathToFileURL(file).href}?version=${mtimeMs}`);
   if (typeof template !== 'function') {
-    throw new Error(`${folder}/template.mjs must export a default function that renders the page's body, see README.md, "Templates".`);
+    throw new Error(`${folder}/template.mjs must export a default function that renders the page's body, see DEVELOPMENT.md, "Templates".`);
   }
   return template;
 }

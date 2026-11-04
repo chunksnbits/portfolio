@@ -1,5 +1,5 @@
 // Creates, lists, shows, publishes and takes down variants: tailored copies of the portfolio for one job application.
-// see: README.md, "Variants"
+// see: DEVELOPMENT.md, "Variants"
 //
 // Usage:
 // - npm run variant -- new <slug> --job <url> [--company <name>] [--role <title>] [--language de|en]
@@ -76,7 +76,7 @@ async function create(name) {
   await mkdir(join(folder, 'private'), { recursive: true });
   for (const page of PAGES) {
     for (const source of [page.source, page.cvSource]) {
-      await writeFile(join(folder, source), `<!-- Changes to ${source} for ${variant.company}. Format: README.md, "Variant files". -->\n`);
+      await writeFile(join(folder, source), `<!-- Changes to ${source} for ${variant.company}. Format: DEVELOPMENT.md, "Variant files". -->\n`);
     }
   }
   await writeFile(join(folder, 'variant.json'), `${JSON.stringify(settings, null, 2)}\n`);

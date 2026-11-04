@@ -1,5 +1,5 @@
 // Variants: tailored copies of the portfolio, one per job application, each published below its own folder name.
-// see: README.md, "Variants"
+// see: DEVELOPMENT.md, "Variants"
 //
 // A variant lives in variants/<slug>/ with a variant.json, a theme.css and one Markdown file per base file.
 // Each Markdown file holds only its changes to the base file of the same name, see scripts/lib/overlay.mjs.
