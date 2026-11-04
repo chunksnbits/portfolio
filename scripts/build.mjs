@@ -74,7 +74,8 @@ export async function build({ drafts = false, only = null } = {}) {
 
 /**
  * Reads every variant in variants/, published or not, sorted by folder name.
- * Skips a folder without a variant.json, such as one that only holds private files.
+ * Skips a folder without a variant.json, such as one that only holds private files, and hidden folders.
+ * variants/ is a clone of the private variants repository, so it holds a .git folder.
  */
 export async function loadVariants() {
   const folder = join(ROOT, VARIANTS);
@@ -86,7 +87,8 @@ export async function loadVariants() {
     throw error;
   }
   const variants = [];
-  for (const entry of entries.filter((candidate) => candidate.isDirectory()).sort((a, b) => a.name.localeCompare(b.name))) {
+  const folders = entries.filter((candidate) => candidate.isDirectory() && !candidate.name.startsWith('.'));
+  for (const entry of folders.sort((a, b) => a.name.localeCompare(b.name))) {
     const file = join(VARIANTS, entry.name, 'variant.json');
     let settings;
     try {

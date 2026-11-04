@@ -29,8 +29,8 @@ for (const variant of variants) {
 
 for (const path of WATCHED.filter((candidate) => existsSync(join(ROOT, candidate)))) {
   watch(join(ROOT, path), { recursive: true }, (event, file) => {
-    // A variant's private files, like its cover letter, aren't part of the site.
-    if (file?.split(/[\\/]/).includes('private')) return;
+    // A variant's private files, like its cover letter, aren't part of the site, and neither is the variants repository's .git.
+    if (file?.split(/[\\/]/).some((part) => part === 'private' || part === '.git')) return;
     clearTimeout(timer);
     timer = setTimeout(rebuild, 150);
   });

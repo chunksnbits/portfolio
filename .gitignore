@@ -6,6 +6,6 @@ raw
 .plan/
 
 # Per-company research, brief and cover letters. Only the tailored portfolio and its theme are published.
-variants/*/private/
-variants/*md
 .claude
+variants/
+**/*private/

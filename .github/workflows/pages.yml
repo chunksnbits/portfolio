@@ -19,18 +19,34 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Whether the key to the private variants repository is set. Forks and their pull requests don't have it.
+      HAS_VARIANTS: ${{ secrets.VARIANTS_DEPLOY_KEY != '' }}
     steps:
       - uses: actions/checkout@v7
+      # The variants live in a private repository, so only their built pages go online.
+      # The key is a read-only deploy key of that repository.
+      - if: env.HAS_VARIANTS == 'true'
+        uses: actions/checkout@v7
+        with:
+          repository: chunksnbits/portfolio-variants
+          ssh-key: ${{ secrets.VARIANTS_DEPLOY_KEY }}
+          path: variants
       - uses: actions/setup-node@v7
         with:
           node-version: 22
       - run: npm test
       # Builds dist/ and fails if the printed CV runs past two pages
       # or a color misses the WCAG AA contrast minimum.
-      - run: npm run check
+      # This log is public, so variant folders and paths show as "…".
+      - run: npm run check 2>&1 | sed -E -e 's#variants/[^/[:space:]]+#variants/…#g' -e 's#/portfolio/[a-z0-9-]+/#/portfolio/…/#g'
+        # bash fails the step when npm run check fails, not only when sed does.
+        shell: bash
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
+          # The artifact holds the published variants' pages, and signed-in GitHub users can download it until it expires.
+          retention-days: 1
 
   deploy:
     if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
