@@ -216,7 +216,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Kontakt {#contact}
 
-Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Dann sprechen wir.==
+Sie suchen einen Lead Engineer, der Ihre Produktvision voranbringt? ==Lassen Sie uns sprechen.==
 
 Ich bin offen für Senior- und Lead-Rollen in der Web-, Mobile- und Full-Stack-Entwicklung.
 

@@ -6,7 +6,7 @@
 // - .screen with an id: a section the language switch returns to and npm run check captures
 // - .nav__link and [data-nav]: the nav link of the section in view gets aria-current
 // - [data-theme-toggle], [data-print] and .language: the theme switch, "Save as PDF" and the other language
-// - .keyvisual--ascii layers and .screen[data-keyvisual]: an ASCII drawing of a photo while its screen is in view
+// - .keyvisual--ascii layers and .screen[data-keyvisual]: an ASCII drawing of a photo while it is near the window
 
 export default function render({ meta, sections }, kit) {
   const nav = sections.map((section) => `<li><a class="nav__link" href="#${section.id}">${kit.inline(section.title)}</a></li>`);

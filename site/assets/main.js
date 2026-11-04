@@ -173,50 +173,79 @@ function setUpShowMore() {
   }
 }
 
-// Shows the keyvisual of the screen that crosses the middle of the window and hides the others.
-// The base page spreads its layers behind all screens and finds a screen's layer by its data-keyvisual.
-// Projects of the same customer share that layer, which then stays shown between their screens.
-// A variant's page may put a layer inside a screen instead, which then belongs to that screen alone.
+// Shows the keyvisuals, the photos behind the screens, once their image has decoded.
+// - The base page spreads its layers behind all screens, see showSharedKeyvisuals().
+// - A variant's page puts each layer inside its screen, see showScreenKeyvisuals().
 function setUpKeyvisuals() {
-  const all = [...document.querySelectorAll('.keyvisual')];
-  if (all.length === 0) return;
-  const shared = new Map(all.filter((layer) => !layer.closest('.screen')).map((layer) => [layer.dataset.keyvisual, layer]));
-  const layerOf = (screen) => screen.querySelector('.keyvisual') ?? shared.get(screen.dataset.keyvisual) ?? null;
-  const screens = [...document.querySelectorAll('.screen')];
+  const layers = [...document.querySelectorAll('.keyvisual')];
+  if (layers.length === 0) return;
   const asciiDrawings = new Map(
-    all.filter((layer) => layer.classList.contains('keyvisual--ascii')).map((layer) => [layer, setUpAsciiKeyvisual(layer)]),
+    layers.filter((layer) => layer.classList.contains('keyvisual--ascii')).map((layer) => [layer, setUpAsciiKeyvisual(layer)]),
   );
-
-  let current = null;
-  let timer = 0;
-  const show = (layer) => {
-    current = layer;
-    for (const other of all) {
-      if (other !== layer) other.classList.remove('is-shown');
-    }
-    // Waits for the image, so it doesn't pop in after its fade.
+  // Waits for the image, so a layer never shows empty.
+  // `wanted` reports whether the layer should still show by then.
+  const show = (layer, wanted) =>
     layer
-      ?.querySelector('img')
+      .querySelector('img')
       .decode()
       .catch(() => {})
       .then(() => {
-        if (current !== layer) return;
+        if (!wanted()) return;
         asciiDrawings.get(layer)?.();
         layer.classList.add('is-shown');
       });
-  };
 
+  showSharedKeyvisuals(layers.filter((layer) => !layer.closest('.screen')), show);
+  showScreenKeyvisuals(layers.filter((layer) => layer.closest('.screen')), show);
+}
+
+// Shows the layer of the screen that crosses the middle of the window, found by the screen's data-keyvisual, and hides the others.
+// Projects of the same customer share a layer, which then stays shown between their screens.
+function showSharedKeyvisuals(layers, show) {
+  if (layers.length === 0) return;
+  const byImage = new Map(layers.map((layer) => [layer.dataset.keyvisual, layer]));
+  let current = null;
+  let timer = 0;
   const observer = new IntersectionObserver(
     (entries) => {
       const entry = entries.findLast((candidate) => candidate.isIntersecting);
       if (!entry) return;
       // Waits for the page to settle, so screens it only passes, like after a nav click, don't flash their keyvisual.
       clearTimeout(timer);
-      timer = setTimeout(() => show(layerOf(entry.target)), 150);
+      timer = setTimeout(() => {
+        const layer = byImage.get(entry.target.dataset.keyvisual) ?? null;
+        current = layer;
+        for (const other of layers) {
+          if (other !== layer) other.classList.remove('is-shown');
+        }
+        if (layer) show(layer, () => current === layer);
+      }, 150);
     },
     { rootMargin: '-50% 0px -50% 0px' },
   );
-  for (const screen of screens) observer.observe(screen);
+  for (const screen of document.querySelectorAll('.screen')) observer.observe(screen);
+}
+
+// Shows each layer while it is within half a window of the view, so it is drawn before it scrolls in.
+// A layer further away is hidden, which frees its canvas, see setUpAsciiKeyvisual().
+function showScreenKeyvisuals(layers, show) {
+  if (layers.length === 0) return;
+  const near = new Set();
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const { target: layer, isIntersecting } of entries) {
+        if (isIntersecting) {
+          near.add(layer);
+          show(layer, () => near.has(layer));
+        } else {
+          near.delete(layer);
+          layer.classList.remove('is-shown');
+        }
+      }
+    },
+    { rootMargin: '50% 0px' },
+  );
+  for (const layer of layers) observer.observe(layer);
 }
 
 // Draws an ASCII keyvisual: its photo as colored dots on a canvas, after https://ascii.rest/storm-plains/.

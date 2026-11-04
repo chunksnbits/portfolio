@@ -214,7 +214,7 @@ export default function render({ meta, sections }, kit) {
 - `.screen` with an `id`: a section that fills the window or less. The language switch returns to it, and `npm run check` saves a screenshot of each.
 - `.nav__link` and `[data-nav]`: the link of the section in view gets `aria-current`.
 - `[data-theme-toggle]`, `[data-print]`, `.language`: the theme switch, "Save as PDF" and the other language, as the kit renders them.
-- `.keyvisual--ascii`: drawn as ASCII art while its screen is in view. Inside a `.screen` it belongs to that screen. The screen's `data-keyvisual` makes `npm run check` wait for the drawing.
+- `.keyvisual--ascii`: drawn as ASCII art. Inside a `.screen`, a layer is drawn while it is within half a window of the view and gets `is-shown`, so it can show without a fade. The screen's `data-keyvisual` makes `npm run check` wait for the drawing.
 - `.more`, `.panel`, `.spotlight`: the base page's show-more button, sliding panels and cursor glow. Use other names for a variant's own parts.
 
 `page.css` sets light tokens on `:root`, dark ones under `@media screen { :root:not([data-theme='light']) { … } }`, and white print under `@media print`.
