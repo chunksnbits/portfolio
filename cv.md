@@ -4,13 +4,13 @@ lang: en
 
 ## About {#about}
 
-I am a lead software engineer with expertise in web and mobile systems. More than fifteen years of experience in developing and maintaining enterprise-grade applications for some of the biggest brands and enterprises in Germany have me well prepared for the next phase of agentic software engineering.
+Senior lead software engineer with more than fifteen years of experience in developing and maintaining enterprise-grade applications. I have worked for some of the biggest brands and enterprises in Germany, an experience that prepared me well for the next phase of agentic software engineering.
 
-Hands-on lead with sound technical judgment, an eye for detail, continuous mentoring, and constructive code reviews.
+I am a hands-on lead with sound technical judgment, an eye for detail, the ability to search and find out-of-the-box solutions, and an enjoyment in mentoring, pragmatically and constructively.
 
 ## Experience {#experience}
 
-### Senior Software Engineer + Satellytes
+### Senior / Staff Software Engineer + Satellytes
 2021 – today + Munich, Fulda
 
 Lead engineer and core contributor for ZEISS, ADAC Motorsport, FC Bayern München and MediaMarktSaturn.
