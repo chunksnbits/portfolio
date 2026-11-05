@@ -4,9 +4,9 @@ lang: de
 
 ## Über mich {#about}
 
-Senior Staff Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web-Anwendungen und Apps für einige der grössten Marken und Unternehmen im deutschsprachigen Raum.
+Senior Staff Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web-Anwendungen und Apps für einige der größten Marken und Unternehmen im deutschsprachigen Raum.
 
-AI-first developer mit Erfahrung und Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Fähigkeit über den Tellerrand hinauszuschauen, der auch bereit ist jüngere Kolleg*innen mitzunehmen und zu fördern.
+AI-first developer mit Erfahrung und Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Fähigkeit über den Tellerrand hinauszuschauen, der jüngere Kolleg*innen gerne mitnimmt und fördert.
 
 ## Erfahrung {#experience}
 
