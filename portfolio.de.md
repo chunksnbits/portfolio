@@ -39,7 +39,7 @@ Wenn KI-Agenten den Code schreiben, treten andere Fähigkeiten in den Vordergrun
 ### Architektur, die hält {#architecture}
 Pragmatische, langlebige Anwendung und Cloud-Services für Produkte, die mit großem Impact – von BMW, Allianz und dem FC Bayern bis zu ZEISS.
 
-### Mit gutem Beispiel vorangehen
+### Mit gutem Beispiel vorangehen {#leadership}
 Hands-on-Lead mit klarem technischem Urteilsvermögen, kontinuierlichem Mentoring und konstruktiven Code-Reviews.
 
 ### Vom Pixel bis zur Cloud {#pixel-to-cloud}

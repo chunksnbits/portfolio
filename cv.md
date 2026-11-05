@@ -4,9 +4,10 @@ lang: en
 
 ## About {#about}
 
-Senior lead software engineer with more than fifteen years of experience in developing and maintaining enterprise-grade applications. I have worked for some of the biggest brands and enterprises in Germany, an experience that prepared me well for the next phase of agentic software engineering.
+Senior staff engineer with more than fifteen years of experience in developing and maintaining enterprise-grade applications for some of the biggest brands and enterprises in Germany.
+Well versed in AI-driven development and agentic software engineering, with multiple years of practical experience.
 
-I am a hands-on lead with sound technical judgment, an eye for detail, the ability to search and find out-of-the-box solutions, and an enjoyment in mentoring, pragmatically and constructively.
+I am a hands-on lead with sound technical judgment, an eye for detail, the ability to search and find out-of-the-box solutions, and an enjoyment in pragmatic and constructic mentoring.
 
 ## Experience {#experience}
 

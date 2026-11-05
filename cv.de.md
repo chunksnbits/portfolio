@@ -4,9 +4,9 @@ lang: de
 
 ## Über mich {#about}
 
-Senior Lead Software Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web- Anwendungen und Apps.
+Senior Staff Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web-Anwendungen und Apps für einige der grössten Marken und Unternehmen im deutschsprachigen Raum.
 
-AI-first developer mit Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Fähigkeit über den Tellerrand hinauszuschauen, der auch bereit ist jüngere Kolleg*innen mitzunehmen und zu fördern.
+AI-first developer mit Erfahrung und Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Fähigkeit über den Tellerrand hinauszuschauen, der auch bereit ist jüngere Kolleg*innen mitzunehmen und zu fördern.
 
 ## Erfahrung {#experience}
 
@@ -49,7 +49,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Skills {#skills}
 
-### Frontend
+### Frontend  {#frontend}
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright`
 
 ### Mobile
@@ -61,7 +61,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`
 
-### Arbeitsweise
+### Arbeitsweise {#ways-of-working}
 `Tech lead` `Mentoring` `Scrum` `AI coding agents` `Product Owner`
 
 `Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`
