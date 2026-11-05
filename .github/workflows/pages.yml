@@ -1,6 +1,8 @@
 # Tests, builds and checks the portfolio on every push, and publishes master to GitHub Pages.
 # see: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
 #
+# Actions are pinned to a commit, since the build holds the key to the private variants repository.
+#
 # NOTE: the repository's Pages source must be set to "GitHub Actions", not the gh-pages branch.
 name: Pages
 
@@ -22,17 +24,34 @@ jobs:
     env:
       # Whether the key to the private variants repository is set. Forks and their pull requests don't have it.
       HAS_VARIANTS: ${{ secrets.VARIANTS_DEPLOY_KEY != '' }}
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact_id }}
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       # The variants live in a private repository, so only their built pages go online.
-      # The key is a read-only deploy key of that repository.
+      # The key is a read-only deploy key of that repository, and no step after this checkout can read it.
       - if: env.HAS_VARIANTS == 'true'
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: chunksnbits/portfolio-variants
           ssh-key: ${{ secrets.VARIANTS_DEPLOY_KEY }}
           path: variants
-      - uses: actions/setup-node@v7
+          persist-credentials: false
+      # This log is public. From here on it shows each variant's folder name, company, role and posting as ***,
+      # also in the file list of the artifact upload.
+      # A company or role that the base pages also name stays readable, since *** in their lines would give it away.
+      - if: env.HAS_VARIANTS == 'true'
+        run: |
+          for file in variants/*/variant.json; do
+            echo "::add-mask::$(basename "$(dirname "$file")")"
+            echo "::add-mask::$(jq -r .job "$file")"
+            jq -r '.company, .role' "$file" | while IFS= read -r value; do
+              grep -qiF -- "$value" portfolio.md portfolio.de.md cv.md cv.de.md || echo "::add-mask::$value"
+            done
+          done
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
       - run: npm test
@@ -42,10 +61,12 @@ jobs:
       - run: npm run check 2>&1 | sed -E -e 's#variants/[^/[:space:]]+#variants/…#g' -e 's#/portfolio/[a-z0-9-]+/#/portfolio/…/#g'
         # bash fails the step when npm run check fails, not only when sed does.
         shell: bash
-      - uses: actions/upload-pages-artifact@v5
+      # Only a deploy needs the artifact. It holds the published variants' pages, which signed-in GitHub users could download.
+      - if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+        id: upload
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: dist
-          # The artifact holds the published variants' pages, and signed-in GitHub users can download it until it expires.
           retention-days: 1
 
   deploy:
@@ -60,4 +81,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  # Deletes the artifact once the site is online, so nobody can download the variants' pages from it.
+  # After a failed deploy, it expires within a day.
+  clean-up:
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - run: gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID"
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ needs.build.outputs.artifact-id }}

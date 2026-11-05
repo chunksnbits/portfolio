@@ -35,6 +35,10 @@ export const META_LINE = /^\d{4}\b/;
  */
 export function toPortfolio({ frontmatter, blocks }) {
   checkFrontmatter(frontmatter, FRONTMATTER_KEYS);
+  // A variant may replace these, and the page links them as they are.
+  for (const key of ['github', 'linkedin']) {
+    if (!frontmatter[key].startsWith('https://')) throw new SyntaxError(`frontmatter: ${key} must be an https:// address`);
+  }
   return { meta: frontmatter, sections: toSections(blocks) };
 }
 

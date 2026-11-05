@@ -58,9 +58,11 @@ const print = (changes) => printMarkdown(merge(changes));
 const normal = (markdown) => printMarkdown(parseMarkdown(markdown));
 const entryTitles = (document, id) => toPortfolio({ ...document, frontmatter: FULL_FRONTMATTER }).sections.find((section) => section.id === id).entries.map((entry) => entry.title);
 
-const FULL_FRONTMATTER = Object.fromEntries(
-  ['lang', 'name', 'title', 'subtitle', 'status', 'intro', 'location', 'email', 'github', 'linkedin', 'description'].map((key) => [key, key]),
-);
+const FULL_FRONTMATTER = {
+  ...Object.fromEntries(['lang', 'name', 'title', 'subtitle', 'status', 'intro', 'location', 'email', 'description'].map((key) => [key, key])),
+  github: 'https://github.com/someone',
+  linkedin: 'https://www.linkedin.com/in/someone',
+};
 
 test('keeps the base as it is when the variant changes nothing', () => {
   assert.equal(print(''), normal(BASE));

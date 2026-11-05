@@ -170,6 +170,18 @@ test('rejects syntax outside the supported subset, naming the line', () => {
   }
 });
 
+test('rejects a link or image to an address other than https, http and mailto, naming the line', () => {
+  const sources = ['[x](javascript:alert(1))', 'See [x](JavaScript:void(0)).', '![x](data:image/png;base64,AA)', '- [x](file:///etc/passwd)', '[x](site/javascript:alert(1))'];
+  for (const source of sources) {
+    assert.throws(() => parseMarkdown(`## About {#about}\n\n${source}`), /line 3: link targets must be/, source);
+  }
+  assert.doesNotThrow(() => parseMarkdown('## About {#about}\n\n[a](https://x.example) [b](http://x.example) [c](mailto:me@example.com) [d](site/docs/a.pdf) [e](#about)'));
+});
+
+test('rejects control characters, which browsers drop from an address, naming the line', () => {
+  assert.throws(() => parseMarkdown('## About {#about}\n\n[x](\u0001javascript:alert(1))'), /line 3: control characters are not supported/);
+});
+
 test('renders inline formatting and escapes HTML', () => {
   assert.equal(
     renderInline('**Lead** with *care* and ==focus==, `<code> **raw**` & <b>'),

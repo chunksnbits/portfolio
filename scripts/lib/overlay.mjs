@@ -1,5 +1,5 @@
 // Applies an overlay to the base file it changes.
-// see: README.md, "Variant files"
+// see: DEVELOPMENT.md, "Variant files"
 //
 // An overlay is one of a variant's Markdown files, e.g. variants/acme/portfolio.md, and holds only its changes to portfolio.md.
 // Each heading in it finds a section of the base by its {#id}, or an entry by its {#id} or title.

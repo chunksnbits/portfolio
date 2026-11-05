@@ -1,5 +1,5 @@
 // Page template of the COMPANY variant: renders the body of its portfolio pages from the Markdown content.
-// see: README.md, "Templates"
+// see: DEVELOPMENT.md, "Templates"
 //
 // npm run variant -- new copies this starter. /tailor replaces it with a page built from the company's own patterns.
 // The kit holds the base page's renderers, bound to this page. main.js still runs here and looks for:

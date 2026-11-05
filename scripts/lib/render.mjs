@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { escapeHtml, inlineText, lineError, linkRel, renderInline } from './markdown.mjs';
 import { PROJECTS } from './portfolio.mjs';
 
@@ -69,6 +70,17 @@ const THEME_BOOT =
 // Wires the CV's print button, since the CV page loads no main.js.
 const PRINT_BUTTON = "document.querySelector('[data-print]').addEventListener('click',function(){print()})";
 
+// Every page loads only files of the site, and runs no inline script but the two above, named by their hash.
+// Screenshot frames set their size in a style attribute, which only 'unsafe-inline' allows.
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  `script-src 'self' ${[THEME_BOOT, PRINT_BUTTON].map((script) => `'sha256-${createHash('sha256').update(script).digest('base64')}'`).join(' ')}`,
+  "style-src 'self' 'unsafe-inline'",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'none'",
+].join('; ');
+
 // The CV's sidebar holds the contact details, then this section and every section after it.
 const CV_SIDEBAR_START = 'skills';
 
@@ -128,7 +140,7 @@ ${body}
 
 // Builds the kit a variant's template renders its page with: the base page's renderers, bound to the page.
 // They render content the way the base page does and reject invalid content with the same errors.
-// see: README.md, "Templates"
+// see: DEVELOPMENT.md, "Templates"
 function templateKit(context) {
   return {
     ui: context.ui,
@@ -281,6 +293,7 @@ function renderCvHead({ meta, ui, base, homepage, path, alternate, variant }) {
 function pageHead(base, stylesheets, variant) {
   const fonts = variant?.fonts?.length > 0 ? variant.fonts : FONTS.map((font) => `assets/fonts/${font}.woff2`);
   return [
+    `<meta http-equiv="Content-Security-Policy" content="${CONTENT_SECURITY_POLICY}">`,
     variant ? '<meta name="robots" content="noindex">' : '',
     `<meta name="color-scheme" content="${variant?.theme ?? 'dark'}">`,
     `<link rel="icon" href="${base}favicon.svg" type="image/svg+xml">`,

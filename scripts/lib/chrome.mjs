@@ -69,13 +69,15 @@ export async function launchChrome() {
  * The tab's `send` makes DevTools protocol calls in the tab, and `close` closes it.
  * `scale` is the device pixel ratio, e.g. 2 for a Retina display.
  * `colorScheme` ('light' or 'dark') sets the system preference the page sees, otherwise Chrome's default applies.
+ * `beforeLoad` is a script that runs in the page before any of the page's own.
  */
-export async function openTab(client, url, { width, height, scale = 1, colorScheme = null }) {
+export async function openTab(client, url, { width, height, scale = 1, colorScheme = null, beforeLoad = null }) {
   const { targetId } = await client.send('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await client.send('Target.attachToTarget', { targetId, flatten: true });
   const send = (method, params) => client.send(method, params, sessionId);
 
   await send('Page.enable');
+  if (beforeLoad) await send('Page.addScriptToEvaluateOnNewDocument', { source: beforeLoad });
   await send('Emulation.setDeviceMetricsOverride', {
     width,
     height,

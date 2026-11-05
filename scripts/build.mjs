@@ -2,7 +2,7 @@
 // Each variant in variants/ adds the same pages below its folder name, see scripts/lib/variants.mjs.
 //
 // Usage: npm run build [-- --drafts] [-- --variant <slug>]
-import { access, cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { access, cp, lstat, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -11,6 +11,7 @@ import { applyOverlay } from './lib/overlay.mjs';
 import { compareStructure } from './lib/parity.mjs';
 import { toCv, toPortfolio } from './lib/portfolio.mjs';
 import { renderCv, renderPage } from './lib/render.mjs';
+import { checkTemplate, publishedSource } from './lib/variant-files.mjs';
 import { selectVariants, toVariant, VARIANTS, variantPages } from './lib/variants.mjs';
 
 export const ROOT = new URL('..', import.meta.url).pathname;
@@ -34,9 +35,13 @@ export const CV_PATH = 'cv/';
 
 // Files a variant's page can't be built without: template.mjs renders it, page.css styles it.
 const REQUIRED_FILES = ['template.mjs', 'page.css'];
-// Files and folders of a variant that go online when they exist: its stylesheets, its script, its fonts and its images.
+// Files of a variant that go online when they exist, without their comments: its stylesheets and its script.
 const PUBLISHED_FILES = ['page.css', 'cv.css', 'page.js'];
-const PUBLISHED_FOLDERS = ['fonts', 'img'];
+// Folders of a variant that go online, and the only files each may hold.
+const PUBLISHED_FOLDERS = {
+  fonts: { files: /^(?:[\w.-]+\.woff2|LICENSE[\w.-]*\.txt)$/, holds: 'woff2 fonts and their LICENSE*.txt' },
+  img: { files: /^[\w.-]+\.(?:webp|avif)$/, holds: 'WebP and AVIF images' },
+};
 
 /**
  * Builds the base pages and the selected variants into dist/ and throws if a file is invalid.
@@ -55,10 +60,13 @@ export async function build({ drafts = false, only = null } = {}) {
   const sites = await Promise.all(
     [{ pages: PAGES, variant: null }, ...variants.map((variant) => ({ pages: variantPages(variant, PAGES), variant }))].map(loadSite),
   );
-  // Every page renders before dist/ is cleared, so an invalid file leaves the last build in place.
+  // Every page renders, and every variant's files are read and checked, before dist/ is cleared,
+  // so an invalid file leaves the last build in place.
   const pages = [];
+  const publications = [];
   for (const site of sites) {
     const design = site.variant ? await checkVariant(site.variant) : null;
+    if (site.variant) publications.push(await readPublication(site.variant));
     pages.push(...(await renderSite(site, { homepage, design, ...assets })));
   }
 
@@ -67,7 +75,7 @@ export async function build({ drafts = false, only = null } = {}) {
     recursive: true,
     filter: (source) => !source.endsWith('manifest.json') && !source.endsWith('.DS_Store') && !source.startsWith(LOGOS) && !source.startsWith(BADGES),
   });
-  for (const variant of variants) await publishVariant(variant);
+  for (const publication of publications) await publishVariant(publication);
   for (const { file, html } of pages) await write(file, html);
   return variants;
 }
@@ -171,11 +179,13 @@ async function checkVariant(variant) {
   }
   for (const file of REQUIRED_FILES) {
     if (!(await exists(join(source, file)))) {
-      throw new Error(`${folder}/${file} is missing. A variant brings its own page, see README.md, "Templates".`);
+      throw new Error(`${folder}/${file} is missing. A variant brings its own page, see DEVELOPMENT.md, "Templates".`);
     }
   }
+  checkTemplate(`${folder}/template.mjs`, await readFile(join(source, 'template.mjs'), 'utf8'));
+
   const optional = async (file) => ((await exists(join(source, file))) ? `${variant.slug}/${file}` : null);
-  const fonts = (await exists(join(source, 'fonts'))) ? (await readdir(join(source, 'fonts'))).filter((file) => file.endsWith('.woff2')) : [];
+  const fonts = (await publishedFolder(variant, 'fonts')).filter((file) => file.endsWith('.woff2'));
   return {
     template: await loadTemplate(join(source, 'template.mjs'), folder),
     folder: variant.slug,
@@ -194,24 +204,57 @@ async function loadTemplate(file, folder) {
   const { mtimeMs } = await stat(file);
   const { default: template } = await import(`${pathToFileURL(file).href}?version=${mtimeMs}`);
   if (typeof template !== 'function') {
-    throw new Error(`${folder}/template.mjs must export a default function that renders the page's body, see README.md, "Templates".`);
+    throw new Error(`${folder}/template.mjs must export a default function that renders the page's body, see DEVELOPMENT.md, "Templates".`);
   }
   return template;
 }
 
-// Copies the only files of a variant that go online to dist/<slug>/.
-// Anything else in its folder, like its template, notes or captures outside private/, stays behind.
-async function publishVariant(variant) {
+// Reads what a variant puts online: its stylesheets and script without their comments, and the files of its fonts/ and img/.
+// Throws on a file that can't go online.
+async function readPublication(variant) {
   const source = join(ROOT, VARIANTS, variant.slug);
-  const target = join(DIST, variant.slug);
-  await mkdir(target, { recursive: true });
+  const texts = [];
   for (const file of PUBLISHED_FILES) {
-    if (await exists(join(source, file))) await cp(join(source, file), join(target, file));
+    const info = await lstat(join(source, file)).catch(() => null);
+    if (!info) continue;
+    if (!info.isFile()) throw new Error(`${VARIANTS}/${variant.slug}/${file} can't go online: it is a link or a folder, not a file.`);
+    texts.push({ file, text: publishedSource(`${VARIANTS}/${variant.slug}/${file}`, await readFile(join(source, file), 'utf8')) });
   }
-  for (const folder of PUBLISHED_FOLDERS) {
-    if (!(await exists(join(source, folder)))) continue;
-    await cp(join(source, folder), join(target, folder), { recursive: true, filter: (file) => !file.endsWith('.DS_Store') });
+  const copies = [];
+  for (const name of Object.keys(PUBLISHED_FOLDERS)) {
+    copies.push(...(await publishedFolder(variant, name)).map((file) => `${name}/${file}`));
   }
+  return { slug: variant.slug, texts, copies };
+}
+
+// Writes what readPublication() read to dist/<slug>/.
+// Anything else in a variant's folder, like its template, notes or captures outside private/, stays behind.
+async function publishVariant({ slug, texts, copies }) {
+  const source = join(ROOT, VARIANTS, slug);
+  const target = join(DIST, slug);
+  for (const { file, text } of texts) await write(join(target, file), text);
+  for (const file of copies) {
+    await mkdir(dirname(join(target, file)), { recursive: true });
+    await cp(join(source, file), join(target, file));
+  }
+}
+
+// Lists the files of a variant's fonts/ or img/ that go online, and throws on any other entry in it.
+// A link would put whatever it points at online, a private file included.
+async function publishedFolder(variant, name) {
+  const folder = join(ROOT, VARIANTS, variant.slug, name);
+  const info = await lstat(folder).catch(() => null);
+  if (!info) return [];
+  if (!info.isDirectory()) throw new Error(`${VARIANTS}/${variant.slug}/${name} can't go online: it is a link or a file, not a folder.`);
+  const { files, holds } = PUBLISHED_FOLDERS[name];
+  const entries = (await readdir(folder, { withFileTypes: true })).filter((entry) => entry.name !== '.DS_Store');
+  const stray = entries.find((entry) => !entry.isFile() || !files.test(entry.name));
+  if (stray) {
+    throw new Error(
+      `${VARIANTS}/${variant.slug}/${name}/${stray.name} can't go online: ${name}/ holds only ${holds}, as plain files. Keep other files, like an image's source, in private/.`,
+    );
+  }
+  return entries.map((entry) => entry.name).sort();
 }
 
 /**
@@ -245,9 +288,13 @@ function prefixErrors(source, work) {
 }
 
 function warnOnDrift(first, second, differences) {
-  if (differences.length > 0) {
-    console.warn(`Warning: ${first} and ${second} differ in structure:\n- ${differences.join('\n- ')}`);
+  if (differences.length === 0) return;
+  // CI's log is public, and a variant's differences quote its headings and links.
+  if (process.env.CI && first.startsWith(`${VARIANTS}/`)) {
+    console.warn(`Warning: ${first} and ${second} differ in structure in ${differences.length} places. Run npm run build to list them.`);
+    return;
   }
+  console.warn(`Warning: ${first} and ${second} differ in structure:\n- ${differences.join('\n- ')}`);
 }
 
 async function write(file, html) {

@@ -1,5 +1,5 @@
 // Drafts a variant's cover letters in German and English with Antigravity (agy), on Gemini.
-// see: README.md, "Variants"
+// see: DEVELOPMENT.md, "Cover letters and brief"
 //
 // Usage: npm run letter -- <slug> [--model <id>] [--force]
 //
@@ -77,13 +77,18 @@ async function draft(name) {
   const read = (file, fallback = null) => readFile(file, 'utf8').catch((error) => (fallback !== null && error.code === 'ENOENT' ? fallback : Promise.reject(error)));
   // Gemini reads the tailored portfolio as a whole, not just the variant's changes to the base.
   const portfolio = await Promise.all(variantPages(variant, PAGES).map(async (page) => printMarkdown(await readMarkdown(page.source, page.extends))));
+  const profileFile = await findProfile();
+  const profile = await read(profileFile);
+  if (!PERSONAL_SECTION.test(profile)) {
+    throw new Error(`${profileFile} has no "## Basics" section followed by another section, so its birth date and contact details would go to Gemini.`);
+  }
   const prompt = [
     await read(join(ROOT, 'scripts/letter.prompt.md')),
     `## Frame\n\n- Company: ${variant.company}\n- Role: ${variant.role}\n- Posting: ${variant.job}\n- Language of the posting: ${variant.language}`,
     `## Voice\n\n${await read(join(ROOT, VARIANTS, 'VOICE.md'))}`,
     `## Posting\n\n${await read(join(folder, 'job.md'))}`,
     `## Company research\n\n${await read(join(folder, 'research.md'), 'None yet.')}`,
-    `## Profile\n\n${(await read(await findProfile())).replace(PERSONAL_SECTION, '')}`,
+    `## Profile\n\n${profile.replace(PERSONAL_SECTION, '')}`,
     `## Tailored portfolio\n\n${portfolio.join('\n\n')}`,
   ].join('\n\n');
 

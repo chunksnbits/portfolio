@@ -2,6 +2,7 @@
 // - the rail fits the viewport below, on pages that have one, and nothing scrolls sideways
 // - the printed CV stays within two A4 pages, and the one-page CV within one
 // - text and controls meet the WCAG 2.2 AA contrast minimums, in the light and the dark theme
+// - the Content-Security-Policy blocks nothing on the page
 //
 // Options:
 // - --drafts: also check the variants that aren't published
@@ -30,6 +31,9 @@ const PREVIEW = { width: 1200, height: 630 };
 const MAX_CV_PAGES = 2;
 // The 150 ms main.js waits before showing a keyvisual, plus its longest transition in styles.css.
 const KEYVISUAL_FOCUS_MS = 2000;
+// Collects what the page's Content-Security-Policy blocks, which the browser reports only as events.
+// A template's inline script or on… attribute would otherwise stop working unnoticed.
+const RECORD_BLOCKED = "window.blocked = []; document.addEventListener('securitypolicyviolation', (event) => window.blocked.push(`${event.violatedDirective} ${event.blockedURI || 'inline'}`));";
 
 // Runs in the page and reports the screens to capture, the rail's height and the sideways overflow.
 // A variant's own page has no rail, and its template marks each screen with the class "screen" too.
@@ -105,10 +109,12 @@ try {
     if (options.shots) {
       await saveShots(tab, options.shots, `${name}-${theme}`, result.screens, { file: `${name}-cv.pdf`, pdf });
     }
+    failures.push(...(await auditPolicy(tab, page.source)));
     await tab.close();
 
     const cv = await openTab(chrome.client, server.url + page.path + CV_PATH, { ...VIEWPORT, theme });
     failures.push(...(await auditThemes(cv, page.cvSource, 'CV contrast', theme)));
+    failures.push(...(await auditPolicy(cv, page.cvSource)));
     const sheet = await printPdf(cv);
     const sheets = countPages(sheet);
     console.log(`  ${sheets > 1 ? '✗' : '✓'} ${'one-page CV'.padEnd(18)} ${sheets} of 1 page`);
@@ -172,6 +178,13 @@ async function saveShots(tab, folder, prefix, screens, cv = null) {
   }
 }
 
+// Prints a line for what the page's Content-Security-Policy blocked since it loaded, and returns it as problems.
+async function auditPolicy(tab, source) {
+  const blocked = await evaluate(tab.send, 'window.blocked');
+  console.log(`  ${blocked.length > 0 ? '✗' : '✓'} ${'policy'.padEnd(18)} ${blocked.length} blocked`);
+  return blocked.map((what) => `${source}: the Content-Security-Policy blocked ${what}`);
+}
+
 // Audits the contrast in the light and the dark theme, prints a line for each, and returns the problems.
 // The tab is left in `theme`, the one the screenshots use.
 async function auditThemes(tab, source, label, theme) {
@@ -180,7 +193,9 @@ async function auditThemes(tab, source, label, theme) {
     await setTheme(tab, audited);
     const found = await evaluate(tab.send, `(${auditContrast})()`);
     console.log(`  ${found.length > 0 ? '✗' : '✓'} ${`${label}, ${audited}`.padEnd(18)} ${found.length} below the minimum`);
-    problems.push(...found.map((problem) => `${source}, ${audited} theme: ${problem}`));
+    // CI's log is public, so a variant's problems name the element without quoting its text.
+    const quiet = process.env.CI && source.startsWith('variants/');
+    problems.push(...found.map((problem) => `${source}, ${audited} theme: ${quiet ? problem.replace(/ "[^"]*"/, '') : problem}`));
   }
   await setTheme(tab, theme);
   return problems;
@@ -202,7 +217,7 @@ async function setTheme(tab, theme) {
 
 // Opens a page in the given theme, at the scale the screenshots use.
 async function openTab(client, url, { width, height, theme }) {
-  const tab = await openChromeTab(client, url, { width, height, scale: Number(options.scale) });
+  const tab = await openChromeTab(client, url, { width, height, scale: Number(options.scale), beforeLoad: RECORD_BLOCKED });
   await setTheme(tab, theme);
   return tab;
 }

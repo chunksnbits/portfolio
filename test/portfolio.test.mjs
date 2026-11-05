@@ -87,3 +87,10 @@ test('takes only the language as CV frontmatter, since the header comes from the
   const missing = cvSource().replace('lang: en\n', '');
   assert.throws(() => toCv(parseMarkdown(missing)), /lang/);
 });
+
+test('rejects a GitHub or LinkedIn profile that is no https address', () => {
+  for (const [key, value] of [['linkedin', 'javascript:alert(1)'], ['github', 'http://github.com/chunksnbits']]) {
+    const source = portfolioSource().replace(new RegExp(`^${key}: .*$`, 'm'), `${key}: ${value}`);
+    assert.throws(() => toPortfolio(parseMarkdown(source)), new RegExp(`frontmatter: ${key} must be an https:// address`), key);
+  }
+});
