@@ -4,11 +4,13 @@ lang: de
 
 ## Über mich {#about}
 
-Lead Software Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web- Anwendungen und Mobile Apps. AI-first developer mit Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen und Projektverantwortung.
+Senior Lead Software Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web- Anwendungen und Apps.
+
+AI-first developer mit Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Fähigkeit über den Tellerrand hinauszuschauen, der auch bereit ist jüngere Kolleg*innen mitzunehmen und zu fördern.
 
 ## Erfahrung {#experience}
 
-### Senior Software Engineer + Satellytes
+### Senior / Staff Software Engineer + Satellytes
 2021 – heute + München, Fulda
 
 Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
@@ -47,7 +49,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Skills {#skills}
 
-### Frontend {#frontend}
+### Frontend
 `TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright`
 
 ### Mobile
@@ -59,7 +61,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`
 
-### Arbeitsweise {#ways-of-working}
+### Arbeitsweise
 `Tech lead` `Mentoring` `Scrum` `AI coding agents` `Product Owner`
 
 `Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`

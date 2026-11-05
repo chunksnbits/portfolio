@@ -1,7 +1,7 @@
 ---
 lang: de
 name: Daniel Eissing
-title: Lead Software Engineer
+title: Staff Software Engineer
 subtitle: Web- und Mobile-Apps, vom Interface bis zur Cloud
 status: Offen für Senior-Rollen
 intro: 15 Jahre Erfahrung in der Entwicklung großer React- und Angular-Fullstack-Anwendungen und Integrationen für Kunden wie ZEISS, FC Bayern, BMW und Allianz
