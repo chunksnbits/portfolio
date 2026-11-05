@@ -2,7 +2,6 @@
 # see: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
 #
 # Actions are pinned to a commit, since the build holds the key to the private variants repository.
-# The comment after each pin names its release.
 #
 # NOTE: the repository's Pages source must be set to "GitHub Actions", not the gh-pages branch.
 name: Pages
@@ -42,11 +41,15 @@ jobs:
           persist-credentials: false
       # This log is public. From here on it shows each variant's folder name, company, role and posting as ***,
       # also in the file list of the artifact upload.
+      # A company or role that the base pages also name stays readable, since *** in their lines would give it away.
       - if: env.HAS_VARIANTS == 'true'
         run: |
           for file in variants/*/variant.json; do
             echo "::add-mask::$(basename "$(dirname "$file")")"
-            jq -r '.company, .role, .job' "$file" | while IFS= read -r value; do echo "::add-mask::$value"; done
+            echo "::add-mask::$(jq -r .job "$file")"
+            jq -r '.company, .role' "$file" | while IFS= read -r value; do
+              grep -qiF -- "$value" portfolio.md portfolio.de.md cv.md cv.de.md || echo "::add-mask::$value"
+            done
           done
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

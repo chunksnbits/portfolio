@@ -10,8 +10,13 @@ zero=0000000000000000000000000000000000000000
 while read -r local_ref local_sha remote_ref remote_sha; do
   # A deleted branch pushes no commits.
   [ "$local_sha" = "$zero" ] && continue
-  if [ "$remote_sha" = "$zero" ]; then range="$local_sha --not --remotes=origin"; else range="$remote_sha..$local_sha"; fi
-  if [ -n "$(git rev-list $range -- variants)" ]; then
+  # Every commit the remote doesn't have yet, even on a merged side branch that added variants/ and removed it again.
+  # remote_sha stays unused, since this clone may never have fetched that commit.
+  if ! commits=$(git rev-list --full-history "$local_sha" --not --remotes="$1" -- variants); then
+    echo "pre-push: can't list the commits of $local_ref. Run git fetch, then push again." >&2
+    exit 1
+  fi
+  if [ -n "$commits" ]; then
     echo "pre-push: $local_ref has commits that touch variants/, which this public repository must never hold. Push refused." >&2
     exit 1
   fi

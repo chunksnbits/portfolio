@@ -125,3 +125,30 @@ test('lets a stylesheet load files of the site and name addresses in its comment
 
   assert.doesNotThrow(() => publishedSource('variants/acme/page.css', source));
 });
+
+test('refuses a template that exports anything but its default, or hides a name behind an escape', () => {
+  const cases = [
+    ["export { default } from 'data:text/javascript,export default () => 1';", /template\.mjs exports something besides its default function on line 1/],
+    ["export * from './helper.mjs';\nexport default () => '';", /exports something besides its default function on line 1/],
+    ["const x = 1;\nexport { x };\nexport default () => '';", /on line 2/],
+    ['export default () => proc\\u0065ss.pid;', /template\.mjs writes a name with an escape on line 1/],
+    ["export default () => { new WebSocket('wss://x.example'); return ''; };", /uses WebSocket on line 1/],
+  ];
+  for (const [source, message] of cases) {
+    assert.throws(() => checkTemplate('variants/acme/template.mjs', source), message, source);
+  }
+  assert.throws(() => publishedSource('variants/acme/page.js', "fe\\u0074ch('/x');"), /page\.js writes a name with an escape/);
+});
+
+test('keeps tokens apart where a comment between them goes', () => {
+  assert.equal(stripComments('return/**/x;', 'js'), 'return x;');
+  assert.equal(vm.runInNewContext(stripComments('(function () { var x = 7; return/**/x; })()', 'js')), 7);
+  assert.equal(stripComments('.a/**/.b { margin: 1px/**/2px; } /* why */', 'css'), '.a/**/.b { margin: 1px/**/2px; } ');
+  assert.equal(stripComments('.a/* across\n lines */.c, a/*\n*/:hover {}', 'css'), '.a/**/.c, a/**/:hover {}');
+});
+
+test('lets page.js declare classes', () => {
+  const source = 'class Slider {\n  constructor(root) {\n    this.root = root;\n  }\n}\nnew Slider(document.body);\n';
+
+  assert.equal(publishedSource('variants/acme/page.js', source), source);
+});

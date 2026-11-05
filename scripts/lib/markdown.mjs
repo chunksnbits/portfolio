@@ -36,8 +36,11 @@ const UNSUPPORTED_ANYWHERE = [
   // A typed · can end up at the start of a line, unlike a separator.
   [/·/, 'write the separator as " + ", e.g. React + Expo'],
   [/&#?\w+;/, 'HTML entities are not supported'],
+  // Browsers drop control characters from an address, which would hide a scheme from the rule below.
+  [/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/, 'control characters are not supported'],
   // A javascript: or data: target runs code or shows content of its own when clicked.
-  [/\]\((?!https?:|mailto:)[a-z][a-z0-9+.-]*:/i, 'link targets must be https:, http: or mailto: addresses, or paths and #ids of the site'],
+  // The build cuts a leading site/ off before the browser sees the target.
+  [/\]\((?:site\/)?(?!https?:|mailto:)[a-z][a-z0-9+.-]*:/i, 'link targets must be https:, http: or mailto: addresses, or paths and #ids of the site'],
 ];
 
 /**

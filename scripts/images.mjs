@@ -26,7 +26,7 @@ const IMAGES = [
   { source: 'image 7.png', name: 'fcbayern-mobile', density: 1 },
   { source: 'image 14.png', name: 'mms-campaign', density: 1 },
   // Keyvisuals only feed the ASCII drawing, which takes one pixel per 6 px cell.
-  // 960 px covers a window 5760 px wide, and keeps the full-size photos, one of them a model's face, offline.
+  // 960 px covers a window 5760 px wide, and keeps the full-size photos off the site, since one shows a model's face.
   //
   // NOTE: a keyvisual shown as a photo, with the title "keyvisual", needs its original size back.
   { source: 'zeiss_keyvisual.jpg', name: 'zeiss-keyvisual', width: 960, density: 1 },

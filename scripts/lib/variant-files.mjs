@@ -5,23 +5,25 @@
 // An LLM writes both after reading job postings and company sites, so the build refuses code that
 // reaches past its job: into Node, onto the network, or into code built from text.
 //
-// NOTE: this is a tripwire for obvious misuse, not a sandbox. Names built at run time still get through.
+// NOTE: this is a lint against mistakes, not a sandbox. A file written to get past it, e.g. with names in strings, gets through.
 import { basename } from 'node:path';
 import { Script } from 'node:vm';
 
 // Names a script may not use in its code. Strings, template text and comments don't count.
-// - template.mjs: composes the kit it gets, so it needs neither Node nor the network
-// - page.js: drives the page, which loads nothing from other sites
 const FORBIDDEN = {
   'template.mjs': {
-    names: ['import', 'require', 'process', 'global', 'globalThis', 'fetch', 'eval', 'Function', 'constructor', '__proto__'],
+    names: ['import', 'require', 'process', 'global', 'globalThis', 'fetch', 'WebSocket', 'EventSource', 'eval', 'Function', 'constructor', '__proto__'],
     reason: 'A template only composes the kit it gets, see DEVELOPMENT.md, "Templates".',
   },
   'page.js': {
-    names: ['import', 'fetch', 'XMLHttpRequest', 'WebSocket', 'EventSource', 'sendBeacon', 'eval', 'Function', 'constructor', '__proto__'],
+    // The page's Content-Security-Policy already stops code built from text, so constructor stays allowed for classes.
+    names: ['import', 'fetch', 'XMLHttpRequest', 'WebSocket', 'EventSource', 'sendBeacon', 'eval', 'Function'],
     reason: 'page.js only drives the page, which loads nothing from other sites.',
   },
 };
+
+// An export besides `export default`, like `export … from`, which loads a module without the word import.
+const OTHER_EXPORT = /(?<![\w$.])export(?![\w$])(?!\s+default(?![\w$]))/;
 
 // A url() or @import target with a scheme, like https: or data:, or one starting with // for another host.
 const FOREIGN_CSS = /url\(\s*['"]?\s*(?:[a-z][a-z0-9+.-]*:|\/\/)|@import\s+['"]\s*(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
@@ -29,9 +31,15 @@ const FOREIGN_CSS = /url\(\s*['"]?\s*(?:[a-z][a-z0-9+.-]*:|\/\/)|@import\s+['"]\
 // Words after which a slash starts a regular expression, not a division.
 const BEFORE_EXPRESSION = new Set(['return', 'typeof', 'instanceof', 'in', 'of', 'new', 'delete', 'void', 'throw', 'case', 'do', 'else', 'yield', 'await']);
 
-/** Throws if a variant's template.mjs uses a name it may not, naming the name and its line. `file` is its path for the message. */
+/** Throws if a variant's template.mjs uses a name or an export it may not, naming its line. `file` is its path for the message. */
 export function checkTemplate(file, source) {
-  refuseNames(file, source, FORBIDDEN['template.mjs']);
+  const code = codeOf(source);
+  const otherExport = OTHER_EXPORT.exec(code);
+  if (otherExport) {
+    throw new Error(`${file} exports something besides its default function on line ${lineAt(source, otherExport.index)}. A template exports only its render function, and loads no other module.`);
+  }
+  refuseEscapes(file, source, code);
+  refuseNames(file, source, code, FORBIDDEN['template.mjs']);
 }
 
 /**
@@ -40,14 +48,20 @@ export function checkTemplate(file, source) {
  */
 export function publishedSource(file, source) {
   if (file.endsWith('.css')) {
-    const foreign = FOREIGN_CSS.exec(blank(source, 'css', ['comment']));
-    if (foreign) {
-      throw new Error(`${file} loads a file from outside the site on line ${lineAt(source, foreign.index)}. A variant's stylesheets load only files of the site.`);
+    const stripped = stripComments(source, 'css');
+    // The stripped text is what goes online, so it's checked as well.
+    for (const [text, where] of [[source, ''], [stripped, ' once its comments are gone']]) {
+      const foreign = FOREIGN_CSS.exec(blank(text, 'css', ['comment']));
+      if (foreign) {
+        throw new Error(`${file} loads a file from outside the site on line ${lineAt(text, foreign.index)}${where}. A variant's stylesheets load only files of the site.`);
+      }
     }
-    return stripComments(source, 'css');
+    return stripped;
   }
   compile(file, source);
-  refuseNames(file, source, FORBIDDEN[basename(file)]);
+  const code = codeOf(source);
+  refuseEscapes(file, source, code);
+  refuseNames(file, source, code, FORBIDDEN[basename(file)]);
   const stripped = stripComments(source, 'js');
   compile(file, stripped, 'scripts/lib/variant-files.mjs broke it while stripping its comments. ');
   return stripped;
@@ -71,11 +85,18 @@ export function stripComments(source, language) {
       continue;
     }
     touched.add(lines);
-    // A comment across lines still ends its line, which can end a statement in a script.
-    if (text.includes('\n')) {
+    // A comment keeps the tokens on its sides apart: return/**/x is return x, and 1px/**/2px two lengths.
+    // In CSS only an empty comment does that, since whitespace would turn .a/**/.b into a descendant selector.
+    const between = /\S/.test(result.at(-1) ?? '') && /\S/.test(source[token.end] ?? '');
+    if (language === 'css' && between) {
+      result += '/**/';
+    } else if (text.includes('\n')) {
+      // A comment across lines still ends its line, which can end a statement in a script.
       result += '\n';
       lines += 1;
       touched.add(lines);
+    } else if (between) {
+      result += ' ';
     }
   }
   return result
@@ -84,10 +105,24 @@ export function stripComments(source, language) {
     .join('\n');
 }
 
-function refuseNames(file, source, { names, reason }) {
-  const code = blank(source, 'js', ['comment', 'string', 'regex']);
+// A script with its strings, regular expressions and comments blanked: the code the checks below read.
+function codeOf(source) {
+  return blank(source, 'js', ['comment', 'string', 'regex']);
+}
+
+function refuseNames(file, source, code, { names, reason }) {
   const match = new RegExp(`(?<![\\w$])(?:${names.join('|')})(?![\\w$])`).exec(code);
   if (match) throw new Error(`${file} uses ${match[0]} on line ${lineAt(source, match.index)}. ${reason}`);
+}
+
+// Outside strings, regular expressions and comments, a backslash can only start an escape in a name, like proc\u0065ss.
+function refuseEscapes(file, source, code) {
+  const escape = code.indexOf('\\');
+  if (escape !== -1) {
+    throw new Error(
+      `${file} writes a name with an escape on line ${lineAt(source, escape)}, which hides the name from this check. A regular expression right after if (…) reads the same, so give it a variable of its own.`,
+    );
+  }
 }
 
 function compile(file, source, cause = '') {
@@ -126,7 +161,6 @@ function tokenize(source, language) {
 
   // For a script: the open template literals, innermost last, each with the braces open in its current ${} expression.
   const templates = [];
-  // For a script: whether a slash here starts a regular expression rather than a division.
   let slashStartsRegex = true;
   // Takes a template literal's text from `i` up to its closing backtick or its next ${, scanning from `from`.
   const templateText = (from) => {

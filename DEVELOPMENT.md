@@ -14,7 +14,7 @@
 | `npm start` | Build and serve at `http://127.0.0.1:4173/portfolio/`, rebuilding on file changes. Includes draft variants. |
 | `npm run build` | Compile Markdown files and copy `site/` assets into `dist/`, with the published variants. |
 | `npm test` | Run unit tests for parser, model, parity, and renderer. |
-| `npm run check` | Validate CV page counts and WCAG contrast in headless Chrome. `-- --variant <slug>` checks only that variant, `-- --drafts` adds all. |
+| `npm run check` | Validate CV page counts, WCAG contrast and the Content-Security-Policy in headless Chrome. `-- --variant <slug>` checks only that variant, `-- --drafts` adds all. |
 | `npm run check -- --shots <dir>` | Save screen captures and CV PDFs to directory. |
 | `npm run images` | Generate WebP and AVIF assets from `raw/`. |
 | `npm run logos` | Generate monochrome SVG logos from `raw/logos/`. |
@@ -70,7 +70,7 @@
 
 A **variant** is a tailored copy of the portfolio for one job application: a page of its own, built from the company's page patterns in its visual language, with copy aimed at the posting.
 Each variant goes online below its own folder name, next to the base site, e.g. `chunksnbits.github.io/portfolio/acme-k3q9x2/` and `…/acme-k3q9x2/en/`.
-`npm run variant -- new` ends the folder name with 6 random characters, so nobody finds a variant by trying company names.
+`npm run variant -- new` ends the folder name with 6 random characters, so nobody finds a new variant by trying company names. A variant from before keeps its plain name until its folder is renamed.
 Variants stay out of search results.
 
 The variants live in the private repository [chunksnbits/portfolio-variants](https://github.com/chunksnbits/portfolio-variants), so the public repository never shows which companies they are for.
@@ -202,11 +202,11 @@ export default function render({ meta, sections }, kit) {
 
 - **Portfolio**: `meta` is the frontmatter, `sections` the `##` sections with their `blocks` and `entries`, after the variant's changes.
 - **Head**: the build writes it. It loads `page.css`, the fonts in `fonts/`, `main.js`, then `page.js`, keeps the page out of search results and opens it in the variant's theme.
-  Its Content-Security-Policy lets the page load only files of the site, and run no inline script but the build's own, so a template writes no `<script>` and no `on…` attribute.
+  Its Content-Security-Policy lets the page load only files of the site, and run no inline script but the build's own, so a template writes no `<script>` and no `on…` attribute. `npm run check` fails a page whose policy blocks anything.
 - **Kit**: the base page's renderers, bound to the page. They render content the way the base page does and fail the build on invalid content with the same errors.
 - **Limits**: an LLM writes the template and `page.js` from pages it has read, so the build refuses names that reach past their job.
-  A template may not use `import`, `require`, `process`, `global`, `globalThis`, `fetch`, `eval`, `Function`, `constructor` or `__proto__`. `page.js` may not use the network, `import`, `eval` or `Function`.
-  The stylesheets load only files of the site. The check is a tripwire, not a sandbox, so read both files' changes before publishing.
+  A template exports only its default function, writes no escapes in names, and may not use `import`, `require`, `process`, `global`, `globalThis`, `fetch`, `WebSocket`, `EventSource`, `eval`, `Function`, `constructor` or `__proto__`. `page.js` may not use the network, `import`, `eval` or `Function`.
+  The stylesheets load only files of the site. The check catches mistakes, not a file written to get past it, so read both files' changes before publishing.
 
 | Kit member | Renders |
 | --- | --- |
@@ -276,7 +276,7 @@ Files use strict Markdown. Syntax errors fail the build with a line number.
 
 Write a **separator** as a plus between spaces: `2021 – today + Munich`. Never start a line with a plus. Typed dots (`·`) and HTML entities fail the build.
 
-Links and images lead to `https:`, `http:` and `mailto:` addresses, or to paths and `#ids` of the site. Any other scheme, like `javascript:` or `data:`, fails the build.
+Links and images lead to `https:`, `http:` and `mailto:` addresses, or to paths and `#ids` of the site. Any other scheme, like `javascript:` or `data:`, fails the build, and so does a control character.
 
 #### Frontmatter
 

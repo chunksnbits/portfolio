@@ -2,7 +2,7 @@
 // Each variant in variants/ adds the same pages below its folder name, see scripts/lib/variants.mjs.
 //
 // Usage: npm run build [-- --drafts] [-- --variant <slug>]
-import { access, cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { access, cp, lstat, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -60,10 +60,13 @@ export async function build({ drafts = false, only = null } = {}) {
   const sites = await Promise.all(
     [{ pages: PAGES, variant: null }, ...variants.map((variant) => ({ pages: variantPages(variant, PAGES), variant }))].map(loadSite),
   );
-  // Every page renders before dist/ is cleared, so an invalid file leaves the last build in place.
+  // Every page renders, and every variant's files are read and checked, before dist/ is cleared,
+  // so an invalid file leaves the last build in place.
   const pages = [];
+  const publications = [];
   for (const site of sites) {
     const design = site.variant ? await checkVariant(site.variant) : null;
+    if (site.variant) publications.push(await readPublication(site.variant));
     pages.push(...(await renderSite(site, { homepage, design, ...assets })));
   }
 
@@ -72,7 +75,7 @@ export async function build({ drafts = false, only = null } = {}) {
     recursive: true,
     filter: (source) => !source.endsWith('manifest.json') && !source.endsWith('.DS_Store') && !source.startsWith(LOGOS) && !source.startsWith(BADGES),
   });
-  for (const variant of variants) await publishVariant(variant);
+  for (const publication of publications) await publishVariant(publication);
   for (const { file, html } of pages) await write(file, html);
   return variants;
 }
@@ -180,10 +183,6 @@ async function checkVariant(variant) {
     }
   }
   checkTemplate(`${folder}/template.mjs`, await readFile(join(source, 'template.mjs'), 'utf8'));
-  for (const file of PUBLISHED_FILES) {
-    if (await exists(join(source, file))) publishedSource(`${folder}/${file}`, await readFile(join(source, file), 'utf8'));
-  }
-  for (const name of Object.keys(PUBLISHED_FOLDERS)) await publishedFolder(variant, name);
 
   const optional = async (file) => ((await exists(join(source, file))) ? `${variant.slug}/${file}` : null);
   const fonts = (await publishedFolder(variant, 'fonts')).filter((file) => file.endsWith('.woff2'));
@@ -210,35 +209,52 @@ async function loadTemplate(file, folder) {
   return template;
 }
 
-// Copies the only files of a variant that go online to dist/<slug>/, its stylesheets and script without their comments.
-// Anything else in its folder, like its template, notes or captures outside private/, stays behind.
-async function publishVariant(variant) {
+// Reads what a variant puts online: its stylesheets and script without their comments, and the files of its fonts/ and img/.
+// Throws on a file that can't go online.
+async function readPublication(variant) {
   const source = join(ROOT, VARIANTS, variant.slug);
-  const target = join(DIST, variant.slug);
-  await mkdir(target, { recursive: true });
+  const texts = [];
   for (const file of PUBLISHED_FILES) {
-    if (!(await exists(join(source, file)))) continue;
-    const code = await readFile(join(source, file), 'utf8');
-    await writeFile(join(target, file), publishedSource(`${VARIANTS}/${variant.slug}/${file}`, code));
+    const info = await lstat(join(source, file)).catch(() => null);
+    if (!info) continue;
+    if (!info.isFile()) throw new Error(`${VARIANTS}/${variant.slug}/${file} can't go online: it is a link or a folder, not a file.`);
+    texts.push({ file, text: publishedSource(`${VARIANTS}/${variant.slug}/${file}`, await readFile(join(source, file), 'utf8')) });
   }
+  const copies = [];
   for (const name of Object.keys(PUBLISHED_FOLDERS)) {
-    const files = await publishedFolder(variant, name);
-    if (files.length > 0) await mkdir(join(target, name), { recursive: true });
-    for (const file of files) await cp(join(source, name, file), join(target, name, file));
+    copies.push(...(await publishedFolder(variant, name)).map((file) => `${name}/${file}`));
+  }
+  return { slug: variant.slug, texts, copies };
+}
+
+// Writes what readPublication() read to dist/<slug>/.
+// Anything else in a variant's folder, like its template, notes or captures outside private/, stays behind.
+async function publishVariant({ slug, texts, copies }) {
+  const source = join(ROOT, VARIANTS, slug);
+  const target = join(DIST, slug);
+  for (const { file, text } of texts) await write(join(target, file), text);
+  for (const file of copies) {
+    await mkdir(dirname(join(target, file)), { recursive: true });
+    await cp(join(source, file), join(target, file));
   }
 }
 
-// Lists the files of a variant's fonts/ or img/ that go online, and throws on any other file in it.
+// Lists the files of a variant's fonts/ or img/ that go online, and throws on any other entry in it.
+// A link would put whatever it points at online, a private file included.
 async function publishedFolder(variant, name) {
   const folder = join(ROOT, VARIANTS, variant.slug, name);
-  if (!(await exists(folder))) return [];
+  const info = await lstat(folder).catch(() => null);
+  if (!info) return [];
+  if (!info.isDirectory()) throw new Error(`${VARIANTS}/${variant.slug}/${name} can't go online: it is a link or a file, not a folder.`);
   const { files, holds } = PUBLISHED_FOLDERS[name];
-  const entries = (await readdir(folder)).filter((entry) => entry !== '.DS_Store');
-  const stray = entries.find((entry) => !files.test(entry));
+  const entries = (await readdir(folder, { withFileTypes: true })).filter((entry) => entry.name !== '.DS_Store');
+  const stray = entries.find((entry) => !entry.isFile() || !files.test(entry.name));
   if (stray) {
-    throw new Error(`${VARIANTS}/${variant.slug}/${name}/${stray} can't go online: ${name}/ holds only ${holds}. Keep other files, like an image's source, in private/.`);
+    throw new Error(
+      `${VARIANTS}/${variant.slug}/${name}/${stray.name} can't go online: ${name}/ holds only ${holds}, as plain files. Keep other files, like an image's source, in private/.`,
+    );
   }
-  return entries.sort();
+  return entries.map((entry) => entry.name).sort();
 }
 
 /**
@@ -272,9 +288,13 @@ function prefixErrors(source, work) {
 }
 
 function warnOnDrift(first, second, differences) {
-  if (differences.length > 0) {
-    console.warn(`Warning: ${first} and ${second} differ in structure:\n- ${differences.join('\n- ')}`);
+  if (differences.length === 0) return;
+  // CI's log is public, and a variant's differences quote its headings and links.
+  if (process.env.CI && first.startsWith(`${VARIANTS}/`)) {
+    console.warn(`Warning: ${first} and ${second} differ in structure in ${differences.length} places. Run npm run build to list them.`);
+    return;
   }
+  console.warn(`Warning: ${first} and ${second} differ in structure:\n- ${differences.join('\n- ')}`);
 }
 
 async function write(file, html) {
