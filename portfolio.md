@@ -137,7 +137,11 @@ Automated provisioning of build agents, a Contentful-based publish pipeline and 
 
 ![Match centre, statistics and news of fcbayern.com on phones](site/assets/img/fcbayern-mobile.webp "plain")
 
-For FC Bayern, we realized the relaunch of fcbayern.com, integrating a legacy CMS with an in-house headless engine. The project migrated around 100,000 statically generated pages, featuring incremental updates, live news and tickers, real-time results, a custom built audio-player, light and dark themes, WCAG 2.0 and over 2,000 unit tests.
+For FC Bayern, we realized the relaunch of fcbayern.com, integrating a legacy CMS with an in-house headless engine.
+
+[show more]
+
+The project migrated around 100,000 statically generated pages, featuring incremental updates, live news and tickers, real-time results, a custom built audio-player, light and dark themes, WCAG 2.0 and over 2,000 unit tests.
 
 Time-critical features, like the widely frequented online condolence book for Gerd Müller where created with no notice in under two days.
 
