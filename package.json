@@ -23,6 +23,7 @@
     "logos": "python3 scripts/logos.py",
     "tailor": "node scripts/tailor.mjs",
     "variant": "node scripts/variant.mjs",
+    "publish": "node scripts/publish.mjs",
     "brand": "node scripts/brand.mjs",
     "letter": "node scripts/letter.mjs",
     "docs": "node scripts/documents.mjs"

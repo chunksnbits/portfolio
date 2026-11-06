@@ -9,9 +9,8 @@
 // - npm run variant -- publish <slug>
 // - npm run variant -- unpublish <slug>
 //
-// NOTE: publishing only flips "published" in variant.json. variants/ is a clone of the private repository
-// chunksnbits/portfolio-variants, so the change is committed there, and the variant goes online, or comes down,
-// with the next run of the portfolio's Pages workflow.
+// NOTE: publishing only flips "published" in variant.json.
+// The variant goes online, or comes down, once npm run publish pushes the change to chunksnbits/portfolio-variants.
 import { randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -21,8 +20,8 @@ import { dismissCookieBanner, evaluate, launchChrome, openTab } from './lib/chro
 import { printMarkdown } from './lib/markdown.mjs';
 import { checkSlug, toVariant, VARIANTS, variantPages } from './lib/variants.mjs';
 
-// Steps that put a change to variant.json online.
-const DEPLOY = `commit and push it in ${VARIANTS}/, then run: gh workflow run Pages --ref master`;
+// Step that puts a change to variant.json online.
+const DEPLOY = 'run: npm run publish -m "<message>"';
 
 // Random characters that end a new variant's folder name, so its address can't be guessed from the company's name.
 // 36^6, about 2 billion endings, are too many to try.
