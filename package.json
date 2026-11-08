@@ -26,6 +26,7 @@
     "publish": "node scripts/publish.mjs",
     "brand": "node scripts/brand.mjs",
     "letter": "node scripts/letter.mjs",
-    "docs": "node scripts/documents.mjs"
+    "docs": "node scripts/documents.mjs",
+    "docs:all": "node scripts/docs-all.mjs"
   }
 }
