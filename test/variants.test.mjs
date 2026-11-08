@@ -71,3 +71,12 @@ test('builds the published variants, every variant for a preview, or one by name
   assert.deepEqual(selectVariants([live, draft], { only: 'draft' }), [draft]);
   assert.throws(() => selectVariants([live, draft], { only: 'other' }), /"other"/);
 });
+
+test('selects every published variant for publish without a slug, or only the named variant', () => {
+  const first = toVariant('first', { ...SETTINGS, published: true });
+  const second = toVariant('second', { ...SETTINGS, published: false });
+  const third = toVariant('third', { ...SETTINGS, published: true });
+
+  assert.deepEqual(selectVariants([first, second, third]), [first, third]);
+  assert.deepEqual(selectVariants([first, second, third], { only: 'second' }), [second]);
+});
