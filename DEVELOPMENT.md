@@ -22,6 +22,7 @@
 | `npm run variant -- list` | List the variants, published or draft, with their URLs. |
 | `npm run variant -- show <slug>` | Print a variant's Markdown files with their changes applied to the base files. |
 | `npm run variant -- publish <slug>` | Mark a variant for the next deploy. `unpublish` takes it down. |
+| `npm run publish [-m <message>]` | Commit every change in `variants/` and push it, which deploys the site. Asks for the message without `-m`. |
 | `npm run docs -- <slug>` | Print a variant's brief and cover letters to PDF and check their length and contrast. |
 | `npm run letter -- <slug>` | Draft a variant's cover letters with Gemini through `agy`. |
 | `npm run brand -- <url>... --out <dir>` | Capture a company's fonts, colors and components from its pages. |
@@ -32,7 +33,7 @@
 2. Carry career, intro, or skill changes over to `cv.de.md` and `cv.md`.
 3. Run `npm start` and open `http://127.0.0.1:4173/portfolio/` (or `/portfolio/cv/` for the CV).
 4. Check by hand that every desktop screen fits 1440×760, then run `npm run check` to verify CV page limits and WCAG 2.2 AA contrast.
-5. Commit and push. GitHub Actions runs checks and deploys `master`.
+5. Commit and push. GitHub Actions runs checks and deploys `main`.
 
 **NOTE:** `npm run build` warns when the two languages drift in structure, but still builds every page.
 
@@ -83,6 +84,7 @@ cp scripts/pre-push "$(git rev-parse --git-common-dir)/hooks/pre-push"
 
 The hook refuses any push whose commits touch `variants/`, from every worktree and branch of the clone.
 The Pages workflow checks the private repository out with the read-only deploy key in the secret `VARIANTS_DEPLOY_KEY`, so only the built pages of published variants go online.
+A push to `main` there starts the Pages workflow on `main` here, through the private repository's Deploy workflow and its token in the secret `PORTFOLIO_ACTIONS_TOKEN`. Its `README.md` describes the token.
 
 ### Tailoring the portfolio to a job posting
 
@@ -96,13 +98,17 @@ The Pages workflow checks the private repository out with the read-only deploy k
 ### Publishing and taking down
 
 1. Run `npm run variant -- publish <slug>`.
-2. Commit and push in `variants/`, the private repository.
-3. Run `gh workflow run Pages --ref master`. The deploy puts the variant online, and so does any later push to `master`.
-4. To take it down, run `npm run variant -- unpublish <slug>` and repeat steps 2 and 3. Its URL then answers with the 404 page, and its files stay in `variants/<slug>/`.
+   It checks the variant, commits and pushes every change in `variants/` to `main` of the private repository, waits for the Pages workflow, and prints the URL after it responds with HTTP 200.
+   Run `npm run variant -- publish` without a slug to check and verify every variant whose `published` key is `true`.
+2. To take it down, run `npm run variant -- unpublish <slug>` and then `npm run publish -m "<message>"`. Its URL then answers with the 404 page, and its files stay in `variants/<slug>/`.
+
+Every push to the private repository's `main` deploys, also one that only changes a draft, and so does every push to `main` here.
+`npm run publish` refuses to run when `variants/` is on another branch, whose push wouldn't deploy.
+If its Deploy workflow fails, e.g. on an expired token, `npm run publish` has nothing left to push. Start the deploy with `gh workflow run Pages --ref main` instead.
 
 **NOTE:** never commit `variants/` to this repository, which is public. The pre-push hook above refuses such a push.
 
-**NOTE:** the logs of the Pages workflow are public. They show each variant's folder name, company, role and posting as `***`. Only a deploy uploads the build artifact, which holds the published variants' pages, and the workflow deletes it once the site is online.
+**NOTE:** the logs of the Pages workflow are public while a run lasts. They show each variant's folder name, company, role and posting as `***`. Only a deploy uploads the build artifact, which holds the published variants' pages. Once a run has finished, the Clean up workflow deletes its log and its artifact. Its jobs and steps stay visible, so rerun a failed step's command locally to see its output. After a failed deploy, rerun all jobs, since the deploy job alone finds no artifact any more. `gh workflow run "Clean up"` sweeps every finished run, e.g. the runs from before the workflow.
 
 **NOTE:** CI checks every published variant like the base site. A variant that fails `npm run check` stops the deploy of the whole site, so run `npm run check -- --variant <slug>` before publishing.
 
@@ -344,6 +350,7 @@ scripts/
   logos.py                      ← raw/logos/ → site/assets/logos/
   serve.mjs                     ← local development server
   variant.mjs                   ← creates, lists, shows, publishes and unpublishes variants
+  publish.mjs                   ← commits and pushes variants/, which deploys the site
   brand.mjs                     ← captures a company's visual language
   documents.mjs, documents.css  ← prints a variant's brief and cover letters
   letter.mjs, letter.prompt.md  ← drafts cover letters with Gemini through agy

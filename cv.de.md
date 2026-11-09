@@ -6,7 +6,7 @@ lang: de
 
 Senior Staff Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung und Betreuung von Web-Anwendungen und Apps für einige der größten Marken und Unternehmen im deutschsprachigen Raum.
 
-AI-first developer mit Erfahrung und Fokus auf Agentic Software Engineering und Einsatz KI-unterstützter Werkzeuge in der Praxis. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Fähigkeit über den Tellerrand hinauszuschauen, der jüngere Kolleg*innen gerne mitnimmt und fördert.
+AI-first developer mit Fokus auf Agentic Software Engineering. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Bereitschaft, jüngere Kolleg*innen mitzunehmen und zu fördern.
 
 ## Erfahrung {#experience}
 
@@ -56,7 +56,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 `Expo` `React Native` `Expo Router` `Skia` `Bluetooth LE` `Over-the-air updates`
 
 ### Backend und Cloud
-`Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker` `Java` `Kotlin`
+`Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`

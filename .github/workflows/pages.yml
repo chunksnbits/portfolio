@@ -1,9 +1,14 @@
-# Tests, builds and checks the portfolio on every push, and publishes master to GitHub Pages.
+# Tests, builds and checks the portfolio on every push, and publishes main to GitHub Pages.
 # see: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
 #
+# A push to main in the private variants repository starts it on main too, through that repository's Deploy workflow.
+#
 # Actions are pinned to a commit, since the build holds the key to the private variants repository.
+# A run's log is public while the run lasts.
+# clean-up.yml deletes it and the artifact once the run has finished.
 #
 # NOTE: the repository's Pages source must be set to "GitHub Actions", not the gh-pages branch.
+# The github-pages environment must allow deploys from main.
 name: Pages
 
 on:
@@ -24,8 +29,7 @@ jobs:
     env:
       # Whether the key to the private variants repository is set. Forks and their pull requests don't have it.
       HAS_VARIANTS: ${{ secrets.VARIANTS_DEPLOY_KEY != '' }}
-    outputs:
-      artifact-id: ${{ steps.upload.outputs.artifact_id }}
+      DEPLOY: ${{ github.ref == 'refs/heads/main' && github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -39,8 +43,7 @@ jobs:
           ssh-key: ${{ secrets.VARIANTS_DEPLOY_KEY }}
           path: variants
           persist-credentials: false
-      # This log is public. From here on it shows each variant's folder name, company, role and posting as ***,
-      # also in the file list of the artifact upload.
+      # From here on, the log shows each variant's folder name, company, role and posting as ***.
       # A company or role that the base pages also name stays readable, since *** in their lines would give it away.
       - if: env.HAS_VARIANTS == 'true'
         run: |
@@ -62,15 +65,20 @@ jobs:
         # bash fails the step when npm run check fails, not only when sed does.
         shell: bash
       # Only a deploy needs the artifact. It holds the published variants' pages, which signed-in GitHub users could download.
-      - if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
-        id: upload
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+      # It's packed like actions/upload-pages-artifact v5.0.0 packs it, without the list of every file that action logs.
+      # That list showed each variant's fonts, and how many variants are online.
+      - if: env.DEPLOY == 'true'
+        run: tar --dereference --hard-dereference --directory dist -cf "$RUNNER_TEMP/artifact.tar" --exclude=.git --exclude=.github '--exclude=.[^/]*' .
+      - if: env.DEPLOY == 'true'
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
-          path: dist
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
           retention-days: 1
+          if-no-files-found: error
 
   deploy:
-    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -82,16 +90,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
-
-  # Deletes the artifact once the site is online, so nobody can download the variants' pages from it.
-  # After a failed deploy, it expires within a day.
-  clean-up:
-    needs: [build, deploy]
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-    steps:
-      - run: gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$ARTIFACT_ID"
-        env:
-          GH_TOKEN: ${{ github.token }}
-          ARTIFACT_ID: ${{ needs.build.outputs.artifact-id }}

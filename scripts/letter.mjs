@@ -1,8 +1,10 @@
 // Drafts a variant's cover letters in German and English with Antigravity (agy), on Gemini.
 // see: DEVELOPMENT.md, "Cover letters and brief"
 //
-// Usage: npm run letter -- <slug> [--model <id>] [--force]
+// Usage: npm run letter -- <slug> [--lang de|en] [--model <id>] [--force]
 //
+// Drafts both languages by default. Pass --lang to redraft only one, leaving the other's file untouched
+// even with --force, so an edited letter in one language survives a redraft of the other.
 // The instructions are in scripts/letter.prompt.md.
 // agy gets them with the posting (private/job.md), the company research (private/research.md),
 // Daniel's profile without its personal details, the tailored portfolio and variants/VOICE.md.
@@ -51,10 +53,14 @@ const SCHEMA = {
 };
 
 const { values: options, positionals } = parseArgs({
-  options: { model: { type: 'string', default: DEFAULT_MODEL }, force: { type: 'boolean', default: false } },
+  options: { model: { type: 'string', default: DEFAULT_MODEL }, force: { type: 'boolean', default: false }, lang: { type: 'string' } },
   allowPositionals: true,
 });
 const [slug] = positionals;
+if (options.lang && !['de', 'en'].includes(options.lang)) {
+  console.error('--lang must be "de" or "en"');
+  process.exit(1);
+}
 
 try {
   await draft(slug);
@@ -64,11 +70,12 @@ try {
 }
 
 async function draft(name) {
-  if (!name) throw new Error('Usage: npm run letter -- <slug> [--model <id>] [--force]');
+  if (!name) throw new Error('Usage: npm run letter -- <slug> [--lang de|en] [--model <id>] [--force]');
   const variant = (await loadVariants()).find((candidate) => candidate.slug === name);
   if (!variant) throw new Error(`There is no variant "${name}" in ${VARIANTS}/.`);
   const folder = join(ROOT, VARIANTS, name, 'private');
-  const targets = ['de', 'en'].map((lang) => ({ lang, file: join(folder, `cover-letter.${lang}.md`) }));
+  const langs = options.lang ? [options.lang] : ['de', 'en'];
+  const targets = langs.map((lang) => ({ lang, file: join(folder, `cover-letter.${lang}.md`) }));
   // Checked again on writing, since agy takes minutes and Daniel may start a letter meanwhile.
   for (const { file } of targets) {
     if (!options.force && (await exists(file))) throw new Error(overwriteError(file));
@@ -204,7 +211,7 @@ function run(command, args, { cwd, env }) {
 }
 
 function overwriteError(file) {
-  return `${file} exists and may hold your edits. Pass --force to replace both letters.`;
+  return `${file} exists and may hold your edits. Pass --force to replace it, or --lang to draft only the other language.`;
 }
 
 async function findProfile() {

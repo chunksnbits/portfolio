@@ -1,0 +1,66 @@
+# Deletes the log and the artifacts of every finished Pages run, so nobody can look a variant up in them.
+# see: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_run
+#
+# The Pages workflow masks each variant's folder name, company, role and posting, but only in their exact spelling.
+# A failing build or check can still print a variant's copy or CSS.
+# The run keeps its jobs and steps, so a failed step still names the command to rerun locally.
+#
+# This workflow sweeps every finished Pages run when started by hand: gh workflow run "Clean up" -R chunksnbits/portfolio
+# That covers the runs from before this workflow, and any run whose clean-up failed.
+#
+# NOTE: GitHub runs this file from main only, so a change to it takes effect once it is merged.
+name: Clean up
+
+on:
+  workflow_run:
+    workflows: [Pages]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  clean-up:
+    # Runs from forks never get the key to the variants, so their logs stay for whoever opened the pull request.
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUNS: repos/${{ github.repository }}/actions/runs
+      RUN_ID: ${{ github.event.workflow_run.id }}
+    steps:
+      # A Pages run's logs answer 404 for a few seconds after the run finishes, until GitHub has stored them.
+      # A delete in those seconds removes nothing.
+      # The step passes after a minute when the Pages run has no logs.
+      - if: github.event_name == 'workflow_run'
+        run: |
+          for attempt in 1 2 3 4 5 6; do
+            answer=$(gh api "$RUNS/$RUN_ID/logs" --silent 2>&1) || true
+            [[ $answer == *'HTTP 404'* ]] || exit 0
+            sleep 10
+          done
+      # A failure on one Pages run doesn't stop the others.
+      # The step still fails at the end, so the Clean up run shows the failure.
+      - run: |
+          if [[ $GITHUB_EVENT_NAME == workflow_run ]]; then
+            ids=$RUN_ID
+          else
+            ids=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/runs?status=completed" \
+              --jq ".workflow_runs[] | select(.head_repository.full_name == \"$GITHUB_REPOSITORY\") | .id")
+          fi
+          status=0
+          for id in $ids; do
+            gh api --method DELETE "$RUNS/$id/logs" || true
+            answer=$(gh api "$RUNS/$id/logs" --silent 2>&1) || true
+            [[ $answer == *'HTTP 404'* ]] || { echo "The logs of run $id are still online." >&2; status=1; }
+            if ! artifacts=$(gh api "$RUNS/$id/artifacts" --jq '.artifacts[].id'); then
+              echo "Can't list the artifacts of run $id." >&2
+              status=1
+              continue
+            fi
+            for artifact in $artifacts; do
+              gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact" || status=1
+            done
+          done
+          exit $status
