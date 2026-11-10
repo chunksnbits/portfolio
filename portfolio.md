@@ -14,7 +14,7 @@ description: Lead Software Engineer. 10x engineer with intent, a vision for the 
 
 ## About {#about}
 
-I engineer web and mobile systems that ==are built to last==.
+I engineer web and mobile systems that ==are built to last==
 
 Fifteen years of experience developing and maintaining enterprise-grade applications have me well prepared for the next phase of AI-driven software development.
 
@@ -47,7 +47,7 @@ Taking ownership of products from pixel to cloud, in close alignment with PMs, P
 
 ## Brands {#brands}
 
-Products for brands ==you know==.
+Products for brands ==you know==
 
 I have spent most of my career working with some of Germany's largest brands and enterprises, adapting quickly to new domains, corporate structures, and existing stacks.
 
