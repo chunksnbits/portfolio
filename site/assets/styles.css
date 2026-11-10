@@ -83,7 +83,7 @@
   --glint: #f59e0b;
   /* The glint across a highlight, light enough to show on its amber in both themes. */
   --mark-glint: #fff3d1;
-  --keyvisual-opacity: 0.6;
+  --keyvisual-opacity: 0.85;
   /* The photo's opacity behind the rail. Higher values let a black or white spot in it push the rail's button outlines below 3:1. */
   --keyvisual-rail-opacity: 0.17;
   --frame: #e2e8f0;
@@ -1030,6 +1030,13 @@ code {
     opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
     filter 1.6s cubic-bezier(0.22, 1, 0.36, 1),
     transform 1.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Light theme: the dots sit on a dark ground, as in HomeServe and Sixt (#222, 0.85), instead of washing
+ * out against the near-white page. main.js reads this as the layer's own background and colors the dots
+ * against it instead of the page. */
+:root[data-theme='light'] .keyvisual {
+  background: #222;
 }
 
 .keyvisual img {

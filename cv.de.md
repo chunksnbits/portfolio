@@ -15,10 +15,9 @@ AI-first developer mit Fokus auf Agentic Software Engineering. Hands-on-Lead mit
 
 Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
 
-- **ZEISS AURA® Smart Analyzer** + Companion App für ein neues Nahinfrarot-Spektrometer von ZEISS
-- **MyZEISS** + zentrale Projekte für MyZEISS Vision und Meditec
-- **MediaMarktSaturn** + Pilotprojekte im webmobile-Team
-- **ADAC Motorsport** + Migration von Gatsby Cloud und Netlify auf Build Agents auf Basis von GitHub Actions, Self hosted Runner und DigitalOcean
+- **ZEISS** + ZEISS AURA® Smart Analyzer Companion App + zentrale Projekte für MyZEISS Vision und Meditec
+- **ADAC Motorsport** + Migration von Gatsby Cloud und Netlify
+- **MediaMarktSaturn** + Diverse Leuchtturm Projekte im webmobile-Team
 - **FC Bayern München** + Relaunch von fcbayern.com
 
 ### Freiberuflicher Senior Web Developer
