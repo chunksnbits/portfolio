@@ -98,8 +98,9 @@ A push to `main` there starts the Pages workflow on `main` here, through the pri
 ### Publishing and taking down
 
 1. Run `npm run variant -- publish <slug>`.
-2. Run `npm run publish -m "<message>"`. It commits every change in `variants/` and pushes it to `main` of the private repository, which deploys the site with the variant a few minutes later.
-3. To take it down, run `npm run variant -- unpublish <slug>` and repeat step 2. Its URL then answers with the 404 page, and its files stay in `variants/<slug>/`.
+   It checks the variant, commits and pushes every change in `variants/` to `main` of the private repository, waits for the Pages workflow, and prints the URL after it responds with HTTP 200.
+   Run `npm run variant -- publish` without a slug to check and verify every variant whose `published` key is `true`.
+2. To take it down, run `npm run variant -- unpublish <slug>` and then `npm run publish -m "<message>"`. Its URL then answers with the 404 page, and its files stay in `variants/<slug>/`.
 
 Every push to the private repository's `main` deploys, also one that only changes a draft, and so does every push to `main` here.
 `npm run publish` refuses to run when `variants/` is on another branch, whose push wouldn't deploy.

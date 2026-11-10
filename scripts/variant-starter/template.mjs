@@ -51,7 +51,7 @@ ${kit.metaLine(entry.meta)}
 ${kit.blocks(text)}
 ${rest.length > 0 ? `<details><summary>${kit.ui.showMore}</summary>\n${kit.blocks(rest)}\n</details>` : ''}
 ${kit.blocks(tags)}
-${visuals.map((block) => kit.visual(block)).join('\n')}
+${visuals.length > 0 ? `<div class="project__visuals">${visuals.map((block) => kit.visual(block)).join('\n')}</div>` : ''}
 </section>`;
   });
   return `<div id="${section.id}" data-nav>

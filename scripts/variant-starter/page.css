@@ -11,6 +11,8 @@
   --muted: #595959;
   --accent: #0b5cad;
   --line: #d9d9d9;
+  --card: #ffffff;
+  --shadow-card: 0 16px 36px -24px rgb(0 0 0 / 0.28);
   /* The marker behind highlights, with dark letters, in one of the company's colors. */
   --mark: #f59e0b;
   --on-mark: #1a1a1a;
@@ -24,6 +26,8 @@
     --muted: #a8a8a8;
     --accent: #8ab4f8;
     --line: #3a3a3a;
+    --card: #1f1f1f;
+    --shadow-card: 0 16px 36px -24px rgb(0 0 0 / 0.8);
   }
 }
 
@@ -93,6 +97,46 @@ mark {
   min-height: calc(100svh - 64px);
   padding: 48px 32px;
   scroll-margin-top: 64px;
+}
+
+.project {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow-card);
+}
+
+/* Homeserve's two-app grid keeps the front screenshot visibly layered. */
+.project__visuals {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  align-items: start;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.project__visuals:has(> .frame--app + .frame--app) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.project__visuals > .frame--app {
+  grid-area: 1 / 1;
+  justify-self: start;
+  width: 58%;
+}
+
+.project__visuals > .frame--app + .frame--app {
+  justify-self: end;
+  margin-top: 20%;
+}
+
+.project__visuals > .frame--browser + .frame--phone {
+  position: absolute;
+  right: -24px;
+  bottom: -40px;
+  width: min(34%, var(--natural-width));
 }
 
 .button,
