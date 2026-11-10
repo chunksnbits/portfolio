@@ -14,7 +14,7 @@ description: Lead Software Engineer mit Weitblick für Architektur, technischem 
 
 ## Über mich {#about}
 
-Ich baue Web- und Mobile-Systeme, die ==Bestand haben==.
+Ich baue Web- und Mobile-Systeme, die ==Bestand haben==
 
 Fünfzehn Jahre Erfahrung in der Entwicklung und Betreuung unternehmenskritischer Anwendungen haben mich optimal auf die nächste Phase der KI-gestützten Softwareentwicklung vorbereitet.
 
@@ -47,7 +47,7 @@ Vom Anwendungscode über Backend-Services bis zum automatisierten Deployment in 
 
 ## Brands {#brands}
 
-Produkte für Marken, ==die man kennt==.
+Produkte für Marken, ==die man kennt==
 
 Ich habe den Großteil meiner Laufbahn im Umfeld einiger der größten Unternehmen und bekanntesten Marken Deutschlands verbracht.
 
