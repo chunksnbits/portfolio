@@ -53,9 +53,7 @@ Ich habe den Großteil meiner Laufbahn im Umfeld einiger der größten Unternehm
 
 Das schnelle Einarbeiten in neue Themenfelder und Projektstrukturen, Codebases oder die Übernahme von Produktverantwortung war dabei stets Teil meiner Leistungen.
 
-Von der technischen Umsetzung bis hin zur Product Ownership: Meine Aufgaben umfassten alle Bereiche des gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- und Mid-Level-Entwicklern.
-
-Egal welche Rolle das jeweilige Projekt verlangt hat, habe ich es als meine Aufgabe angesehen, diese bestmöglich zu erfüllen.
+Von der technischen Umsetzung bis hin zur Product Ownership: Meine Aufgaben umfassten alle Bereiche des gesamten Produktlebenszyklus – von Projektanalyse und Planung über die technische Umsetzung und das Stakeholder-Alignment bis hin zu Architekturentscheidungen und der Förderung von Junior- bis Senior-Level-Entwicklern.
 
 ![Allianz](site/assets/logos/allianz.svg "logo")
 ![BMW](site/assets/logos/bmw.svg "logo")
@@ -158,12 +156,12 @@ Bei MediaMarktSaturn habe ich im webmobile-Team Pilotprojekte umgesetzt. Highgli
 
 ## Erfahrung {#experience}
 
-### Senior Software Engineer + Satellytes
+### Staff / Senior Software Engineer + Satellytes
 2021 – heute + München, Fulda
 
 Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
 
-### Freiberuflicher Senior Web Developer
+### Freiberuflicher Senior Software Egineer
 2018 – 2021 + München
 
 Für Satellytes und jambit als externer Senior Software Architect: Entwicklung von Full-Stack-Webanwendungen und Kernframeworks als Basis für neue Applikationen von Kunden wie Audi und dem FC Bayern. Toolchain u. a. Angular, Spring WebFlux, CI/CD mit Jenkins und Cloud Foundry.
