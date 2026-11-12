@@ -16,9 +16,9 @@ description: Lead Software Engineer. 10x engineer with intent, a vision for the 
 
 I engineer web and mobile systems that ==are built to last==
 
-Fifteen years of experience developing and maintaining enterprise-grade applications have me well prepared for the next phase of AI-driven software development.
+Fifteen years of experience developing and maintaining enterprise-grade applications have me well prepared for the next phase of agentic software development.
 
-When AI agents write the code, other skills come into focus: an obsession with detail, demonstrated experience in shaping, judging and steering architectural decisions, and the open-mindedness to look beyond my own discipline enable me to find creative, pragmatic solutions to complicated problems that drive your business forward.
+When AI agents write the code, other skills come into focus: an obsession with detail, demonstrated experience in shaping, judging and steering architectural decisions, and the open-mindedness to look beyond the Tellerrand enable me to find creative, pragmatic solutions to complicated problems that drive your business forward.
 
 - **15 years**
   - in software development
@@ -51,11 +51,9 @@ Products for brands ==you know==
 
 I have spent most of my career working with some of Germany's largest brands and enterprises, adapting quickly to new domains, corporate structures, and existing stacks.
 
-Getting up to speed fast in a new domain, be it an existing codebase, new business domain or taking over product ownership has been a common theme throughout my career.
+Getting up to speed fast in a new domain has been a common theme throughout my career. Whatever the challenge, I take full ownership of projects from plan to product.
 
-This included supporting and managing the whole product lifecycle from requirements and planning to execution, stakeholder alignment, technical decision making and supporting junior and mid level engineers to grow.
-
-Whatever role the project required, I took on the task with maximum effort and di my best to define and fulfill the role it asked of me.
+This includes supporting and managing the whole product lifecycle: requirements and planning to execution; stakeholder alignment; technical decision making and supporting junior to senior level engineers to grow.
 
 ![Allianz](site/assets/logos/allianz.svg "logo")
 ![BMW](site/assets/logos/bmw.svg "logo")
@@ -160,12 +158,12 @@ At MediaMarktSaturn, I was part of the webmobile team delivering pilot projects�
 
 ## Experience {#experience}
 
-### Senior Software Engineer + Satellytes
+### Staff / Senior Software Engineer + Satellytes
 2021 – today + Munich, Fulda
 
 Lead engineer and core contributor for ZEISS, ADAC Motorsport, FC Bayern München and MediaMarktSaturn.
 
-### Freelance Senior Web Developer
+### Freelance Senior Software Engineer
 2018 – 2021 + Munich
 
 Working with Satellytes and for jambit as external Senior Software Architect, I developed full stack web applications and core frameworks, to support the development of new applications for customers like Audi and FC Bayern. The toolchain included Angular, Spring WebFlux, CI/CD with Jenkins and Cloud Foundry.
