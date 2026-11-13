@@ -10,7 +10,7 @@ AI-first developer mit Fokus auf Agentic Software Engineering. Hands-on-Lead mit
 
 ## Erfahrung {#experience}
 
-### Senior / Senior Staff Engineer + Satellytes
+### Senior Staff Engineer + Satellytes
 2021 – heute + München, Fulda
 
 Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
@@ -20,12 +20,12 @@ Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München
 - **MediaMarktSaturn** + Diverse Leuchtturm Projekte im webmobile-Team
 - **FC Bayern München** + Relaunch von fcbayern.com
 
-### Freiberuflicher Senior Web Developer
+### Freiberuflicher Senior Engineer
 2018 – 2021 + München
 
 Senior Software Architect und Engineer für Satellytes und jambit + Entwicklung von Full-Stack-Webanwendungen und Kernframeworks als Basis für neue Applikationen von Kunden wie Audi und dem FC Bayern auf Basis von Angular, Java, Spring WebFlux, CI/CD mit Jenkins und Cloud Foundry.
 
-### (Senior) Product Engineer + SinnerSchrader, heute Accenture Song
+### (Senior) Engineer + SinnerSchrader, heute Accenture Song
 2013 – 2018 + München
 
 Frontend-Entwickler und Lead für BMW Group eRetail und Allianz MyInvest Projekte. Neuentwicklung eines Living Styleguide für Audi. Weiterentwicklung der Pattern Library für die Allianz. Senior ab 2016.
