@@ -14,7 +14,7 @@ I am a hands-on lead with sound technical judgment, an eye for detail, the abili
 ### Senior / Senior Staff Engineer + Satellytes
 2021 – today + Munich, Fulda
 
-Lead engineer and core contributor for ZEISS, ADAC Motorsport, FC Bayern München and MediaMarktSaturn.
+Lead- and core-engineer for customers like ZEISS, ADAC Motorsport, FC Bayern München and MediaMarktSaturn.
 
 - **ZEISS AURA® Smart Analyzer** + companion app for a new ZEISS near-infrared spectrometer
 - **MyZEISS** + projects for MyZEISS Vision and Meditec
@@ -57,7 +57,7 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### AI engineering {#ai-engineering}
-`Agentic coding` `MCP` `RAG` `LLM APIs` `Agentic Workflows` /`Prompt engineering` `Evals and guardrails`
+`Agentic coding` `MCP` `RAG` `LLM APIs` `Agentic workflows` `Prompt engineering`
 
 ### Architecture and delivery
 `Monorepos` `Module Federation` `Design systems` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
