@@ -4,7 +4,7 @@ lang: de
 
 ## Über mich {#about}
 
-Staff Full Stack Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung geschäftskritischer React and TypeScript Anwendungen, auf Basis von GraphQL, Node.js and .NET Services mit Ownership von der Anforderung über die Entwicklung, das Deployment, die Qualitätssicherung bis hin zum Betrieb.
+Staff Software Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung geschäftskritischer React and TypeScript Anwendungen, auf Basis von GraphQL, Node.js and .NET Services mit Ownership von der Anforderung über die Entwicklung, das Deployment, die Qualitätssicherung bis hin zum Betrieb.
 
 AI-first developer mit Fokus auf Agentic Software Engineering. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Bereitschaft, jüngere Kolleg*innen mitzunehmen und zu fördern.
 
@@ -55,7 +55,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### AI Engineering {#ai-engineering}
-`Agentic Coding` `AI-Coding-Agenten` `Coding-Agent-Harnesses` `MCP` `RAG` `LLM APIs` `Prompt Engineering` `Evals und Guardrails`
+`Agentic Coding` `MCP` `RAG` `Agentic Workflows` `Prompt Engineering` `Evals und Guardrails`
 
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`

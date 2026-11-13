@@ -63,7 +63,7 @@
 
 ## Variants
 
-A **variant** is a tailored copy of the portfolio for one job application: a page of its own, built from the company's page patterns in its visual language, with copy aimed at the posting.
+A **variant** is a visually tailored copy of the portfolio for one job application: a page of its own, built from the company's page patterns in its visual language, with the base portfolio and CV content unchanged.
 Each variant goes online below its own folder name, next to the base site, e.g. `chunksnbits.github.io/portfolio/acme-k3q9x2/` and `…/acme-k3q9x2/en/`.
 `node scripts/variant.mjs new` ends the folder name with 6 random characters, so nobody finds a new variant by trying company names. A variant from before keeps its plain name until its folder is renamed.
 Variants stay out of search results.
@@ -83,10 +83,9 @@ A push to any branch there starts the Pages workflow on `main` here, through the
 ### Tailoring the portfolio to a job posting
 
 1. Run `npm run tailor -- <job-url>`, or `/tailor <job-url>` in Claude Code.
-   The skill in `.claude/skills/tailor/SKILL.md` researches the company, captures its page patterns and visual language, proposes a page built from them, has it reviewed by Claude and Gemini, implements it as the variant's template, tailors the copy, writes the interview brief and has Gemini draft the cover letters.
+   The skill in `.claude/skills/tailor/SKILL.md` researches the company, captures its page patterns and visual language, proposes a page built from them, has it reviewed by Claude and Gemini, implements it as the variant's template, records optional copy suggestions without applying them, writes the interview brief and has Gemini draft the cover letters.
 2. Restart `npm start` and open `http://127.0.0.1:4173/portfolio/<slug>/`. Every variant in the private repository goes online on the next deploy.
-3. Edit the copy in `variants/<slug>/portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md`, and the letters in `variants/<slug>/private/cover-letter.de.md` and `.en.md`.
-   The four Markdown files hold only what changes in the base files, see "Variant files".
+3. Keep `variants/<slug>/portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` unchanged. Record optional wording or skill proposals in `suggestions.md`. Edit letters only in `variants/<slug>/private/cover-letter.de.md` and `.en.md`.
 4. Run `npm run docs -- <slug>` after editing a letter or the brief, and `npm run check -- --variant <slug>` after editing the copy.
 
 ### Publishing and taking down
@@ -110,8 +109,9 @@ If the Deploy workflow fails, e.g. on an expired token, start the deployment wit
 variants/
   VOICE.md                ← how Daniel writes, for copy and letters
   <slug>/
-    variant.json          ← company, role, posting URL, language, published, theme it opens in
-    portfolio.de.md, portfolio.md, cv.de.md, cv.md   ← changes to the base files of the same name
+    variant.json          ← company, posting role, official title, posting URL, language, published, theme
+    portfolio.de.md, portfolio.md, cv.de.md, cv.md   ← unchanged; content inherits from the base files
+    suggestions.md        ← optional wording or skill proposals for Daniel to review
     template.mjs          ← renders the body of the variant's portfolio pages, see "Templates"
     page.css              ← stylesheet of the variant's portfolio pages, in place of styles.css
     page.js               ← optional: behavior of the variant's own patterns, loaded after main.js
@@ -137,7 +137,8 @@ Any other file in `fonts/` or `img/` fails the build. `template.mjs` runs at bui
 
 | Key | Description |
 | --- | --- |
-| `company`, `role` | Company and job title, as the posting names them. |
+| `company`, `role` | Company and job title, as the posting names them. The posting role remains available to cover-letter generation. |
+| `title` | Daniel's official title. Always `Staff Software Engineer`. |
 | `job` | URL of the posting. |
 | `language` | Language of the posting: `de` or `en`. The cover letter and the first link to send lead with it. |
 | `published` | Legacy setting. All variants go online regardless of its value. |
@@ -145,45 +146,9 @@ Any other file in `fonts/` or `img/` fails the build. `template.mjs` runs at bui
 
 ### Variant files
 
-A variant's `portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` hold only what changes in the base file of the same name.
-Everything they leave out comes from the base file, so a fix there reaches every variant.
+A variant's `portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` stay unchanged and inherit the base file of the same name. This keeps the official `Staff Software Engineer` title and all CV and portfolio content identical across variants.
+Under no circumstances put wording, skill, ordering or metadata changes in these files. Write proposals to `suggestions.md` instead; Daniel decides whether to apply them to the base files.
 Run `node scripts/variant.mjs show <slug>` to read a variant's files the way the build reads them, with the changes applied.
-
-```md
----
-title: Senior Software Engineer
----
-
-## About {#about}
-
-I engineer web and cloud systems that ==are built to last==.
-
-### Pixel to cloud {#pixel-to-cloud}
-The glue between clients, PMs, design and engineering.
-
-## Skills {#skills}
-
-### Frontend and mobile {#frontend}
-`TypeScript` `React` `React Native` `Expo`
-
-### Mobile {.remove}
-```
-
-- **Frontmatter**: a key the variant sets replaces the base's. `lang` stays as in the base file.
-- **Headings**: a `##` heading finds the base section with the same id. A `###` heading finds the entry in that section with the same id, or else with the same title. A heading that finds nothing fails the build.
-- **Content**: the content under a heading replaces the base content of the same kind and keeps the other kinds. The kinds are the meta line, the text with its `[show more]` marker, a bullet list, a numbered list, images and tags.
-  E.g. new paragraphs under `## About {#about}` keep its list and its cards.
-- **Empty heading**: changes nothing. Use it to reach the entries below it, or to place one in a `{.reorder}` section.
-- **Renaming**: write the entry's id with the new title, e.g. `### Frontend and mobile {#frontend}`. Give the base entry the id first, in both languages.
-- **Flags** in the heading's braces add, drop and sort:
-
-| Flag | Effect |
-| --- | --- |
-| `{.remove}` | Drops the section or entry. Takes no content. |
-| `{.new}` | Adds a section or entry after the heading above it in the variant file, or first. A new section keeps its entries as written. |
-| `{.reorder}` | On a `##` section only. Its entries follow the order of the variant file, then the ones it leaves out, in base order. |
-
-**NOTE:** a variant can't drop one kind of content and keep the rest, e.g. a project's screenshots.
 
 ### Templates
 
@@ -198,7 +163,7 @@ export default function render({ meta, sections }, kit) {
 }
 ```
 
-- **Portfolio**: `meta` is the frontmatter, `sections` the `##` sections with their `blocks` and `entries`, after the variant's changes.
+- **Portfolio**: `meta` is the base frontmatter, and `sections` are the base `##` sections with their `blocks` and `entries`.
 - **Head**: the build writes it. It loads `page.css`, the fonts in `fonts/`, `main.js`, then `page.js`, keeps the page out of search results and opens it in the variant's theme.
   Its Content-Security-Policy lets the page load only files of the site, and run no inline script but the build's own, so a template writes no `<script>` and no `on…` attribute. `npm run check` fails a page whose policy blocks anything.
 - **Kit**: the base page's renderers, bound to the page. They render content the way the base page does and fail the build on invalid content with the same errors.
@@ -294,7 +259,6 @@ Links and images lead to `https:`, `http:` and `mailto:` addresses, or to paths 
 
 - `## Title {#id}` creates a section: one viewport screen and one nav item.
 - `### Title` creates an entry inside a section. Project entries require an ID: `### MyZEISS {#myzeiss}`.
-- `{.new}`, `{.remove}` and `{.reorder}` only work in a variant's files, see "Variant files".
 - Section `#projects` converts child entries into sliding project screens.
 - Section `#contact` renders contact links and PDF buttons.
 

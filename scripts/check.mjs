@@ -51,7 +51,7 @@ const MEASURE = `(() => {
   // the body clips them, so both are switched off while measuring.
   function layoutOverflow() {
     const panels = [...document.querySelectorAll('.panel')];
-    panels.forEach((panel) => panel.style.setProperty('transform', 'none'));
+    panels.forEach((panel) => panel.style.setProperty('transform', 'none', 'important'));
     document.body.style.overflowX = 'visible';
     const overflow = document.documentElement.scrollWidth - innerWidth;
     document.body.style.overflowX = '';

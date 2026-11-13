@@ -4,7 +4,7 @@ lang: en
 
 ## About {#about}
 
-Senior staff engineer with more than fifteen years of experience in developing and maintaining enterprise-grade applications for some of the biggest brands and enterprises in Germany.
+Staff Software Engineer with more than fifteen years of experience in developing and maintaining enterprise-grade applications for some of the biggest brands and enterprises in Germany.
 Well versed in AI-driven development and agentic software engineering, with multiple years of practical experience.
 
 I am a hands-on lead with sound technical judgment, an eye for detail, the ability to search and find out-of-the-box solutions, and an enjoyment in pragmatic and constructive mentoring.
@@ -57,7 +57,7 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### AI engineering {#ai-engineering}
-`Agentic coding` `AI coding agents` `Coding-agent harnesses` `MCP` `RAG` `LLM APIs` `Prompt engineering` `Evals and guardrails`
+`Agentic coding` `MCP` `RAG` `LLM APIs` `Agentic Workflows` `Prompt engineering` `Evals and guardrails`
 
 ### Architecture and delivery
 `Monorepos` `Module Federation` `Design systems` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`

@@ -1,8 +1,7 @@
-// Variants: tailored copies of the portfolio, one per job application, each published below its own folder name.
+// Variants: visually tailored copies of the portfolio, one per job application, each published below its own folder name.
 // see: DEVELOPMENT.md, "Variants"
 //
-// A variant lives in variants/<slug>/ with a variant.json, a theme.css and one Markdown file per base file.
-// Each Markdown file holds only its changes to the base file of the same name, see scripts/lib/overlay.mjs.
+// A variant lives in variants/<slug>/ with a variant.json, a theme.css and an unchanged overlay for each base Markdown file.
 // The base site and every published variant build into one dist/, so they go online and come down independently.
 import { join } from 'node:path';
 
@@ -17,14 +16,16 @@ const RESERVED = ['assets', 'cv', 'docs', 'en'];
 
 const LANGUAGES = ['de', 'en'];
 const THEMES = ['dark', 'light'];
+export const OFFICIAL_TITLE = 'Staff Software Engineer';
 
 // - company: name of the company, e.g. in document titles
 // - role: job title as the posting writes it
+// - title: Daniel's official title, used unchanged by every variant
 // - job: address of the posting
 // - language: language of the posting, which the cover letter and the first link sent lead with
 // - theme: theme the pages open in, until the visitor switches
 // - published: legacy flag kept optional for backwards compatibility; all variants build and deploy
-const REQUIRED = ['company', 'role', 'job', 'language'];
+const REQUIRED = ['company', 'role', 'title', 'job', 'language'];
 const OPTIONAL = { theme: 'dark', published: false };
 
 /**
@@ -45,6 +46,7 @@ export function toVariant(slug, settings) {
 
   const variant = { slug, ...OPTIONAL, ...settings };
   if (typeof variant.company !== 'string' || typeof variant.role !== 'string') fail('company and role must be text');
+  if (variant.title !== OFFICIAL_TITLE) fail(`title must be "${OFFICIAL_TITLE}"`);
   if (!/^https?:\/\//.test(variant.job)) fail(`job must be the address of the posting, starting with https://`);
   if (!LANGUAGES.includes(variant.language)) fail(`language must be one of ${LANGUAGES.join(', ')}`);
   if (typeof variant.published !== 'boolean') fail('published must be true or false');

@@ -13,7 +13,7 @@ import { parseArgs } from 'node:util';
 import { loadVariants, PAGES, readMarkdown, ROOT } from './build.mjs';
 import { dismissCookieBanner, evaluate, launchChrome, openTab } from './lib/chrome.mjs';
 import { printMarkdown } from './lib/markdown.mjs';
-import { checkSlug, toVariant, VARIANTS, variantPages } from './lib/variants.mjs';
+import { checkSlug, OFFICIAL_TITLE, toVariant, VARIANTS, variantPages } from './lib/variants.mjs';
 
 // Random characters that end a new variant's folder name, so its address can't be guessed from the company's name.
 // 36^6, about 2 billion endings, are too many to try.
@@ -26,6 +26,7 @@ const POSTING_SETTLE_MS = 2500;
 // The starter writes "COMPANY" where the variant's company goes.
 const STARTER = new URL('variant-starter/', import.meta.url);
 const STARTER_FILES = ['template.mjs', 'page.css', 'cv.css'];
+const CONTENT_NOTICE = '<!-- Inherits the base file unchanged. Put proposed wording or skill changes in suggestions.md. -->\n';
 
 const { values: options, positionals } = parseArgs({
   options: {
@@ -50,8 +51,8 @@ try {
   process.exit(1);
 }
 
-// Creates variants/<name>-<random>/ with a variant.json, the starter page, one Markdown file per base file
-// that changes nothing yet, and the posting's text in private/job.md.
+// Creates variants/<name>-<random>/ with a variant.json, the starter page, unchanged overlays for the base files,
+// suggestions.md, and the posting's text in private/job.md.
 async function create(name) {
   if (!name || !options.job) throw new Error('Usage: node scripts/variant.mjs new <name> --job <url>');
   const slug = `${name}-${[...randomBytes(SUFFIX_LENGTH)].map((byte) => (byte % 36).toString(36)).join('')}`;
@@ -63,6 +64,7 @@ async function create(name) {
   const settings = {
     company: options.company ?? posting.company,
     role: options.role ?? posting.role,
+    title: OFFICIAL_TITLE,
     job: options.job,
     language: options.language ?? posting.language,
     theme: 'dark',
@@ -73,9 +75,13 @@ async function create(name) {
   await mkdir(join(folder, 'private'), { recursive: true });
   for (const page of PAGES) {
     for (const source of [page.source, page.cvSource]) {
-      await writeFile(join(folder, source), `<!-- Changes to ${source} for ${variant.company}. Format: DEVELOPMENT.md, "Variant files". -->\n`);
+      await writeFile(join(folder, source), CONTENT_NOTICE);
     }
   }
+  await writeFile(
+    join(folder, 'suggestions.md'),
+    '# Suggestions\n\nSuggest optional wording or skill updates for the base CV or portfolio here. Do not apply them to a variant.\n',
+  );
   await writeFile(join(folder, 'variant.json'), `${JSON.stringify(settings, null, 2)}\n`);
   for (const file of STARTER_FILES) {
     const starter = await readFile(new URL(file, STARTER), 'utf8');
