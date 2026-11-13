@@ -1,7 +1,7 @@
 ---
 lang: de
 name: Daniel Eissing
-title: Staff Software Engineer
+title: Senior Staff Engineer
 subtitle: Web- und Mobile-Apps, vom Interface bis zur Cloud
 status: Offen für Senior-Rollen
 intro: 15 Jahre Erfahrung in der Entwicklung großer React- und Angular-Fullstack-Anwendungen und Integrationen für Kunden wie ZEISS, FC Bayern, BMW und Allianz
@@ -9,7 +9,7 @@ location: Fulda, Deutschland
 email: github.daniel.eissing@gmail.com
 github: https://github.com/chunksnbits
 linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
-description: Lead Software Engineer mit Weitblick für Architektur, technischem Urteilsvermögen und klarem Fokus. 15 Jahre Erfahrung in der Entwicklung großer React- und Angular-Fullstack-Anwendungen und Integrationen für Kunden wie ZEISS, ADAC Motorsport, FC Bayern München, BMW und Allianz.
+description: Senior Staff Engineer mit Weitblick für Architektur, technischem Urteilsvermögen und klarem Fokus. 15 Jahre Erfahrung in der Entwicklung großer React- und Angular-Fullstack-Anwendungen und Integrationen für Kunden wie ZEISS, ADAC Motorsport, FC Bayern München, BMW und Allianz.
 ---
 
 ## Über mich {#about}
@@ -156,17 +156,17 @@ Bei MediaMarktSaturn habe ich im webmobile-Team Pilotprojekte umgesetzt. Highgli
 
 ## Erfahrung {#experience}
 
-### Staff / Senior Software Engineer + Satellytes
+### Senior Staff Engineer + Satellytes
 2021 – heute + München, Fulda
 
 Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
 
-### Freiberuflicher Senior Software Egineer
+### Freiberuflicher Senior Engineer
 2018 – 2021 + München
 
 Für Satellytes und jambit als externer Senior Software Architect: Entwicklung von Full-Stack-Webanwendungen und Kernframeworks als Basis für neue Applikationen von Kunden wie Audi und dem FC Bayern. Toolchain u. a. Angular, Spring WebFlux, CI/CD mit Jenkins und Cloud Foundry.
 
-### (Senior) Product Engineer + SinnerSchrader, heute Accenture Song
+### (Senior) Engineer + SinnerSchrader, heute Accenture Song
 2013 – 2018 + München
 
 Frontend-Entwickler und Lead für BMW Group eRetail und Allianz MyInvest Projekte. Neuentwicklung eines Living Styleguide für Audi. Weiterentwicklung der Pattern Library für die Allianz Antragsstrecken. Senior ab 2016.

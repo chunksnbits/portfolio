@@ -1,7 +1,7 @@
 ---
 lang: en
 name: Daniel Eissing
-title: Staff Software Engineer
+title: Senior Staff Engineer
 subtitle: Web and mobile apps, from interface to cloud
 status: Open to senior roles
 intro: 15 years of experience in building large scale React and Angular full-stack applications and integrations for customers like ZEISS, FC Bayern, BMW and Allianz
@@ -9,7 +9,7 @@ location: Fulda, Germany
 email: github.daniel.eissing@gmail.com
 github: https://github.com/chunksnbits
 linkedin: https://www.linkedin.com/in/daniel-eißing-5a24805b
-description: Lead Software Engineer. 10x engineer with intent, a vision for the architecture, and judgment. 15 years of experience in building large scale React and Angular full-stack applications and integrations for customers like ZEISS, ADAC Motorsport, FC Bayern München, BMW and Allianz.
+description: Senior Staff Engineer. 10x engineer with intent, a vision for the architecture, and judgment. 15 years of experience in building large scale React and Angular full-stack applications and integrations for customers like ZEISS, ADAC Motorsport, FC Bayern München, BMW and Allianz.
 ---
 
 ## About {#about}
@@ -158,17 +158,17 @@ At MediaMarktSaturn, I was part of the webmobile team delivering pilot projects�
 
 ## Experience {#experience}
 
-### Staff / Senior Software Engineer + Satellytes
+### Sentior Staffe Engineer + Satellytes
 2021 – today + Munich, Fulda
 
 Lead engineer and core contributor for ZEISS, ADAC Motorsport, FC Bayern München and MediaMarktSaturn.
 
-### Freelance Senior Software Engineer
+### Freelance Senior Engineer
 2018 – 2021 + Munich
 
 Working with Satellytes and for jambit as external Senior Software Architect, I developed full stack web applications and core frameworks, to support the development of new applications for customers like Audi and FC Bayern. The toolchain included Angular, Spring WebFlux, CI/CD with Jenkins and Cloud Foundry.
 
-### (Senior) Product Engineer + SinnerSchrader, now Accenture Song
+### (Senior) Engineer + SinnerSchrader, now Accenture Song
 2013 – 2018 + Munich
 
 Frontend engineer and lead for BMW Group eRetail and Allianz MyInvest, a living styleguide for Audi and a pattern library for Allianz. Senior from 2016.

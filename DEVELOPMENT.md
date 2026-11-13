@@ -138,7 +138,7 @@ Any other file in `fonts/` or `img/` fails the build. `template.mjs` runs at bui
 | Key | Description |
 | --- | --- |
 | `company`, `role` | Company and job title, as the posting names them. The posting role remains available to cover-letter generation. |
-| `title` | Daniel's official title. Always `Staff Software Engineer`. |
+| `title` | Daniel's official title. Always `Senior Staff Engineer`. |
 | `job` | URL of the posting. |
 | `language` | Language of the posting: `de` or `en`. The cover letter and the first link to send lead with it. |
 | `published` | Legacy setting. All variants go online regardless of its value. |
@@ -146,7 +146,7 @@ Any other file in `fonts/` or `img/` fails the build. `template.mjs` runs at bui
 
 ### Variant files
 
-A variant's `portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` stay unchanged and inherit the base file of the same name. This keeps the official `Staff Software Engineer` title and all CV and portfolio content identical across variants.
+A variant's `portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` stay unchanged and inherit the base file of the same name. This keeps the official `Senior Staff Engineer` title and all CV and portfolio content identical across variants.
 Under no circumstances put wording, skill, ordering or metadata changes in these files. Write proposals to `suggestions.md` instead; Daniel decides whether to apply them to the base files.
 Run `node scripts/variant.mjs show <slug>` to read a variant's files the way the build reads them, with the changes applied.
 

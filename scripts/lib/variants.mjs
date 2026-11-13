@@ -16,7 +16,7 @@ const RESERVED = ['assets', 'cv', 'docs', 'en'];
 
 const LANGUAGES = ['de', 'en'];
 const THEMES = ['dark', 'light'];
-export const OFFICIAL_TITLE = 'Staff Software Engineer';
+export const OFFICIAL_TITLE = 'Senior Staff Engineer';
 
 // - company: name of the company, e.g. in document titles
 // - role: job title as the posting writes it
