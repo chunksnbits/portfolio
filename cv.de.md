@@ -4,13 +4,13 @@ lang: de
 
 ## Über mich {#about}
 
-Staff Software Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung geschäftskritischer React and TypeScript Anwendungen, auf Basis von GraphQL, Node.js and .NET Services mit Ownership von der Anforderung über die Entwicklung, das Deployment, die Qualitätssicherung bis hin zum Betrieb.
+Senior Staff Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung geschäftskritischer React and TypeScript Anwendungen, auf Basis von GraphQL, Node.js and .NET Services mit Ownership von der Anforderung über die Entwicklung, das Deployment, die Qualitätssicherung bis hin zum Betrieb.
 
 AI-first developer mit Fokus auf Agentic Software Engineering. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Bereitschaft, jüngere Kolleg*innen mitzunehmen und zu fördern.
 
 ## Erfahrung {#experience}
 
-### Senior / Staff Software Engineer + Satellytes
+### Senior / Senior Staff Engineer + Satellytes
 2021 – heute + München, Fulda
 
 Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.

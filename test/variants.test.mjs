@@ -45,7 +45,7 @@ test('rejects a missing, unknown or invalid setting, naming the variant and the 
   const cases = [
     [withoutCompany, /company/],
     [withoutTitle, /title/],
-    [{ ...SETTINGS, title: 'Senior Software Engineer' }, /title must be "Staff Software Engineer"/],
+    [{ ...SETTINGS, title: 'Senior Software Engineer' }, /title must be "Senior Staff Engineer"/],
     [{ ...SETTINGS, color: 'blue' }, /unknown.*color/],
     [{ ...SETTINGS, company: 42 }, /company and role must be text/],
     [{ ...SETTINGS, job: 'acme.example/jobs/42' }, /job/],
