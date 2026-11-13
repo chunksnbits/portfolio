@@ -158,7 +158,7 @@ At MediaMarktSaturn, I was part of the webmobile team delivering pilot projects�
 
 ## Experience {#experience}
 
-### Sentior Staffe Engineer + Satellytes
+### Senior Staff Engineer + Satellytes
 2021 – today + Munich, Fulda
 
 Lead engineer and core contributor for ZEISS, ADAC Motorsport, FC Bayern München and MediaMarktSaturn.
