@@ -5,8 +5,7 @@
 // - the Content-Security-Policy blocks nothing on the page
 //
 // Options:
-// - --drafts: also check the variants that aren't published
-// - --variant <slug>: check only this variant, published or not
+// - --variant <slug>: check only this variant
 // - --shots <dir>: also save a screenshot per screen and both CVs as PDF, for review
 // - --theme light|dark: theme for the screenshots (default: the theme each page opens in)
 // - --mobile: add the same screenshots at phone width
@@ -63,7 +62,6 @@ const MEASURE = `(() => {
 
 const { values: options } = parseArgs({
   options: {
-    drafts: { type: 'boolean', default: false },
     variant: { type: 'string' },
     shots: { type: 'string' },
     theme: { type: 'string' },
@@ -73,7 +71,7 @@ const { values: options } = parseArgs({
   },
 });
 
-const variants = await build({ drafts: options.drafts, only: options.variant ?? null });
+const variants = await build({ only: options.variant ?? null });
 // Each page gets a label for its screenshots and the theme it opens in: the base pages open dark.
 const pages = [
   ...(options.variant ? [] : PAGES.map((page) => ({ ...page, label: '', theme: 'dark' }))),
@@ -140,7 +138,7 @@ try {
     }
   }
   if (options.og) {
-    await build({ drafts: options.drafts, only: options.variant ?? null });
+    await build({ only: options.variant ?? null });
     console.log('\nRedrew site/og-*.png and rebuilt dist/.');
   }
 } finally {

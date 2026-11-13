@@ -22,10 +22,10 @@ const THEMES = ['dark', 'light'];
 // - role: job title as the posting writes it
 // - job: address of the posting
 // - language: language of the posting, which the cover letter and the first link sent lead with
-// - published: whether the variant goes online with the next deploy
 // - theme: theme the pages open in, until the visitor switches
-const REQUIRED = ['company', 'role', 'job', 'language', 'published'];
-const OPTIONAL = { theme: 'dark' };
+// - published: legacy flag kept optional for backwards compatibility; all variants build and deploy
+const REQUIRED = ['company', 'role', 'job', 'language'];
+const OPTIONAL = { theme: 'dark', published: false };
 
 /**
  * Validates a variant's variant.json and returns its settings with its `slug`, the folder name.
@@ -79,14 +79,13 @@ export function variantPages(variant, pages) {
 
 /**
  * Picks the variants to build.
- * By default only the published ones, which is what a deploy puts online.
- * `drafts` adds the unpublished ones for a local preview, and `only` picks one variant by its slug.
+ * By default every variant in variants/ is included; `only` picks one variant by its slug.
  */
-export function selectVariants(variants, { drafts = false, only = null } = {}) {
+export function selectVariants(variants, { only = null } = {}) {
   if (only) {
     const variant = variants.find((candidate) => candidate.slug === only);
     if (!variant) throw new Error(`There is no variant "${only}" in ${VARIANTS}/.`);
     return [variant];
   }
-  return drafts ? variants : variants.filter((variant) => variant.published);
+  return variants;
 }

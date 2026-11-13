@@ -62,21 +62,11 @@ test('places the pages of a variant below its folder, one level deeper than the 
   ]);
 });
 
-test('builds the published variants, every variant for a preview, or one by name', () => {
-  const live = toVariant('live', { ...SETTINGS, published: true });
-  const draft = toVariant('draft', SETTINGS);
-
-  assert.deepEqual(selectVariants([live, draft]), [live]);
-  assert.deepEqual(selectVariants([live, draft], { drafts: true }), [live, draft]);
-  assert.deepEqual(selectVariants([live, draft], { only: 'draft' }), [draft]);
-  assert.throws(() => selectVariants([live, draft], { only: 'other' }), /"other"/);
-});
-
-test('selects every published variant for publish without a slug, or only the named variant', () => {
+test('builds every variant by default, or one by name', () => {
   const first = toVariant('first', { ...SETTINGS, published: true });
   const second = toVariant('second', { ...SETTINGS, published: false });
-  const third = toVariant('third', { ...SETTINGS, published: true });
 
-  assert.deepEqual(selectVariants([first, second, third]), [first, third]);
-  assert.deepEqual(selectVariants([first, second, third], { only: 'second' }), [second]);
+  assert.deepEqual(selectVariants([first, second]), [first, second]);
+  assert.deepEqual(selectVariants([first, second], { only: 'second' }), [second]);
+  assert.throws(() => selectVariants([first, second], { only: 'other' }), /"other"/);
 });

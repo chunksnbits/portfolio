@@ -1,5 +1,4 @@
 // Local preview: builds, serves dist/ at /portfolio/ like GitHub Pages, and rebuilds when content or site/ changes.
-// It builds every variant, published or not, so drafts can be previewed before they go online.
 // Reload the browser to see a rebuild. Changes to scripts/ need a restart.
 import { existsSync, watch } from 'node:fs';
 import { join } from 'node:path';
@@ -13,7 +12,7 @@ let timer = null;
 let variants = [];
 const rebuild = async () => {
   try {
-    variants = await build({ drafts: true });
+    variants = await build();
     console.log(`${new Date().toLocaleTimeString()} rebuilt`);
   } catch (error) {
     console.error(`${new Date().toLocaleTimeString()} ${error.message}`);
@@ -24,7 +23,7 @@ await rebuild();
 const { url } = await serve(DIST, { port: Number(process.env.PORT ?? 4173) });
 console.log(`Serving ${url} (English: ${url}en/, one-page CVs: ${url}cv/ and ${url}en/cv/)`);
 for (const variant of variants) {
-  console.log(`Variant ${variant.slug}${variant.published ? '' : ' (draft)'}: ${url}${variant.slug}/ and ${url}${variant.slug}/en/`);
+  console.log(`Variant ${variant.slug}: ${url}${variant.slug}/ and ${url}${variant.slug}/en/`);
 }
 
 for (const path of WATCHED.filter((candidate) => existsSync(join(ROOT, candidate)))) {
