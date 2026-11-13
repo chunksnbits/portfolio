@@ -187,20 +187,20 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Skills {#skills}
 
-### Frontend {#frontend}
-`TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright` `d3.js`
-
-### Mobile
-`Expo` `React Native` `Expo Router` `Skia` `Bluetooth LE` `SQLite` `Over-the-air updates`
+### Frontend und Mobile {#frontend}
+`TypeScript` `React` `Next.js` `Angular` `Expo` `React Native` `TanStack Query` `XState` `Storybook` `Playwright` `Bluetooth LE`
 
 ### Backend und Cloud
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
+
+### AI Engineering {#ai-engineering}
+`Agentic Coding` `AI-Coding-Agenten` `Coding-Agent-Harnesses` `MCP` `RAG` `LLM APIs` `Prompt Engineering` `Evals und Guardrails`
 
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
 
 ### Arbeitsweise {#ways-of-working}
-`Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
+`Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams`
 
 `Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`
 

@@ -1,7 +1,7 @@
 // Builds the site into dist/: a page and a one-page CV per language from the Markdown files, plus everything in site/.
 // Each variant in variants/ adds the same pages below its folder name, see scripts/lib/variants.mjs.
 //
-// Usage: npm run build [-- --drafts] [-- --variant <slug>]
+// Usage: npm run build [-- --variant <slug>]
 import { access, cp, lstat, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -45,18 +45,17 @@ const PUBLISHED_FOLDERS = {
 
 /**
  * Builds the base pages and the selected variants into dist/ and throws if a file is invalid.
- * By default it builds the published variants, which is what a deploy puts online.
- * `drafts` and `only` work as in `selectVariants`. Resolves with the variants it built.
+ * By default it builds every variant in variants/; `only` builds a single variant by slug.
  * A structural difference between the two languages only prints a warning.
  */
-export async function build({ drafts = false, only = null } = {}) {
+export async function build({ only = null } = {}) {
   const { homepage } = JSON.parse(await readFile(join(ROOT, 'package.json'), 'utf8'));
   const assets = {
     images: JSON.parse(await readFile(join(ROOT, 'site/assets/img/manifest.json'), 'utf8')),
     logos: await loadSvgs(LOGOS, 'assets/logos'),
     badges: await loadSvgs(BADGES, 'assets/badges'),
   };
-  const variants = selectVariants(await loadVariants(), { drafts, only });
+  const variants = selectVariants(await loadVariants(), { only });
   const sites = await Promise.all(
     [{ pages: PAGES, variant: null }, ...variants.map((variant) => ({ pages: variantPages(variant, PAGES), variant }))].map(loadSite),
   );
@@ -319,10 +318,10 @@ async function exists(file) {
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const { values: options } = parseArgs({ options: { drafts: { type: 'boolean', default: false }, variant: { type: 'string' } } });
+  const { values: options } = parseArgs({ options: { variant: { type: 'string' } } });
   try {
-    const variants = await build({ drafts: options.drafts, only: options.variant ?? null });
-    const names = variants.map((variant) => `${variant.slug}${variant.published ? '' : ' (draft)'}`);
+    const variants = await build({ only: options.variant ?? null });
+    const names = variants.map((variant) => variant.slug);
     console.log(`Built dist/${names.length > 0 ? ` with ${names.join(', ')}` : ''}`);
   } catch (error) {
     console.error(error.message);

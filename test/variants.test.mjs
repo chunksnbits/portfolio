@@ -1,10 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkSlug, selectVariants, toVariant, variantPages } from '../scripts/lib/variants.mjs';
+import { checkSlug, OFFICIAL_TITLE, selectVariants, toVariant, variantPages } from '../scripts/lib/variants.mjs';
 
 const SETTINGS = {
   company: 'Acme',
   role: 'Senior Software Engineer',
+  title: OFFICIAL_TITLE,
   job: 'https://acme.example/jobs/42',
   language: 'de',
   published: false,
@@ -40,8 +41,11 @@ test('checks a folder name on its own, before a new variant has settings', () =>
 
 test('rejects a missing, unknown or invalid setting, naming the variant and the setting', () => {
   const { company, ...withoutCompany } = SETTINGS;
+  const { title, ...withoutTitle } = SETTINGS;
   const cases = [
     [withoutCompany, /company/],
+    [withoutTitle, /title/],
+    [{ ...SETTINGS, title: 'Senior Software Engineer' }, /title must be "Staff Software Engineer"/],
     [{ ...SETTINGS, color: 'blue' }, /unknown.*color/],
     [{ ...SETTINGS, company: 42 }, /company and role must be text/],
     [{ ...SETTINGS, job: 'acme.example/jobs/42' }, /job/],
@@ -62,21 +66,11 @@ test('places the pages of a variant below its folder, one level deeper than the 
   ]);
 });
 
-test('builds the published variants, every variant for a preview, or one by name', () => {
-  const live = toVariant('live', { ...SETTINGS, published: true });
-  const draft = toVariant('draft', SETTINGS);
-
-  assert.deepEqual(selectVariants([live, draft]), [live]);
-  assert.deepEqual(selectVariants([live, draft], { drafts: true }), [live, draft]);
-  assert.deepEqual(selectVariants([live, draft], { only: 'draft' }), [draft]);
-  assert.throws(() => selectVariants([live, draft], { only: 'other' }), /"other"/);
-});
-
-test('selects every published variant for publish without a slug, or only the named variant', () => {
+test('builds every variant by default, or one by name', () => {
   const first = toVariant('first', { ...SETTINGS, published: true });
   const second = toVariant('second', { ...SETTINGS, published: false });
-  const third = toVariant('third', { ...SETTINGS, published: true });
 
-  assert.deepEqual(selectVariants([first, second, third]), [first, third]);
-  assert.deepEqual(selectVariants([first, second, third], { only: 'second' }), [second]);
+  assert.deepEqual(selectVariants([first, second]), [first, second]);
+  assert.deepEqual(selectVariants([first, second], { only: 'second' }), [second]);
+  assert.throws(() => selectVariants([first, second], { only: 'other' }), /"other"/);
 });

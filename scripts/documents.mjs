@@ -3,7 +3,8 @@
 // - cover-letter.<lang>.md: one A4 page each, its text from greeting to signature at most half a page
 // - application.<lang>.pdf: the cover letter and the one-page CV combined into a single PDF to attach
 //
-// Usage: npm run docs -- <slug>
+// Usage: npm run docs [-- <slug-or-job-url>]
+// Without an argument, regenerates the private documents for every variant in variants/.
 //
 // Each document becomes a self-contained HTML page beside its source, styled by scripts/documents.css
 // and the variant's documents.css, then a PDF. A missing document is skipped.
@@ -28,47 +29,67 @@ const MAX_LETTER_TEXT_MM = 148.5;
 const A4 = { width: 794, height: 1123 };
 
 const { positionals } = parseArgs({ allowPositionals: true });
-const [slug] = positionals;
-if (!slug) {
-  console.error('Usage: npm run docs -- <slug>');
-  process.exit(1);
+const [target] = positionals;
+const allVariants = await loadVariants();
+let targets;
+if (target) {
+  targets = allVariants.filter((candidate) => candidate.slug === target || candidate.job === target);
+  if (targets.length !== 1) {
+    console.error(targets.length ? `More than one variant matches "${target}"; use its slug.` : `There is no variant matching "${target}" in ${VARIANTS}/.`);
+    process.exit(1);
+  }
+} else {
+  if (allVariants.length === 0) {
+    console.log('No variants in variants/.');
+    process.exit(0);
+  }
+  targets = allVariants;
 }
 
-const variant = (await loadVariants()).find((candidate) => candidate.slug === slug);
-if (!variant) {
-  console.error(`There is no variant "${slug}" in ${VARIANTS}/.`);
-  process.exit(1);
-}
 const { homepage } = JSON.parse(await readFile(join(ROOT, 'package.json'), 'utf8'));
-const folder = join(ROOT, VARIANTS, slug, 'private');
-// The sender of each letter comes from the variant's portfolio in its language, and links to that page.
-const portfolios = Object.fromEntries(
-  await Promise.all(
-    variantPages(variant, PAGES).map(async (page) => {
-      const { meta } = toPortfolio(await readMarkdown(page.source, page.extends));
-      return [meta.lang, { meta, path: page.path }];
-    }),
-  ),
-);
-const palette = join(ROOT, VARIANTS, slug, 'documents.css');
-const styles = [await readFile(join(ROOT, 'scripts/documents.css'), 'utf8'), ...((await exists(palette)) ? [await readFile(palette, 'utf8')] : [])];
-
-// Rebuilds dist/, so the combined application carries the variant's current one-page CV.
-await build({ only: slug });
-const variantCvCss = join(DIST, slug, 'cv.css');
-const cvStyles = [
-  absolutizeFontUrls(await readFile(join(DIST, 'assets/cv.css'), 'utf8'), join(DIST, 'assets')),
-  ...((await exists(variantCvCss)) ? [absolutizeFontUrls(await readFile(variantCvCss, 'utf8'), join(DIST, slug))] : []),
-];
-
+const baseStyles = [await readFile(join(ROOT, 'scripts/documents.css'), 'utf8')];
 const chrome = await launchChrome();
-const failures = [];
+let failed = false;
 try {
+  for (const variant of targets) {
+    if (!target) console.log(`\n== ${variant.slug} ==`);
+    const ok = await buildVariantDocs(variant);
+    if (!ok) failed = true;
+  }
+} finally {
+  await chrome.close();
+}
+if (failed) process.exit(1);
+
+async function buildVariantDocs(variant) {
+  const targetSlug = variant.slug;
+  const folder = join(ROOT, VARIANTS, targetSlug, 'private');
+  // The sender of each letter comes from the variant's portfolio in its language, and links to that page.
+  const portfolios = Object.fromEntries(
+    await Promise.all(
+      variantPages(variant, PAGES).map(async (page) => {
+        const { meta } = toPortfolio(await readMarkdown(page.source, page.extends));
+        return [meta.lang, { meta, path: page.path }];
+      }),
+    ),
+  );
+  const palette = join(ROOT, VARIANTS, targetSlug, 'documents.css');
+  const styles = [...baseStyles, ...((await exists(palette)) ? [await readFile(palette, 'utf8')] : [])];
+
+  // Rebuilds dist/, so the combined application carries the variant's current one-page CV.
+  await build({ only: targetSlug });
+  const variantCvCss = join(DIST, targetSlug, 'cv.css');
+  const cvStyles = [
+    absolutizeFontUrls(await readFile(join(DIST, 'assets/cv.css'), 'utf8'), join(DIST, 'assets')),
+    ...((await exists(variantCvCss)) ? [absolutizeFontUrls(await readFile(variantCvCss, 'utf8'), join(DIST, targetSlug))] : []),
+  ];
+
+  const failures = [];
   if (await exists(join(folder, 'brief.body.html'))) {
     const body = await readFile(join(folder, 'brief.body.html'), 'utf8');
     const title = textOf(body.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? variant.company);
     await writeFile(join(folder, 'brief.html'), wrapDocument({ lang: variant.language, title, body, styles }));
-    const { pdf, contrast } = await print('brief');
+    const { pdf, contrast } = await print(folder, 'brief');
     const pages = countPages(pdf);
     console.log(`${pages > MAX_BRIEF_PAGES ? '✗' : '✓'} ${'brief.pdf'.padEnd(20)} ${pages} of ${MAX_BRIEF_PAGES} pages`);
     if (pages > MAX_BRIEF_PAGES) failures.push(`brief.body.html prints on ${pages} pages, shorten it`);
@@ -85,7 +106,7 @@ try {
       throw new Error(`${folder}/${name}.md: ${error.message}`);
     }
     await writeFile(join(folder, `${name}.html`), renderLetter(letter, { meta, homepage, portfolioPath: path, styles }));
-    const { pdf, contrast, textMm } = await print(name, '.letter__body');
+    const { pdf, contrast, textMm } = await print(folder, name, '.letter__body');
     const pages = countPages(pdf);
     const fits = pages === 1 && textMm <= MAX_LETTER_TEXT_MM;
     console.log(`${fits ? '✓' : '✗'} ${`${name}.pdf`.padEnd(20)} ${pages} page, text ${Math.round(textMm)} of ${MAX_LETTER_TEXT_MM} mm`);
@@ -101,24 +122,23 @@ try {
 ${cvBody}
 </div>`;
     await writeFile(join(folder, `${application}.html`), wrapDocument({ lang, title, body, styles: [...styles, ...cvStyles] }));
-    const { pdf: applicationPdf, contrast: applicationContrast } = await print(application);
+    const { pdf: applicationPdf, contrast: applicationContrast } = await print(folder, application);
     const applicationPages = countPages(applicationPdf);
     console.log(`${applicationPages === 2 ? '✓' : '✗'} ${`${application}.pdf`.padEnd(20)} ${applicationPages} of 2 pages`);
     if (applicationPages !== 2) failures.push(`${application}.pdf prints on ${applicationPages} pages, expected the letter and the CV on one page each`);
     failures.push(...applicationContrast.map((problem) => `${application}.pdf: ${problem}`));
   }
-} finally {
-  await chrome.close();
+  if (failures.length > 0) {
+    console.error(`\n${failures.length} problem(s):\n- ${failures.join('\n- ')}`);
+    return false;
+  }
+  console.log(`\nSaved the HTML pages and PDFs to ${folder}/`);
+  return true;
 }
-if (failures.length > 0) {
-  console.error(`\n${failures.length} problem(s):\n- ${failures.join('\n- ')}`);
-  process.exit(1);
-}
-console.log(`\nSaved the HTML pages and PDFs to ${folder}/`);
 
 // Prints <name>.html from the private folder to <name>.pdf, after auditing its contrast as printed.
 // With `measure`, it also measures that element's height as printed, in millimeters.
-async function print(name, measure = null) {
+async function print(folder, name, measure = null) {
   const tab = await openTab(chrome.client, pathToFileURL(join(folder, `${name}.html`)).href, A4);
   try {
     await tab.send('Emulation.setEmulatedMedia', { media: 'print' });

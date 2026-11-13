@@ -19,14 +19,7 @@
     "start": "node scripts/serve.mjs",
     "test": "node --test test/*.test.mjs",
     "check": "node scripts/check.mjs",
-    "images": "node scripts/images.mjs",
-    "logos": "python3 scripts/logos.py",
     "tailor": "node scripts/tailor.mjs",
-    "variant": "node scripts/variant.mjs",
-    "publish": "node scripts/publish.mjs",
-    "brand": "node scripts/brand.mjs",
-    "letter": "node scripts/letter.mjs",
-    "docs": "node scripts/documents.mjs",
-    "docs:all": "node scripts/docs-all.mjs"
+    "docs": "node scripts/documents.mjs"
   }
 }
