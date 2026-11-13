@@ -1,7 +1,7 @@
 /* Stylesheet of the COMPANY variant's portfolio pages, in place of assets/styles.css.
  * The design proposal and its reviews are in private/design.md.
  *
- * npm run variant -- new copies this starter. /tailor replaces it.
+ * node scripts/variant.mjs new copies this starter. /tailor replaces it.
  * NOTE: print must stay white and fit two A4 pages. Set print colors under @media print. */
 
 :root {

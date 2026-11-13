@@ -1,4 +1,5 @@
 # Tests, builds and checks the portfolio on every push, and publishes main to GitHub Pages.
+# A push to another branch starts a separate Pages run on main after its checks pass.
 # see: https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
 #
 # A push to main in the private variants repository starts it on main too, through that repository's Deploy workflow.
@@ -43,6 +44,12 @@ jobs:
           ssh-key: ${{ secrets.VARIANTS_DEPLOY_KEY }}
           path: variants
           persist-credentials: false
+      # A production deploy must include the private variants checkout. Without this guard,
+      # a missing or unavailable deploy key would silently publish only the base template.
+      - if: env.DEPLOY == 'true' && env.HAS_VARIANTS != 'true'
+        run: |
+          echo 'VARIANTS_DEPLOY_KEY is required for a production deploy.' >&2
+          exit 1
       # From here on, the log shows each variant's folder name, company, role and posting as ***.
       # A company or role that the base pages also name stays readable, since *** in their lines would give it away.
       - if: env.HAS_VARIANTS == 'true'
@@ -64,7 +71,7 @@ jobs:
       - run: npm run check 2>&1 | sed -E -e 's#variants/[^/[:space:]]+#variants/…#g' -e 's#/portfolio/[a-z0-9-]+/#/portfolio/…/#g'
         # bash fails the step when npm run check fails, not only when sed does.
         shell: bash
-      # Only a deploy needs the artifact. It holds the published variants' pages, which signed-in GitHub users could download.
+      # Only a deploy needs the artifact. It holds the variants' pages, which signed-in GitHub users could download.
       # It's packed like actions/upload-pages-artifact v5.0.0 packs it, without the list of every file that action logs.
       # That list showed each variant's fonts, and how many variants are online.
       - if: env.DEPLOY == 'true'
@@ -90,3 +97,14 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  deploy-main:
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - run: gh api --method POST "repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/dispatches" -f ref=main
+        env:
+          GH_TOKEN: ${{ github.token }}

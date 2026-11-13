@@ -754,7 +754,7 @@ function processedImage(block, context) {
   const file = publishedPath(block.src, block.line);
   const image = context.images[file];
   if (!image) {
-    throw lineError(block.line, `${block.src} has no processed copy, run "npm run images"`);
+    throw lineError(block.line, `${block.src} has no processed copy, run "node scripts/images.mjs"`);
   }
   return { file, image };
 }

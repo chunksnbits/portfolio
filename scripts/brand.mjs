@@ -1,6 +1,6 @@
 // Captures a company's visual language from its live pages, as evidence for a variant's theme.
 //
-// Usage: npm run brand -- <url>... --out <dir> [--scheme light|dark] [--eval <script>]
+// Usage: node scripts/brand.mjs <url>... --out <dir> [--scheme light|dark] [--eval <script>]
 //
 // --scheme sets the system color scheme the pages see.
 // --eval runs a script in each page before the capture.
@@ -128,7 +128,7 @@ const { values: options, positionals: urls } = parseArgs({
   allowPositionals: true,
 });
 if (urls.length === 0 || !options.out) {
-  console.error('Usage: npm run brand -- <url>... --out <dir> [--scheme light|dark] [--eval <script>]');
+  console.error('Usage: node scripts/brand.mjs <url>... --out <dir> [--scheme light|dark] [--eval <script>]');
   process.exit(1);
 }
 await mkdir(options.out, { recursive: true });

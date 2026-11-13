@@ -1,5 +1,5 @@
 # Turns the client logos in raw/logos/ into the one-color SVGs in site/assets/logos/.
-# Run it after adding or replacing a logo: npm run logos.
+# Run it after adding or replacing a logo: python3 scripts/logos.py.
 # It needs Python 3 plus picosvg and skia-pathops (pip install picosvg skia-pathops).
 # The build reads only its output, so CI never runs it.
 #

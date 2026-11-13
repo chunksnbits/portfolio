@@ -49,23 +49,18 @@ jobs:
             ids=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/runs?status=completed" \
               --jq ".workflow_runs[] | select(.head_repository.full_name == \"$GITHUB_REPOSITORY\") | .id")
           fi
-          # GitHub's log deletion is eventually consistent: GET can keep returning the log briefly after DELETE succeeds.
+          # GitHub's log deletion is eventually consistent: GET can keep returning the log after DELETE succeeds.
+          # The DELETE response is authoritative; a stale GET must not make this best-effort cleanup fail.
           delete_logs() {
-            local id=$1 del_answer answer
-            if ! del_answer=$(gh api --method DELETE "$RUNS/$id/logs" 2>&1); then
-              [[ $del_answer == *'HTTP 404'* || $del_answer == *'HTTP 410'* ]] && return 0
-              echo "Failed to delete logs of run $id: $del_answer" >&2
-              return 1
-            fi
-            for attempt in $(seq 1 12); do
-              answer=$(gh api "$RUNS/$id/logs" --silent 2>&1) || true
-              [[ $answer == *'HTTP 404'* || $answer == *'HTTP 410'* ]] && return 0
-              if [[ $attempt -eq 6 ]]; then
-                gh api --method DELETE "$RUNS/$id/logs" >/dev/null 2>&1 || true
+            local id=$1 del_answer
+            for attempt in 1 2 3; do
+              if del_answer=$(gh api --method DELETE "$RUNS/$id/logs" 2>&1); then
+                return 0
               fi
-              sleep 5
+              [[ $del_answer == *'HTTP 404'* || $del_answer == *'HTTP 410'* ]] && return 0
+              [[ $attempt -lt 3 ]] && sleep 5
             done
-            echo "The logs of run $id are still online." >&2
+            echo "Failed to delete logs of run $id: $del_answer" >&2
             return 1
           }
 

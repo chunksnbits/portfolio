@@ -53,7 +53,7 @@ try {
 // Creates variants/<name>-<random>/ with a variant.json, the starter page, one Markdown file per base file
 // that changes nothing yet, and the posting's text in private/job.md.
 async function create(name) {
-  if (!name || !options.job) throw new Error('Usage: npm run variant -- new <name> --job <url>');
+  if (!name || !options.job) throw new Error('Usage: node scripts/variant.mjs new <name> --job <url>');
   const slug = `${name}-${[...randomBytes(SUFFIX_LENGTH)].map((byte) => (byte % 36).toString(36)).join('')}`;
   checkSlug(slug);
   if ((await loadVariants()).some((variant) => variant.slug === slug)) throw new Error(`${VARIANTS}/${slug}/ already exists.`);

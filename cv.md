@@ -50,20 +50,20 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 
 ## Skills {#skills}
 
-### Frontend {#frontend}
-`TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright` `d3.js`
-
-### Mobile
-`Expo` `React Native` `Expo Router` `Skia` `Bluetooth LE` `SQLite` `Over-the-air updates`
+### Frontend and mobile {#frontend}
+`TypeScript` `React` `Next.js` `Angular` `Expo` `React Native` `TanStack Query` `XState` `Storybook` `Playwright` `Bluetooth LE`
 
 ### Backend and cloud
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
+
+### AI engineering {#ai-engineering}
+`Agentic coding` `AI coding agents` `Coding-agent harnesses` `MCP` `RAG` `LLM APIs` `Prompt engineering` `Evals and guardrails`
 
 ### Architecture and delivery
 `Monorepos` `Module Federation` `Design systems` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
 
 ### Ways of working {#ways-of-working}
-`Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams` `AI coding agents`
+`Tech lead` `Mentoring` `Code reviews` `Scrum` `Remote teams`
 
 `Pragmatic` `Creative` `Fast learner` `Adaptable` `Being glue` `Open-minded`
 

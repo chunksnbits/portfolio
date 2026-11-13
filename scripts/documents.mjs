@@ -3,8 +3,8 @@
 // - cover-letter.<lang>.md: one A4 page each, its text from greeting to signature at most half a page
 // - application.<lang>.pdf: the cover letter and the one-page CV combined into a single PDF to attach
 //
-// Usage: npm run docs [-- <slug>]
-// Without <slug>, regenerates the private documents for every variant in variants/.
+// Usage: npm run docs [-- <slug-or-job-url>]
+// Without an argument, regenerates the private documents for every variant in variants/.
 //
 // Each document becomes a self-contained HTML page beside its source, styled by scripts/documents.css
 // and the variant's documents.css, then a PDF. A missing document is skipped.
@@ -29,16 +29,15 @@ const MAX_LETTER_TEXT_MM = 148.5;
 const A4 = { width: 794, height: 1123 };
 
 const { positionals } = parseArgs({ allowPositionals: true });
-const [slug] = positionals;
+const [target] = positionals;
 const allVariants = await loadVariants();
 let targets;
-if (slug) {
-  const variant = allVariants.find((candidate) => candidate.slug === slug);
-  if (!variant) {
-    console.error(`There is no variant "${slug}" in ${VARIANTS}/.`);
+if (target) {
+  targets = allVariants.filter((candidate) => candidate.slug === target || candidate.job === target);
+  if (targets.length !== 1) {
+    console.error(targets.length ? `More than one variant matches "${target}"; use its slug.` : `There is no variant matching "${target}" in ${VARIANTS}/.`);
     process.exit(1);
   }
-  targets = [variant];
 } else {
   if (allVariants.length === 0) {
     console.log('No variants in variants/.');
@@ -53,7 +52,7 @@ const chrome = await launchChrome();
 let failed = false;
 try {
   for (const variant of targets) {
-    if (!slug) console.log(`\n== ${variant.slug} ==`);
+    if (!target) console.log(`\n== ${variant.slug} ==`);
     const ok = await buildVariantDocs(variant);
     if (!ok) failed = true;
   }
