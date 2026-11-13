@@ -50,13 +50,21 @@ const MEASURE = `(() => {
 
   // Width the layout itself needs beyond the window. Panels may slide in from off screen and
   // the body clips them, so both are switched off while measuring.
+  // A panel's scroll-driven slide-in animation is switched off too: while it runs, Chrome can
+  // keep the panel's slide-in offset in scrollWidth after its transform is reset.
   function layoutOverflow() {
     const panels = [...document.querySelectorAll('.panel')];
-    panels.forEach((panel) => panel.style.setProperty('transform', 'none'));
+    panels.forEach((panel) => {
+      panel.style.setProperty('transform', 'none');
+      panel.style.setProperty('animation', 'none');
+    });
     document.body.style.overflowX = 'visible';
     const overflow = document.documentElement.scrollWidth - innerWidth;
     document.body.style.overflowX = '';
-    panels.forEach((panel) => panel.style.removeProperty('transform'));
+    panels.forEach((panel) => {
+      panel.style.removeProperty('transform');
+      panel.style.removeProperty('animation');
+    });
     return overflow;
   }
 })()`;
