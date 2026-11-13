@@ -49,18 +49,38 @@ jobs:
             ids=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/runs?status=completed" \
               --jq ".workflow_runs[] | select(.head_repository.full_name == \"$GITHUB_REPOSITORY\") | .id")
           fi
+          # GitHub's log deletion is eventually consistent: GET can keep returning the log briefly after DELETE succeeds.
+          delete_logs() {
+            local id=$1 del_answer answer
+            if ! del_answer=$(gh api --method DELETE "$RUNS/$id/logs" 2>&1); then
+              [[ $del_answer == *'HTTP 404'* || $del_answer == *'HTTP 410'* ]] && return 0
+              echo "Failed to delete logs of run $id: $del_answer" >&2
+              return 1
+            fi
+            for attempt in $(seq 1 12); do
+              answer=$(gh api "$RUNS/$id/logs" --silent 2>&1) || true
+              [[ $answer == *'HTTP 404'* || $answer == *'HTTP 410'* ]] && return 0
+              if [[ $attempt -eq 6 ]]; then
+                gh api --method DELETE "$RUNS/$id/logs" >/dev/null 2>&1 || true
+              fi
+              sleep 5
+            done
+            echo "The logs of run $id are still online." >&2
+            return 1
+          }
+
           status=0
           for id in $ids; do
-            gh api --method DELETE "$RUNS/$id/logs" || true
-            answer=$(gh api "$RUNS/$id/logs" --silent 2>&1) || true
-            [[ $answer == *'HTTP 404'* ]] || { echo "The logs of run $id are still online." >&2; status=1; }
+            delete_logs "$id" || status=1
             if ! artifacts=$(gh api "$RUNS/$id/artifacts" --jq '.artifacts[].id'); then
               echo "Can't list the artifacts of run $id." >&2
               status=1
               continue
             fi
             for artifact in $artifacts; do
-              gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact" || status=1
+              del_answer=$(gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact" 2>&1) || {
+                [[ $del_answer == *'HTTP 404'* ]] || { echo "Failed to delete artifact $artifact of run $id: $del_answer" >&2; status=1; }
+              }
             done
           done
           exit $status
