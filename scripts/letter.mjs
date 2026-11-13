@@ -1,7 +1,7 @@
 // Drafts a variant's cover letters in German and English with Antigravity (agy), on Gemini.
 // see: DEVELOPMENT.md, "Cover letters and brief"
 //
-// Usage: npm run letter -- <slug> [--lang de|en] [--model <id>] [--force]
+// Usage: node scripts/letter.mjs <slug> [--lang de|en] [--model <id>] [--force]
 //
 // Drafts both languages by default. Pass --lang to redraft only one, leaving the other's file untouched
 // even with --force, so an edited letter in one language survives a redraft of the other.
@@ -70,7 +70,7 @@ try {
 }
 
 async function draft(name) {
-  if (!name) throw new Error('Usage: npm run letter -- <slug> [--lang de|en] [--model <id>] [--force]');
+  if (!name) throw new Error('Usage: node scripts/letter.mjs <slug> [--lang de|en] [--model <id>] [--force]');
   const variant = (await loadVariants()).find((candidate) => candidate.slug === name);
   if (!variant) throw new Error(`There is no variant "${name}" in ${VARIANTS}/.`);
   const folder = join(ROOT, VARIANTS, name, 'private');

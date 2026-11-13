@@ -1,7 +1,7 @@
 // Page template of the COMPANY variant: renders the body of its portfolio pages from the Markdown content.
 // see: DEVELOPMENT.md, "Templates"
 //
-// npm run variant -- new copies this starter. /tailor replaces it with a page built from the company's own patterns.
+// node scripts/variant.mjs new copies this starter. /tailor replaces it with a page built from the company's own patterns.
 // The kit holds the base page's renderers, bound to this page. main.js still runs here and looks for:
 // - .screen with an id: a section the language switch returns to and npm run check captures
 // - .nav__link and [data-nav]: the nav link of the section in view gets aria-current

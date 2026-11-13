@@ -4,28 +4,22 @@
 - [Google Chrome](https://www.google.com/chrome/) for `npm run check`. Set `CHROME_PATH` if Chrome is installed in a custom location.
 - Optional (new screenshots): macOS with `brew install webp libavif`.
 - Optional (new client logos): [Python](https://www.python.org/) 3 with `pip install picosvg skia-pathops`.
-- Optional (tailored variants): [Claude Code](https://claude.com/claude-code) for `npm run tailor`, and Antigravity's CLI `agy`, signed in, for `npm run letter`.
+- Optional (tailored variants): [Claude Code](https://claude.com/claude-code) for `npm run tailor`, and Antigravity's CLI `agy`, signed in, for `node scripts/letter.mjs`.
 - Optional (tailored variants): the private repository [chunksnbits/portfolio-variants](https://github.com/chunksnbits/portfolio-variants), cloned into `variants/`, see "Variants".
 
 ## Commands
 
 | Command | Action |
 | --- | --- |
-| `npm start` | Build and serve at `http://127.0.0.1:4173/portfolio/`, rebuilding on file changes. Includes draft variants. |
-| `npm run build` | Compile Markdown files and copy `site/` assets into `dist/`, with the published variants. |
+| `npm start` | Build and serve at `http://127.0.0.1:4173/portfolio/`, rebuilding on file changes. |
+| `npm run build` | Compile Markdown files and copy `site/` assets into `dist/`, with every variant. |
 | `npm test` | Run unit tests for parser, model, parity, and renderer. |
-| `npm run check` | Validate CV page counts, WCAG contrast and the Content-Security-Policy in headless Chrome. `-- --variant <slug>` checks only that variant, `-- --drafts` adds all. |
+| `npm run check` | Validate CV page counts, WCAG contrast and the Content-Security-Policy in headless Chrome. `-- --variant <slug>` checks only that variant. |
 | `npm run check -- --shots <dir>` | Save screen captures and CV PDFs to directory. |
-| `npm run images` | Generate WebP and AVIF assets from `raw/`. |
-| `npm run logos` | Generate monochrome SVG logos from `raw/logos/`. |
 | `npm run tailor -- <job-url>` | Start Claude Code on `/tailor`: a new variant for one job posting. |
-| `npm run variant -- list` | List the variants, published or draft, with their URLs. |
-| `npm run variant -- show <slug>` | Print a variant's Markdown files with their changes applied to the base files. |
-| `npm run variant -- publish <slug>` | Mark a variant for the next deploy. `unpublish` takes it down. |
-| `npm run publish [-m <message>]` | Commit every change in `variants/` and push it, which deploys the site. Asks for the message without `-m`. |
-| `npm run docs -- <slug>` | Print a variant's brief and cover letters to PDF and check their length and contrast. |
-| `npm run letter -- <slug>` | Draft a variant's cover letters with Gemini through `agy`. |
-| `npm run brand -- <url>... --out <dir>` | Capture a company's fonts, colors and components from its pages. |
+| `node scripts/variant.mjs list` | List the variants with their URLs. |
+| `node scripts/variant.mjs show <slug>` | Print a variant's Markdown files with their changes applied to the base files. |
+| `npm run docs [-- <slug-or-job-url>]` | Print the brief and cover letters to PDF and check their length and contrast. Without an argument, process every variant. |
 
 ## Updating content
 
@@ -45,7 +39,7 @@
 
 1. Place source images in `raw/`.
 2. Add the file to `IMAGES` in `scripts/images.mjs` with target width and pixel density.
-3. Run `npm run images` to generate WebP and AVIF files in `site/assets/img/`.
+3. Run `node scripts/images.mjs` to generate WebP and AVIF files in `site/assets/img/`.
 4. Reference the WebP copy in Markdown.
    E.g. `![Dashboard](site/assets/img/myzeiss-vision-desktop.webp)`.
 5. For `"keyvisual ascii"`, add flash coordinates to `FLASH_AREAS` in `site/assets/main.js`.
@@ -63,15 +57,15 @@
 
 1. Save source SVG into `raw/logos/`.
 2. Add an entry to `LOGOS` in `scripts/logos.py` with cutout colors.
-3. Run `npm run logos` to generate monochrome SVGs in `site/assets/logos/`.
+3. Run `python3 scripts/logos.py` to generate monochrome SVGs in `site/assets/logos/`.
 4. Reference in Markdown.
    E.g. `![ZEISS](site/assets/logos/zeiss.svg "logo")`.
 
 ## Variants
 
-A **variant** is a tailored copy of the portfolio for one job application: a page of its own, built from the company's page patterns in its visual language, with copy aimed at the posting.
+A **variant** is a visually tailored copy of the portfolio for one job application: a page of its own, built from the company's page patterns in its visual language, with the base portfolio and CV content unchanged.
 Each variant goes online below its own folder name, next to the base site, e.g. `chunksnbits.github.io/portfolio/acme-k3q9x2/` and `…/acme-k3q9x2/en/`.
-`npm run variant -- new` ends the folder name with 6 random characters, so nobody finds a new variant by trying company names. A variant from before keeps its plain name until its folder is renamed.
+`node scripts/variant.mjs new` ends the folder name with 6 random characters, so nobody finds a new variant by trying company names. A variant from before keeps its plain name until its folder is renamed.
 Variants stay out of search results.
 
 The variants live in the private repository [chunksnbits/portfolio-variants](https://github.com/chunksnbits/portfolio-variants), so the public repository never shows which companies they are for.
@@ -83,34 +77,31 @@ cp scripts/pre-push "$(git rev-parse --git-common-dir)/hooks/pre-push"
 ```
 
 The hook refuses any push whose commits touch `variants/`, from every worktree and branch of the clone.
-The Pages workflow checks the private repository out with the read-only deploy key in the secret `VARIANTS_DEPLOY_KEY`, so only the built pages of published variants go online.
-A push to `main` there starts the Pages workflow on `main` here, through the private repository's Deploy workflow and its token in the secret `PORTFOLIO_ACTIONS_TOKEN`. Its `README.md` describes the token.
+The Pages workflow checks the private repository out with the read-only deploy key in the secret `VARIANTS_DEPLOY_KEY`. The built pages of every variant go online.
+A push to any branch there starts the Pages workflow on `main` here, through the private repository's Deploy workflow and its token in the secret `PORTFOLIO_ACTIONS_TOKEN`. The deployment builds the private repository's `main` branch. Its `README.md` describes the token.
 
 ### Tailoring the portfolio to a job posting
 
 1. Run `npm run tailor -- <job-url>`, or `/tailor <job-url>` in Claude Code.
-   The skill in `.claude/skills/tailor/SKILL.md` researches the company, captures its page patterns and visual language, proposes a page built from them, has it reviewed by Claude and Gemini, implements it as the variant's template, tailors the copy, writes the interview brief and has Gemini draft the cover letters.
-2. Restart `npm start` and open `http://127.0.0.1:4173/portfolio/<slug>/`. Drafts show in the preview, never online.
-3. Edit the copy in `variants/<slug>/portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md`, and the letters in `variants/<slug>/private/cover-letter.de.md` and `.en.md`.
-   The four Markdown files hold only what changes in the base files, see "Variant files".
+   The skill in `.claude/skills/tailor/SKILL.md` researches the company, captures its page patterns and visual language, proposes a page built from them, has it reviewed by Claude and Gemini, implements it as the variant's template, records optional copy suggestions without applying them, writes the interview brief and has Gemini draft the cover letters.
+2. Restart `npm start` and open `http://127.0.0.1:4173/portfolio/<slug>/`. Every variant in the private repository goes online on the next deploy.
+3. Keep `variants/<slug>/portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` unchanged. Record optional wording or skill proposals in `suggestions.md`. Edit letters only in `variants/<slug>/private/cover-letter.de.md` and `.en.md`.
 4. Run `npm run docs -- <slug>` after editing a letter or the brief, and `npm run check -- --variant <slug>` after editing the copy.
 
 ### Publishing and taking down
 
-1. Run `npm run variant -- publish <slug>`.
-   It checks the variant, commits and pushes every change in `variants/` to `main` of the private repository, waits for the Pages workflow, and prints the URL after it responds with HTTP 200.
-   Run `npm run variant -- publish` without a slug to check and verify every variant whose `published` key is `true`.
-2. To take it down, run `npm run variant -- unpublish <slug>` and then `npm run publish -m "<message>"`. Its URL then answers with the 404 page, and its files stay in `variants/<slug>/`.
+1. Run `npm run check` to check the base site and every variant.
+2. Commit and push changes to `main` in the private repository. Its Deploy workflow starts the Pages workflow here.
+3. To take a variant down, remove its directory from the private repository and push the change.
 
-Every push to the private repository's `main` deploys, also one that only changes a draft, and so does every push to `main` here.
-`npm run publish` refuses to run when `variants/` is on another branch, whose push wouldn't deploy.
-If its Deploy workflow fails, e.g. on an expired token, `npm run publish` has nothing left to push. Start the deploy with `gh workflow run Pages --ref main` instead.
+Every push to either repository starts a deployment from both repositories' `main` branches. A push to another branch here first checks that branch.
+If the Deploy workflow fails, e.g. on an expired token, start the deployment with `gh workflow run Pages --ref main -R chunksnbits/portfolio`.
 
 **NOTE:** never commit `variants/` to this repository, which is public. The pre-push hook above refuses such a push.
 
-**NOTE:** the logs of the Pages workflow are public while a run lasts. They show each variant's folder name, company, role and posting as `***`. Only a deploy uploads the build artifact, which holds the published variants' pages. Once a run has finished, the Clean up workflow deletes its log and its artifact. Its jobs and steps stay visible, so rerun a failed step's command locally to see its output. After a failed deploy, rerun all jobs, since the deploy job alone finds no artifact any more. `gh workflow run "Clean up"` sweeps every finished run, e.g. the runs from before the workflow.
+**NOTE:** the logs of the Pages workflow are public while a run lasts. They show each variant's folder name, company, role and posting as `***`. Only a deploy uploads the build artifact, which holds the variants' pages. Once a run has finished, the Clean up workflow deletes its log and its artifact. Its jobs and steps stay visible, so rerun a failed step's command locally to see its output. After a failed deploy, rerun all jobs, since the deploy job alone finds no artifact any more. `gh workflow run "Clean up"` sweeps every finished run, e.g. the runs from before the workflow.
 
-**NOTE:** CI checks every published variant like the base site. A variant that fails `npm run check` stops the deploy of the whole site, so run `npm run check -- --variant <slug>` before publishing.
+**NOTE:** CI checks every variant like the base site. A variant that fails `npm run check` stops the deploy of the whole site, so run `npm run check -- --variant <slug>` before pushing.
 
 ### Layout of a variant
 
@@ -118,8 +109,9 @@ If its Deploy workflow fails, e.g. on an expired token, `npm run publish` has no
 variants/
   VOICE.md                ← how Daniel writes, for copy and letters
   <slug>/
-    variant.json          ← company, role, posting URL, language, published, theme it opens in
-    portfolio.de.md, portfolio.md, cv.de.md, cv.md   ← changes to the base files of the same name
+    variant.json          ← company, posting role, official title, posting URL, language, published, theme
+    portfolio.de.md, portfolio.md, cv.de.md, cv.md   ← unchanged; content inherits from the base files
+    suggestions.md        ← optional wording or skill proposals for Daniel to review
     template.mjs          ← renders the body of the variant's portfolio pages, see "Templates"
     page.css              ← stylesheet of the variant's portfolio pages, in place of styles.css
     page.js               ← optional: behavior of the variant's own patterns, loaded after main.js
@@ -129,7 +121,7 @@ variants/
     documents.css         ← colors of the cover letter and the brief
     private/              ← ignored by git, never published
       job.md              ← the posting's text
-      brand/              ← captures and tokens from npm run brand
+      brand/              ← captures and tokens from scripts/brand.mjs
       research.md         ← company research with sources
       design.md           ← design proposal, review findings and decisions
       review/             ← reviews and screenshots of each round
@@ -145,58 +137,23 @@ Any other file in `fonts/` or `img/` fails the build. `template.mjs` runs at bui
 
 | Key | Description |
 | --- | --- |
-| `company`, `role` | Company and job title, as the posting names them. |
+| `company`, `role` | Company and job title, as the posting names them. The posting role remains available to cover-letter generation. |
+| `title` | Daniel's official title. Always `Staff Software Engineer`. |
 | `job` | URL of the posting. |
 | `language` | Language of the posting: `de` or `en`. The cover letter and the first link to send lead with it. |
-| `published` | `true` puts the variant online with the next deploy. |
+| `published` | Legacy setting. All variants go online regardless of its value. |
 | `theme` | `dark` (default) or `light`: the theme its pages open in. |
 
 ### Variant files
 
-A variant's `portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` hold only what changes in the base file of the same name.
-Everything they leave out comes from the base file, so a fix there reaches every variant.
-Run `npm run variant -- show <slug>` to read a variant's files the way the build reads them, with the changes applied.
-
-```md
----
-title: Senior Software Engineer
----
-
-## About {#about}
-
-I engineer web and cloud systems that ==are built to last==.
-
-### Pixel to cloud {#pixel-to-cloud}
-The glue between clients, PMs, design and engineering.
-
-## Skills {#skills}
-
-### Frontend and mobile {#frontend}
-`TypeScript` `React` `React Native` `Expo`
-
-### Mobile {.remove}
-```
-
-- **Frontmatter**: a key the variant sets replaces the base's. `lang` stays as in the base file.
-- **Headings**: a `##` heading finds the base section with the same id. A `###` heading finds the entry in that section with the same id, or else with the same title. A heading that finds nothing fails the build.
-- **Content**: the content under a heading replaces the base content of the same kind and keeps the other kinds. The kinds are the meta line, the text with its `[show more]` marker, a bullet list, a numbered list, images and tags.
-  E.g. new paragraphs under `## About {#about}` keep its list and its cards.
-- **Empty heading**: changes nothing. Use it to reach the entries below it, or to place one in a `{.reorder}` section.
-- **Renaming**: write the entry's id with the new title, e.g. `### Frontend and mobile {#frontend}`. Give the base entry the id first, in both languages.
-- **Flags** in the heading's braces add, drop and sort:
-
-| Flag | Effect |
-| --- | --- |
-| `{.remove}` | Drops the section or entry. Takes no content. |
-| `{.new}` | Adds a section or entry after the heading above it in the variant file, or first. A new section keeps its entries as written. |
-| `{.reorder}` | On a `##` section only. Its entries follow the order of the variant file, then the ones it leaves out, in base order. |
-
-**NOTE:** a variant can't drop one kind of content and keep the rest, e.g. a project's screenshots.
+A variant's `portfolio.de.md`, `portfolio.md`, `cv.de.md` and `cv.md` stay unchanged and inherit the base file of the same name. This keeps the official `Staff Software Engineer` title and all CV and portfolio content identical across variants.
+Under no circumstances put wording, skill, ordering or metadata changes in these files. Write proposals to `suggestions.md` instead; Daniel decides whether to apply them to the base files.
+Run `node scripts/variant.mjs show <slug>` to read a variant's files the way the build reads them, with the changes applied.
 
 ### Templates
 
 A variant's page is its own: `template.mjs` renders the body of both portfolio pages from the Markdown content, and `page.css` styles them in place of `styles.css`.
-`npm run variant -- new` starts a variant with the plain page in `scripts/variant-starter/`. `/tailor` replaces it with one built from the company's patterns.
+`node scripts/variant.mjs new` starts a variant with the plain page in `scripts/variant-starter/`. `/tailor` replaces it with one built from the company's patterns.
 
 `template.mjs` exports a default function that takes the portfolio and a kit, and returns the HTML of the page's `<body>`:
 
@@ -206,7 +163,7 @@ export default function render({ meta, sections }, kit) {
 }
 ```
 
-- **Portfolio**: `meta` is the frontmatter, `sections` the `##` sections with their `blocks` and `entries`, after the variant's changes.
+- **Portfolio**: `meta` is the base frontmatter, and `sections` are the base `##` sections with their `blocks` and `entries`.
 - **Head**: the build writes it. It loads `page.css`, the fonts in `fonts/`, `main.js`, then `page.js`, keeps the page out of search results and opens it in the variant's theme.
   Its Content-Security-Policy lets the page load only files of the site, and run no inline script but the build's own, so a template writes no `<script>` and no `on…` attribute. `npm run check` fails a page whose policy blocks anything.
 - **Kit**: the base page's renderers, bound to the page. They render content the way the base page does and fail the build on invalid content with the same errors.
@@ -302,7 +259,6 @@ Links and images lead to `https:`, `http:` and `mailto:` addresses, or to paths 
 
 - `## Title {#id}` creates a section: one viewport screen and one nav item.
 - `### Title` creates an entry inside a section. Project entries require an ID: `### MyZEISS {#myzeiss}`.
-- `{.new}`, `{.remove}` and `{.reorder}` only work in a variant's files, see "Variant files".
 - Section `#projects` converts child entries into sliding project screens.
 - Section `#contact` renders contact links and PDF buttons.
 
@@ -349,8 +305,7 @@ scripts/
   images.mjs                    ← raw/ → site/assets/img/
   logos.py                      ← raw/logos/ → site/assets/logos/
   serve.mjs                     ← local development server
-  variant.mjs                   ← creates, lists, shows, publishes and unpublishes variants
-  publish.mjs                   ← commits and pushes variants/, which deploys the site
+  variant.mjs                   ← creates, lists and shows variants
   brand.mjs                     ← captures a company's visual language
   documents.mjs, documents.css  ← prints a variant's brief and cover letters
   letter.mjs, letter.prompt.md  ← drafts cover letters with Gemini through agy

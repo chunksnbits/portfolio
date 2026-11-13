@@ -4,7 +4,7 @@ lang: de
 
 ## Über mich {#about}
 
-Staff Full Stack Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung geschäftskritischer React and TypeScript Anwendungen, auf Basis von GraphQL, Node.js and .NET Services mit Ownership von der Anforderung über die Entwicklung, das Deployment, die Qualitätssicherung bis hin zum Betrieb.
+Staff Software Engineer mit mehr als 15 Jahren Erfahrung in der Entwicklung geschäftskritischer React and TypeScript Anwendungen, auf Basis von GraphQL, Node.js and .NET Services mit Ownership von der Anforderung über die Entwicklung, das Deployment, die Qualitätssicherung bis hin zum Betrieb.
 
 AI-first developer mit Fokus auf Agentic Software Engineering. Hands-on-Lead mit klarem technischem Urteilsvermögen, einem Auge für Details und der Bereitschaft, jüngere Kolleg*innen mitzunehmen und zu fördern.
 
@@ -48,20 +48,20 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 
 ## Skills {#skills}
 
-### Frontend  {#frontend}
-`TypeScript` `React` `Next.js` `Gatsby` `Angular` `TanStack Query` `XState` `Storybook` `Playwright`
-
-### Mobile
-`Expo` `React Native` `Expo Router` `Skia` `Bluetooth LE` `Over-the-air updates`
+### Frontend und Mobile {#frontend}
+`TypeScript` `React` `Next.js` `Angular` `Expo` `React Native` `TanStack Query` `XState` `Storybook` `Playwright` `Bluetooth LE`
 
 ### Backend und Cloud
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
+
+### AI Engineering {#ai-engineering}
+`Agentic Coding` `MCP` `RAG` `Agentic Workflows` `Prompt Engineering` `Evals und Guardrails`
 
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`
 
 ### Arbeitsweise {#ways-of-working}
-`Tech lead` `Mentoring` `Scrum` `AI coding agents` `Product Owner`
+`Tech lead` `Mentoring` `Scrum` `Product Owner`
 
 `Pragmatisch` `Kreativ` `Schnelle Auffassungsgabe` `Anpassungsfähig` `Bindeglied im Team` `Offen für Neues`
 
