@@ -13,7 +13,7 @@ AI-first developer mit Fokus auf Agentic Software Engineering. Hands-on-Lead mit
 ### Senior Staff Engineer + Satellytes
 2021 – heute + München, Fulda
 
-Lead Engineer und Kernentwickler für ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
+Lead- und Kernentwickler für Kunden wie ZEISS, ADAC Motorsport, FC Bayern München und MediaMarktSaturn.
 
 - **ZEISS** + ZEISS AURA® Smart Analyzer Companion App + zentrale Projekte für MyZEISS Vision und Meditec
 - **ADAC Motorsport** + Migration von Gatsby Cloud und Netlify
@@ -55,7 +55,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### AI Engineering {#ai-engineering}
-`Agentic Coding` `MCP` `RAG` `Agentic Workflows` `Prompt Engineering` `Evals und Guardrails`
+`Agentic Coding` `MCP` `RAG` `Agentic Workflows` `Prompt Engineering`
 
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`
