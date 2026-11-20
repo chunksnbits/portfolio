@@ -55,7 +55,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### AI Engineering {#ai-engineering}
-`Agentic Coding` `MCP` `RAG` `Agentic Workflows` `Prompt Engineering`
+`Agentic coding` `MCP` `RAG` `LLM APIs` `Agentic workflows` `Harness engineering`
 
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Vitest` `Jest`
