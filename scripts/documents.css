@@ -555,6 +555,66 @@ ol.fixes p {
   font: italic 14pt var(--serif);
 }
 
+/* ── Screen: the brief at the /finish report's type scale ── */
+
+/* The sizes above are for A4 and read small on a screen. On screen the brief, and the interview prep built on it,
+ * take the type scale of the /finish report: 14px text, 13px secondary text, 12px labels.
+ * Print keeps the A4 sizes, which documents.mjs measures the page limits against.
+ * see: ~/.claude/skills/finish/templates/pr-report.html */
+@media screen {
+  .brief {
+    font-size: 14px;
+  }
+
+  .brief .eyebrow,
+  .brief nav.toc a .n,
+  .brief h4,
+  .brief :is(.sec-summary, .callout) .label,
+  .brief th,
+  .brief :is(.ok, .meh, .bad),
+  .brief .tag,
+  .brief footer {
+    font-size: 12px;
+  }
+
+  .brief nav.toc a,
+  .brief .sec-summary li,
+  .brief table,
+  .brief .sec-head .idx {
+    font-size: 13px;
+  }
+
+  .brief .intro,
+  .brief footer .k {
+    font-size: 15px;
+  }
+
+  .brief h3 {
+    font-size: 16px;
+  }
+
+  /* Serif headings stay a step above /finish's bold sans ones, so they still lead the larger text. */
+  .brief .sec-head h2 {
+    font-size: 20px;
+  }
+
+  .brief .masthead h1 {
+    font-size: 30px;
+  }
+
+  /* The fix counter grows with its 12px number. */
+  .brief ol.fixes > li {
+    padding-left: 10.4mm;
+  }
+
+  .brief ol.fixes > li::before {
+    top: 1.6mm;
+    width: 5.6mm;
+    height: 5.6mm;
+    font-size: 12px;
+  }
+}
+
 /* ── Print: white A4, the sheet's padding becomes the page margin ── */
 
 @page brief {

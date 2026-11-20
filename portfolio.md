@@ -137,9 +137,9 @@ Automated provisioning of build agents, a Contentful-based publish pipeline and 
 
 For FC Bayern, we realized the relaunch of fcbayern.com, integrating a legacy CMS with an in-house headless engine.
 
-[show more]
-
 The project migrated around 100,000 statically generated pages, featuring incremental updates, live news and tickers, real-time results, a custom built audio-player, light and dark themes, WCAG 2.0 and over 2,000 unit tests.
+
+[show more]
 
 Time-critical features, like the widely frequented online condolence book for Gerd Müller where created with no notice in under two days.
 
@@ -196,7 +196,7 @@ Computer graphics, interface design and semantic web research. Young Talent Awar
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### AI engineering {#ai-engineering}
-`Agentic coding` `AI coding agents` `Coding-agent harnesses` `MCP` `RAG` `LLM APIs` `Prompt engineering` `Evals and guardrails`
+`Agentic coding` `MCP` `RAG` `LLM APIs` `Agentic workflows` `Harness engineering`
 
 ### Architecture and delivery
 `Monorepos` `Module Federation` `Design systems` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`

@@ -135,9 +135,9 @@ Automatische Bereitstellung von Build-Agents, eine an Contentful angebundene Pub
 
 Als neues Team bei Satellytes, verantworteten wir den Relaunch von fcbayern.com. Eine besondere Herausforderung war die Einbindung eines bestehenden Content Management System über eine intern entwickelte Headless-Engine.
 
-[show more]
-
 Das Projekt umfasste die Migration von rund 100.000 statisch generierten Seiten mit inkrementellen Updates, Live-News und Liveticker, Echtzeit-Ergebnissen, einem eigens entwickelten Audio-Player, hellem und dunklem Theme, WCAG 2.0 und über 2.000 Unit-Tests.
+
+[show more]
 
 Zeitkritische Features wie das stark frequentierte Online-Kondolenzbuch für Gerd Müller entstanden ohne Vorlauf in weniger als zwei Tagen.
 
@@ -194,7 +194,7 @@ Computergrafik, Interface-Design und Forschung im Semantic Web. Young Talent Awa
 `Node.js` `GraphQL` `Apollo` `NestJS` `.NET` `HotChocolate` `PostgreSQL` `Azure` `AWS Lambda` `Docker`
 
 ### AI Engineering {#ai-engineering}
-`Agentic Coding` `AI-Coding-Agenten` `Coding-Agent-Harnesses` `MCP` `RAG` `LLM APIs` `Prompt Engineering` `Evals und Guardrails`
+`Agentic coding` `MCP` `RAG` `LLM APIs` `Agentic workflows` `Harness engineering`
 
 ### Architektur und Delivery
 `Monorepos` `Module Federation` `Designsysteme` `GitHub Actions` `Azure Pipelines` `Terraform` `Vitest` `Jest`
